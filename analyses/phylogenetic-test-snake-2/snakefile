@@ -1,0 +1,232 @@
+#cp /net/viral_genomics/corona/gisaid/gisaid_cov2020_sequences.fasta ../../../data/data/gisaid-20200000.fa
+#useless: cp /net/viral_genomics/corona/gisaid_tree/global.tree results/gisaid-20200000-Germany.tree
+#cp ../../../data/data/gisaid-20210602-Wu1.fa ../../../data/data/gisaid-20200000-Wu1.fa 
+
+
+DATE_TREE="20210602"
+#DATE_TREE="20200000"
+DATE_METADATA="20210602"
+DATE_SEQ="20210602"
+#DATE_SEQ="20200000"
+STATE="Germany"
+TWD="/net/sgi/viral_genomics/hadi/tmp/"
+#SUB_TREES="A C"
+SUB_TREES="A B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 C"
+FOLDER_MAIN="../phylogenetic/"
+METADATA_FILE=expand("../../../data/data/gisaid-{DATE_METADATA}-metadata.tsv", DATE_METADATA=DATE_METADATA)
+
+SAMPLING_MIN=0
+SAMPLING_MAX=8000
+SAMPLING_SPECIAL_COUNT=5
+
+SAMPLE_BUCKET_IN=10000
+SAMPLE_BUCKET_OUT=1
+
+rule folders:
+	output:
+		"results/", "results/beast"
+		#, "data/", expand("results/gisaid-{DATE_TREE}-{STATE}.tree", DATE_TREE=DATE_TREE, STATE=STATE)
+	shell:
+		"mkdir -p results/ results/beast/ data/"
+		# && ln -s ../{FOLDER_MAIN}/results/gisaid-{DATE_TREE}-{STATE}.tree results/"
+
+rule case_file:
+	output:
+		"data/covid-case.csv"
+	shell:
+		"""
+		wget https://covid.ourworldindata.org/data/owid-covid-data.csv -O {output}
+		"""
+
+rule metadata:
+	input:
+		expand("{METADATA_FILE}", METADATA_FILE=METADATA_FILE)
+	output:
+		expand("results/gisaid-{DATE_METADATA}-metadata.tsv", DATE_METADATA=DATE_METADATA)
+	shell:
+		"""
+		Rscript scripts/filter-outliers.R '../../../data/lineage-list.csv' {METADATA_FILE} {output}
+		"""
+
+rule pangolin_tree:
+	input:
+		fasta=expand("../../../data/data/gisaid-{DATE_SEQ}.fa", DATE_SEQ=DATE_SEQ),
+		metadata=expand("results/gisaid-{DATE_METADATA}-metadata.tsv", DATE_METADATA=DATE_METADATA)
+	output:
+		pangolin_tree=expand("results/gisaid-{DATE_TREE}-{STATE}.tree", DATE_TREE=DATE_TREE, STATE=STATE)
+	shell:
+		"""
+		./scripts/tree-build-as-pangolin --out results/pangolin-{DATE_TREE}-r0.tree --metadata {input.metadata} --seqs {input.fasta} -l {STATE} non{STATE}
+		## we use following for filtering non-good samaple (e.g. sample without complete date)
+		./scripts/phylogeo_sankoff_general --in results/pangolin-{DATE_TREE}-r0.tree --out {output.pangolin_tree} --metadata {input.metadata} --location_label {STATE} non{STATE} --cond 2 "==" {STATE} 
+		"""
+rule sample:
+	input:
+		tree=expand("results/gisaid-{DATE_TREE}-{STATE}.tree", DATE_TREE=DATE_TREE, STATE=STATE),
+		metadata=expand("results/gisaid-{DATE_METADATA}-metadata.tsv", DATE_METADATA=DATE_METADATA),
+		case="data/covid-case.csv"
+	output:
+		tree=expand("results/gisaid-{DATE_TREE}-sampled.tree", DATE_TREE=DATE_TREE),
+		sample=expand("results/gisaid-{DATE_TREE}-samples.txt", DATE_TREE=DATE_TREE)
+	shell:
+		"""
+		./scripts/sample-evenly --in {input.tree} --out {output.tree}~ -l {STATE} non{STATE} --samples-out {output.sample}~ --metadata {input.metadata} --bucket-size {SAMPLE_BUCKET_IN} {SAMPLE_BUCKET_OUT} --special {SAMPLING_SPECIAL_COUNT} {SUB_TREES} --keep {SAMPLING_MIN} {SAMPLING_MAX} {SUB_TREES} --unbias-method case --case {input.case}
+		cp {output.tree}~ {output.tree}
+		cp {output.sample}~ {output.sample}
+		"""
+
+rule partition_1:
+	input:
+		metadata=expand("results/gisaid-{DATE_METADATA}-metadata.tsv", DATE_METADATA=DATE_METADATA),
+		fasta=expand("../../../data/data/gisaid-{DATE_SEQ}.fa", DATE_SEQ=DATE_SEQ),
+		tree=expand("results/gisaid-{DATE_TREE}-sampled.tree", DATE_TREE=DATE_TREE)
+	output:
+		metadata_sampled=expand("results/gisaid-{DATE_TREE}-metadata-sampled.tsv", DATE_TREE=DATE_TREE)
+	shell:
+		"""
+		Rscript ./scripts/extract-metadata.R results/gisaid-{DATE_TREE}-samples.txt {input.metadata} {output.metadata_sampled}
+		"""
+#library(lubridate)
+#library(dplyr)
+#library(knitr)
+#library(tictoc)
+#library(stringr)
+#library(tidyr)
+#library(colorspace) 
+#library(ggplot2)
+#source("reports/palettes.R")
+#source("reports/plotutils.R")
+#source("reports/clusterutils.R")
+#source("reports/reportutils.R")
+#sampledMetadataFile <- 'results/gisaid-20210602-metadata-sampled.tsv'
+#metadata <- load_metadata(sampledMetadataFile)
+#dateReference <- as.Date("1900-01-01")
+#metadata <- metadata %>% mutate(week = as.integer(floor((sample_date - dateReference)/7)))
+#caseDataFile <- "data/time_series_covid19_confirmed_global.csv"
+#case_data <- load_case_data(caseDataFile)
+#case_data_tibble <- case_data$data %>% mutate(country=rownames(case_data$data)) %>% gather('date_vindex', 'n', -country) %>% 
+#   left_join(case_data$date %>% data.frame() %>% rename(d = ".") %>% tibble::rowid_to_column("index") %>% mutate(vindex = paste0('V', index)), by=c("date_vindex"="vindex")) %>%
+#   mutate(week = as.integer(floor((d - dateReference)/7))) %>% group_by(week, country) %>% dplyr::summarize(n=sum(n))
+#data <- metadata %>% group_by(week, country) %>% dplyr::summarize(n=n()) %>% rename(sampled.seq=n) %>%
+#   full_join(case_data_tibble %>% rename(case=n), by=c("country"="country", "week"="week")) %>% mutate(sampling.rate = ifelse(is.na(sampled.seq) | is.na(case) | sampled.seq == 0 | case == 0, 0, sampled.seq / case))
+#write.csv(file='results/sampling-rate.csv', data %>% select(-sampled.seq, -case) %>% spread(country, sampling.rate) %>% mutate(weekStart = dateReference + week * 7, .before=1))
+#data.spread <- data %>% select(-sampled.seq, -case) %>% spread(country, sampling.rate) %>% mutate(weekStart = dateReference + week * 7, .before=1) %>% filter(weekStart >= as.Date("2020-08-31"), weekStart <= as.Date("2021-05-31") )
+#country.non.trivial <- data.spread %>% group_by() %>% summarise(across(where(is.numeric), ~ sum(.x != 0))) %>% gather(country,rate.sum) %>% filter(rate.sum >= 2) %>% pull(country)
+#write.csv(file='results/sampling-rate-filtered.csv', data.spread %>% select(weekStart, country.non.trivial))
+
+
+
+rule partition_2:
+	input:
+		metadata=expand("results/gisaid-{DATE_METADATA}-metadata.tsv", DATE_METADATA=DATE_METADATA),
+		fasta=expand("../../../data/data/gisaid-{DATE_SEQ}.fa", DATE_SEQ=DATE_SEQ),
+		metadata_sampled=expand("results/gisaid-{DATE_TREE}-metadata-sampled.tsv", DATE_TREE=DATE_TREE),
+		tree=expand("results/gisaid-{DATE_TREE}-sampled.tree", DATE_TREE=DATE_TREE)
+	output:
+		sample_names=expand("results/gisaid-{DATE_TREE}-sample-names.txt", DATE_TREE=DATE_TREE),
+		sample_fasta=expand("data/gisaid-{DATE_SEQ}-sampled.fa", DATE_SEQ=DATE_SEQ),
+		sample0s=expand("results/gisaid-{DATE_TREE}-{X}-samples0.txt", DATE_TREE=DATE_TREE, X=SUB_TREES.split(' ')),
+		sampled_trees=expand("results/gisaid-{DATE_TREE}-{X}-sampled0.tree", DATE_TREE=DATE_TREE, X=SUB_TREES.split(' '))
+	shell:
+		"""
+		cut -f1 {input.metadata_sampled} | tail -n +2  > {output.sample_names}  
+		# changed to local folders
+		./scripts/alignment-filter {input.fasta} {output.sample_names} > {output.sample_fasta}0  
+		#grep '>' {output.sample_fasta}0 | sort | uniq -c | grep -v '^ *1 ' | sort -nr 
+		./scripts/rename-alignment-ids {input.metadata_sampled} < {output.sample_fasta}0 > {output.sample_fasta}
+
+		# Extracting data of the SUB_TREES
+		./scripts/partition-by-name --in {input.tree} --par {SUB_TREES} --samples "results/gisaid-{DATE_TREE}-?-samples0.txt" --trees "results/gisaid-{DATE_TREE}-?-sampled0.tree" -l {STATE} non{STATE} --print-annotation false --print-internal-node-label false
+		"""
+
+rule partition_fa:
+	input:
+		samples=expand("results/gisaid-{DATE_TREE}-{{X}}-samples0.txt", DATE_TREE=DATE_TREE),
+		sample_fasta=expand("data/gisaid-{DATE_SEQ}-sampled.fa", DATE_SEQ=DATE_SEQ)
+	output:
+		expand("results/gisaid-{DATE_TREE}-{{X}}-seq0.fa", DATE_TREE=DATE_TREE)
+	shell:
+		"""
+		#create fasttree for each partition:
+		# Creating sequences for each sub-tree
+		#for X in {SUB_TREES}; do
+			./scripts/alignment-filter {input.sample_fasta} {input.samples} > {output}
+			cat ../../../data/data/gisaid-{DATE_SEQ}-Wu1.fa >> {output}
+		#done
+		"""
+
+rule sarscov2phylo:
+	input:
+		expand("results/gisaid-{DATE_TREE}-{{X}}-seq0.fa", DATE_TREE=DATE_TREE)
+	output:
+		folder=directory(expand("results/fasttree/{DATE_TREE}-{{X}}/", DATE_TREE=DATE_TREE)), 
+		tree=expand("results/gisaid-{DATE_TREE}-{{X}}-1.tree", DATE_TREE=DATE_TREE)
+	shell:
+		"""
+		DIR=`pwd` ;
+		rm -rf {output.folder} ;
+		mkdir -p {output.folder} ;
+		ln -s $DIR/{input} {output.folder}/gisaid-{DATE_TREE}-{wildcards.X}-seq0.fa
+		echo ssh grid.bifo 'qsub -cwd -N sarscov2phylo-{wildcards.X} -sync y -l h_vmem=30G,mem_free=30G,s_vmem=30G -pe smp 1 -o '$DIR'/log -e '$DIR'/log '$DIR'/run-sarscov2phylo-st.sh '$DIR' {DATE_SEQ} {DATE_TREE} {wildcards.X}' ;
+		ssh grid.bifo 'qsub -cwd -N sarscov2phylo-{wildcards.X} -sync y -l h_vmem=30G,mem_free=30G,s_vmem=30G -pe smp 1 -o '$DIR'/log -e '$DIR'/log '$DIR'/run-sarscov2phylo-st.sh '$DIR' {DATE_SEQ} {DATE_TREE} {wildcards.X}' ;
+		"""
+
+rule fill_beast_template:
+	input:
+		samples=expand("results/gisaid-{DATE_TREE}-{{X}}-samples0.txt", DATE_TREE=DATE_TREE),
+		metadata_sampled=expand("results/gisaid-{DATE_TREE}-metadata-sampled.tsv", DATE_TREE=DATE_TREE),
+		tree_X=expand("results/gisaid-{DATE_TREE}-{{X}}-1.tree", DATE_TREE=DATE_TREE)
+	output:
+		metadata_sampled_X=expand("results/gisaid-{DATE_TREE}-{{X}}-metadata-sampled-1.tsv", DATE_TREE=DATE_TREE),
+		samples_X=expand("results/gisaid-{DATE_TREE}-{{X}}-samples1.txt", DATE_TREE=DATE_TREE),
+		xml=expand("results/beast/{{X}}.fixedRootPrior.skygrid-{DATE_TREE}.xml", DATE_TREE=DATE_TREE)
+	shell:
+		"""
+		./scripts/extract-metadata.R {input.samples} {input.metadata_sampled} {output.metadata_sampled_X}
+
+		#grep -v "EPI_ISL_412860\|EPI_ISL_402131\|EPI_ISL_412976\|EPI_ISL_412977\|EPI_ISL_852605\|EPI_ISL_852604\|EPI_ISL_610156\|EPI_ISL_1699443\|EPI_ISL_2333072\|EPI_ISL_2333073\|EPI_ISL_2333074\|EPI_ISL_2333075\|EPI_ISL_2333082\|EPI_ISL_2333083\|EPI_ISL_2333084\|EPI_ISL_2333086\|EPI_ISL_2333087\|EPI_ISL_2333088\|EPI_ISL_2333089\|EPI_ISL_2333090\|EPI_ISL_2333091\|EPI_ISL_2333092\|EPI_ISL_2333093\|EPI_ISL_2333094\|EPI_ISL_2333095\|EPI_ISL_2333096\|EPI_ISL_2333097\|EPI_ISL_2333098\|EPI_ISL_2333099\|EPI_ISL_2333100\|EPI_ISL_2333101\|EPI_ISL_2333102\|EPI_ISL_2333103\|EPI_ISL_2333104\|EPI_ISL_2333105\|EPI_ISL_2333106\|EPI_ISL_2333107\|EPI_ISL_2333108\|EPI_ISL_2333109\|EPI_ISL_2333110\|EPI_ISL_2333111\|EPI_ISL_2333112\|EPI_ISL_2333113\|EPI_ISL_2333114\|EPI_ISL_2333115\|EPI_ISL_2333116\|EPI_ISL_2333117\|EPI_ISL_2333178\|EPI_ISL_2333182\|EPI_ISL_2333183\|EPI_ISL_2333184\|EPI_ISL_2333185\|EPI_ISL_2333186\|EPI_ISL_2333187\|EPI_ISL_2333190\|EPI_ISL_2333191\|EPI_ISL_2333192\|EPI_ISL_2333193\|EPI_ISL_2333194\|EPI_ISL_2333195\|EPI_ISL_2333196\|EPI_ISL_2333202\|EPI_ISL_2333203\|EPI_ISL_2333214\|EPI_ISL_2333215\|EPI_ISL_2333216\|EPI_ISL_2333217\|EPI_ISL_2333516\|EPI_ISL_2333517\|EPI_ISL_2333518\|EPI_ISL_2333519\|EPI_ISL_2333520\|EPI_ISL_2333521\|EPI_ISL_2333522\|EPI_ISL_2333523\|EPI_ISL_2333524\|EPI_ISL_2333525\|EPI_ISL_2333526\|EPI_ISL_2333527\|EPI_ISL_2333528\|EPI_ISL_2357883" results/gisaid-$DATE_TREE-$X-metadata-sampled-1.tsv > results/gisaid-$DATE_TREE-$X-metadata-sampled.tsv
+
+		./scripts/phylogeo_sankoff_general --in {input.tree_X} --out {input.tree_X}2 --metadata {output.metadata_sampled_X} --location_label {STATE} non{STATE} --cond 2 "==" {STATE}  --print-annotation false --print-internal-node-label false --single-child false --samples {output.samples_X}
+
+
+		./scripts/contract_short_branch --in {input.tree_X}2 --out {input.tree_X}-cont --short 5e-6 --location_label {STATE} non{STATE} --print-annotation false --print-internal-node-label false --contract_leaf_enabled false
+
+		./scripts/fill-template.py --template data/X.fixedRootPrior.skygrid-template-thorney.xml --name {wildcards.X} --sample {output.samples_X} --tree {input.tree_X}-cont --tree_init {input.tree_X}2 --metadata {input.metadata_sampled} --out {output.xml} --loc {STATE} --date {DATE_TREE} --clock_rate 0.00075 --chain 300000000 # --cutoff 2.25 --grid_points $[ 225 * 52 / 100 ]
+	"""
+
+rule beast_tree:
+	input:
+		xml=expand("results/beast/{{X}}.fixedRootPrior.skygrid-{DATE_TREE}.xml", DATE_TREE=DATE_TREE)
+	output:
+		folder=directory("results/beast/run/{X,[A-Z0-9.]+}-{i,\d+}"),
+		log=expand("results/beast/run/{{X,[0-9A-Z.]+}}-{{i,\d+}}/{{X}}.fixedRootPrior.skygrid-{DATE_TREE}.log", DATE_TREE=DATE_TREE)
+		#, i=range(31,36)
+	shell:
+		"""
+		DIR=`pwd`
+		ssh grid.bifo 'qsub -cwd -N beast-{wildcards.X}-{wildcards.i} -sync y -l h_vmem=20G,mem_free=20G,s_vmem=20G -pe smp 6 -o '$DIR'/results/beast/run/out/{wildcards.X}-{wildcards.i} -j y '$DIR'/run-beast-st.sh '$DIR'/results/beast/ run/{wildcards.X}-{wildcards.i} {DATE_TREE} {wildcards.X}'
+		"""
+#for X in $SUB_TREES; do for i in {31..35}; do qsub -cwd -N beast-$X-$i -l h_vmem=20G,mem_free=20G,s_vmem=20G -pe smp 6 -o $DIR/results/beast/run/out/$X-$i -j y $DIR/run-beast-st.sh $DIR/results/beast/ run/$X-$i 20210602 $X; done; done
+
+rule beast_tree_log_combine:
+	input:
+		logs=expand("results/beast/run/{{X}}-{i}/{{X}}.fixedRootPrior.skygrid-{DATE_TREE}.log", DATE_TREE=DATE_TREE, i=range(31,36))
+	output:
+		expand("results/beast/{{X}}.fixedRootPrior.skygrid-{DATE_TREE}.log", DATE_TREE=DATE_TREE)
+	shell:
+		"""
+			echo {input.logs} {output}
+		"""
+
+rule beast_tree_1:
+	input:
+		xml=expand("results/beast/{{X}}.fixedRootPrior.skygrid-{DATE_TREE}.xml", DATE_TREE=DATE_TREE)
+	output:
+		folder=directory("pashmak2-{X,[A-Z0-9.]+}-{i,\d+}"),
+		log=expand("results/beast/test/{{X,[0-9A-Z.]+}}-{{i,\d+}}/{{X}}.fixedRootPrior.skygrid-{DATE_TREE}.log", DATE_TREE=DATE_TREE)
+		#, i=range(31,36)
+	shell:
+		"""
+		DIR=`pwd`
+		ssh grid.bifo 'qsub -cwd -N beast-{wildcards.X}-{wildcards.i} -sync y -l h_vmem=20G,mem_free=20G,s_vmem=20G -pe smp 6 -o '$DIR'/results/beast/run/out/{wildcards.X}-{wildcards.i} -j y '$DIR'/run-beast-st.sh '$DIR'/results/beast/ run/{wildcards.X}-{wildcards.i} {DATE_TREE} {wildcards.X}'
+		"""

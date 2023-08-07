@@ -1,0 +1,1513 @@
+cluster	src	dst	height	is_leaf	src_date	
+LIN-Germany-A-20210602_DTA_MCC_1		Hamburg	-1	1	1900.000000	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	0	0	2020.081848	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	1	0	2020.140167	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	2	0	2020.143574	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	3	0	2020.145755	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	0	2020.146775	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	0	2020.149305	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.149853	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.166658	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.166658	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.149853	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	0	2020.153769	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	0	2020.161536	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	1	2020.258483	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	0	2020.258483	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	10	0	2020.263833	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	11	1	2020.277068	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	11	0	2020.277068	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	12	1	2020.282072	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Rhineland-Palatinate	12	1	2020.282072	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	10	1	2020.263833	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	0	2020.161536	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	1	2020.172899	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	1	2020.172899	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	0	2020.153769	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.171729	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.171729	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	0	2020.149305	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	1	2020.280427	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.280427	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.285608	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.285608	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	0	2020.146775	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	1	2020.164371	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	1	2020.164371	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	3	0	2020.145755	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	1	2020.164420	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	1	2020.164420	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	2	0	2020.143574	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	3	0	2020.145324	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	1	2020.163199	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	1	2020.163199	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	3	0	2020.145324	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	0	2020.146012	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	0	2020.147227	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.148444	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.153292	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	0	2020.153292	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.158515	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	0	2020.158515	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	1	2020.168588	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	1	2020.168588	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.148444	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	0	2020.153158	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.162116	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	0	2020.162116	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	1	2020.174314	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	0	2020.174314	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	10	1	2020.283283	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	10	1	2020.283283	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	0	2020.153158	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.167527	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	0	2020.167527	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	1	2020.271907	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	9	1	2020.271907	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	0	2020.147227	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.158256	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.170636	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.170636	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.158256	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.225899	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.225899	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	0	2020.146012	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	1	2020.152323	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	0	2020.152323	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	1	2020.154238	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.154238	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	0	2020.161213	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.171166	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.171166	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.161213	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	1	0	2020.140167	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	2	1	2020.142735	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	2	0	2020.142735	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	3	0	2020.143571	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	1	2020.146413	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	0	2020.146413	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	0	2020.152999	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	1	2020.216529	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	1	2020.216529	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	0	2020.152999	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.159634	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.179907	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	0	2020.179907	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.268169	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Schleswig-Holstein	8	1	2020.268169	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	0	2020.159634	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	0	2020.180729	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.323894	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	8	1	2020.323894	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	7	1	2020.180729	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	3	0	2020.143571	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	0	2020.195437	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	1	2020.199374	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	0	2020.199374	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	1	2020.216076	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	6	1	2020.216076	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	4	0	2020.195437	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	1	2020.214346	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	5	1	2020.214346	
+LIN-Germany-A-20210602_DTA_MCC_2	Hamburg	Hamburg	0	1	2020.081848	
+LIN-Germany-A-20210602_DTA_MCC_2		Hamburg	-1	0	1900.000000	
+LIN-Germany-A-20210602_DTA_MCC_3	Saxony-Anhalt	Saxony-Anhalt	0	1	2020.276031	
+LIN-Germany-A-20210602_DTA_MCC_3	Saxony-Anhalt	Saxony-Anhalt	0	0	2020.276031	
+LIN-Germany-A-20210602_DTA_MCC_3	Saxony-Anhalt	Saxony-Anhalt	1	1	2020.278682	
+LIN-Germany-A-20210602_DTA_MCC_3	Saxony-Anhalt	Saxony-Anhalt	1	1	2020.278682	
+LIN-Germany-A-20210602_DTA_MCC_3		Saxony-Anhalt	-1	0	1900.000000	
+LIN-Germany-A-20210602_DTA_MCC_4		Bavaria	-1	1	1900.000000	
+LIN-Germany-A-20210602_DTA_MCC_5	Brandenburg	Berlin	0	1	2020.221291	
+LIN-Germany-A-20210602_DTA_MCC_5	Brandenburg	Brandenburg	0	1	2020.221291	
+LIN-Germany-A-20210602_DTA_MCC_5		Brandenburg	-1	0	1900.000000	
+LIN-Germany-A-20210602_DTA_MCC_6		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_1		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.895950	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.915905	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.915905	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2	North Rhine-Westphalia	Lower Saxony	2	1	2020.940607	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.940607	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.895950	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2	North Rhine-Westphalia	Lower Saxony	1	1	2020.927811	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.927811	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_2		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_3	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.959213	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_3	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.959213	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_3	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.025020	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_3	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.025020	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_3	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.092889	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_3	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.092889	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_3		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_4		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_5		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_6		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_8		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_9		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_10		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_12		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_13		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_14		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_15		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.023529	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.023529	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.062045	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2021.066098	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2021.071232	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2021.071232	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	4	0	2021.086407	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	5	1	2021.098402	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	5	1	2021.098402	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	4	0	2021.086407	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	5	1	2021.187249	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	5	1	2021.187249	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.066098	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.062045	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_16		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_17		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_18	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.152596	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_18	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.152596	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_18		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_19		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_20	North Rhine-Westphalia	Bremen	0	1	2021.070923	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_20	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.070923	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_20	North Rhine-Westphalia	Hesse	1	1	2021.089379	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_20	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.089379	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_20		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_21		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_23		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_24		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_25		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_26		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_27	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.986916	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_27	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.986916	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_27	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.059935	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_27	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.059935	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_27		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_28		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_29		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_31	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.157326	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_31	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.157326	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_31		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_32		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_33		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_34		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_35		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_36		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_37		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_38		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_40		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_41		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_42	Hamburg	Hamburg	0	1	2021.168114	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_42	Hamburg	Hamburg	0	1	2021.168114	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_42		Hamburg	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_43		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_44		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_45		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_46		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_47		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_48		Bremen	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_49		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_50		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_51		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_53		Saxony-Anhalt	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_54		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_55	North Rhine-Westphalia	Baden-Wurttemberg	0	1	2021.069122	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_55	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.069122	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_55		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_56		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_57	Bavaria	Bavaria	0	1	2021.109505	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_57	Bavaria	Saxony	0	1	2021.109505	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_57		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_58		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_59		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_61		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_62		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_63		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_64	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.097710	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_64	North Rhine-Westphalia	Rhineland-Palatinate	0	1	2021.097710	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_64		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_65		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_66		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_69		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_70		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71	North Rhine-Westphalia	Saxony	0	1	2021.036018	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.036018	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.037881	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.104753	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.104753	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.037881	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71	North Rhine-Westphalia	Hesse	2	1	2021.086584	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71	North Rhine-Westphalia	Baden-Wurttemberg	2	1	2021.086584	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_71		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_72		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_74		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_75		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_76		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_77		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_78		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_79	North Rhine-Westphalia	Hamburg	0	1	2021.077286	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_79	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.077286	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_79		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_80		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_81	Saxony	Saxony	0	1	2021.129311	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_81	Saxony	Saxony	0	1	2021.129311	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_81		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_82		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_83		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_84		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_85		Saxony-Anhalt	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_86		Brandenburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_88		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_89		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_90		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_91		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_92		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_93		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_94	Bremen	Bremen	0	1	2021.067322	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_94	Bremen	Bremen	0	0	2021.067322	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_94	Bremen	Bremen	1	1	2021.070776	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_94	Bremen	Bremen	1	0	2021.070776	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_94	Bremen	Bremen	2	1	2021.079005	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_94	Bremen	North Rhine-Westphalia	2	1	2021.079005	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_94		Bremen	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_95		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_96		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_97		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_98		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_99		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_101		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_103		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_104		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_105		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_106		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_107	Lower Saxony	Lower Saxony	0	1	2021.084236	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_107	Lower Saxony	Lower Saxony	0	1	2021.084236	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_107		Lower Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_109	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.993736	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_109	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.995556	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_109	North Rhine-Westphalia	Baden-Wurttemberg	2	1	2021.000841	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_109	North Rhine-Westphalia	Hamburg	2	1	2021.000841	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_109	North Rhine-Westphalia	Lower Saxony	1	1	2020.995556	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_109	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.993736	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_109		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	Baden-Wurttemberg	0	0	2021.003555	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2021.035077	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2021.035077	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.003555	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.080929	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2021.087649	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	Baden-Wurttemberg	3	1	2021.255531	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2021.255531	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2021.087649	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2021.091577	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2021.115400	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2021.115400	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	Baden-Wurttemberg	3	1	2021.091577	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.080929	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.297248	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.297248	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_110		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_111		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_112		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_113		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_114		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_115		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	0	0	2020.882408	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	1	0	2020.891283	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	2	1	2020.897576	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	2	0	2020.897576	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	3	1	2020.911256	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	3	1	2020.911256	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Thuringia	1	1	2020.891283	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	0	0	2020.882408	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	1	1	2020.883697	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	1	0	2020.883697	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	2	0	2020.885883	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	3	1	2020.891741	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	3	0	2020.891741	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	4	1	2020.899860	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	4	0	2020.899860	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	North Rhine-Westphalia	5	1	2020.920278	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	5	1	2020.920278	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	2	0	2020.885883	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	3	0	2020.895347	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	4	1	2021.054540	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Saxony-Anhalt	4	0	2021.054540	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Saxony-Anhalt	Saxony-Anhalt	5	1	2021.112759	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Saxony-Anhalt	Saxony-Anhalt	5	1	2021.112759	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116	Bavaria	Bavaria	3	1	2020.895347	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_116		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_117		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_119	North Rhine-Westphalia	Saxony	0	1	2021.096535	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_119	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.096535	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_119		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_120		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_121		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_123		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_124		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_125	Saxony	Saxony	0	1	2021.065323	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_125	Saxony	Saxony	0	0	2021.065323	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_125	Saxony	Saxony	1	1	2021.124303	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_125	Saxony	Saxony	1	1	2021.124303	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_125		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_126		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_127	North Rhine-Westphalia	Saxony	0	1	2020.988174	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_127	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.988174	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_127	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.014306	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_127	North Rhine-Westphalia	Baden-Wurttemberg	1	1	2021.014306	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_127		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_128		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_129		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_130	Thuringia	Thuringia	0	1	2021.067566	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_130	Thuringia	Baden-Wurttemberg	0	1	2021.067566	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_130		Thuringia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_131	Bavaria	Bavaria	0	1	2021.144524	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_131	Bavaria	Saxony	0	1	2021.144524	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_131		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.975647	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	North Rhine-Westphalia	Saxony	1	1	2021.018883	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.018883	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	North Rhine-Westphalia	Thuringia	0	0	2020.975647	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Thuringia	Thuringia	1	0	2020.979914	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Thuringia	Baden-Wurttemberg	2	1	2021.011821	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Thuringia	Thuringia	2	1	2021.011821	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Thuringia	Thuringia	1	0	2020.979914	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Thuringia	Thuringia	2	1	2020.992341	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Thuringia	Rhineland-Palatinate	2	0	2020.992341	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Rhineland-Palatinate	Rhineland-Palatinate	3	1	2021.093574	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Rhineland-Palatinate	Rhineland-Palatinate	3	0	2021.093574	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Rhineland-Palatinate	Rhineland-Palatinate	4	1	2021.129615	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132	Rhineland-Palatinate	Rhineland-Palatinate	4	1	2021.129615	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_132		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_133		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_134		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_136		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_137		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_138		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_139		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_140		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_141		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_142		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Bavaria	Hesse	0	0	2020.913689	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Hesse	Hesse	1	0	2020.921242	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Hesse	Hesse	2	1	2020.995080	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Hesse	Saxony	2	0	2020.995080	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Saxony	3	0	2021.037130	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Saxony	4	1	2021.056363	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Saxony	4	0	2021.056363	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Saxony	5	0	2021.096252	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	North Rhine-Westphalia	6	1	2021.109076	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Hesse	6	1	2021.109076	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Saxony	5	0	2021.096252	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Saxony-Anhalt	6	1	2021.102723	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Saxony	6	1	2021.102723	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Saxony	Saxony	3	1	2021.037130	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Hesse	Hesse	1	1	2020.921242	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Bavaria	Bavaria	0	0	2020.913689	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Bavaria	Bavaria	1	1	2020.929630	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Bavaria	Bavaria	1	0	2020.929630	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Bavaria	Bavaria	2	1	2020.972596	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143	Bavaria	Baden-Wurttemberg	2	1	2020.972596	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_143		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_144		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_145	Saxony	Saxony	0	1	2021.229706	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_145	Saxony	Hesse	0	1	2021.229706	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_145		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_146		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_147		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_148		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_149	Saxony	Saarland	0	1	2020.847549	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_149	Saxony	Saxony	0	1	2020.847549	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_149		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_150		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_151		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_152		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_156		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_158	Saxony	Saxony	0	1	2021.109512	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_158	Saxony	Saxony	0	1	2021.109512	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_158		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_160		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_161	Thuringia	Thuringia	0	1	2021.044144	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_161	Thuringia	Rhineland-Palatinate	0	0	2021.044144	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_161	Rhineland-Palatinate	Rhineland-Palatinate	1	1	2021.149991	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_161	Rhineland-Palatinate	Rhineland-Palatinate	1	1	2021.149991	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_161		Thuringia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_162		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164	Baden-Wurttemberg	Baden-Wurttemberg	0	1	2020.999619	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164	Baden-Wurttemberg	Baden-Wurttemberg	0	0	2020.999619	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2021.049503	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164	Baden-Wurttemberg	Baden-Wurttemberg	1	0	2021.049503	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164	Baden-Wurttemberg	Baden-Wurttemberg	2	0	2021.055658	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164	Baden-Wurttemberg	Baden-Wurttemberg	3	1	2021.128539	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164	Baden-Wurttemberg	Baden-Wurttemberg	3	1	2021.128539	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164	Baden-Wurttemberg	Baden-Wurttemberg	2	1	2021.055658	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_164		Baden-Wurttemberg	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_166		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_167		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_168		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_169		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_170		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_171	Thuringia	Saxony-Anhalt	0	1	2020.966347	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_171	Thuringia	Thuringia	0	0	2020.966347	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_171	Thuringia	Thuringia	1	1	2021.010955	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_171	Thuringia	Thuringia	1	1	2021.010955	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_171		Thuringia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_172		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_173		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_174	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.049721	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_174	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.156929	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_174	North Rhine-Westphalia	Bavaria	1	1	2021.156929	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_174	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.049721	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_174	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.144956	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_174	North Rhine-Westphalia	Saxony	1	1	2021.144956	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_174		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_175		Saxony-Anhalt	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_176	Saxony	Saxony	0	1	2021.082802	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_176	Saxony	Saxony	0	1	2021.082802	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_176		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_177	Saxony	Thuringia	0	1	2021.088097	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_177	Saxony	Saxony	0	1	2021.088097	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_177		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_178		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_179		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_180		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_181		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_182	Rhineland-Palatinate	Rhineland-Palatinate	0	1	2021.219757	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_182	Rhineland-Palatinate	Rhineland-Palatinate	0	1	2021.219757	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_182		Rhineland-Palatinate	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_183		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_184		Brandenburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_185		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_186		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_187		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_188		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_190		Saxony-Anhalt	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_191		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_192		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.911972	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.932735	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	Baden-Wurttemberg	2	1	2020.960778	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.960778	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2020.987782	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2021.083431	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2021.083431	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2020.987782	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.999197	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	4	0	2020.999197	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	5	0	2021.019294	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	6	0	2021.036976	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	7	1	2021.159715	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	7	1	2021.159715	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	6	1	2021.036976	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	5	0	2021.019294	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	6	1	2021.057592	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	6	0	2021.057592	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	7	1	2021.194474	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	7	1	2021.194474	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	Saxony	1	1	2020.932735	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.911972	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.958018	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.958018	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.028810	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2021.028810	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2021.171327	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2021.171327	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_193		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_195		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_197		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_198		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_199		Brandenburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_200		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_201	Saxony	Hesse	0	0	2021.048050	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_201	Hesse	Hesse	1	1	2021.252144	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_201	Hesse	Mecklenburg-Western Pomerania	1	1	2021.252144	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_201	Saxony	Saxony	0	1	2021.048050	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_201		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_202		Bremen	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_203		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_204		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_205		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_206		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_207	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.921646	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_207	North Rhine-Westphalia	Lower Saxony	1	1	2021.146099	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_207	North Rhine-Westphalia	Rhineland-Palatinate	1	1	2021.146099	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_207	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.921646	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_207		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_208		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_209	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.018707	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_209	North Rhine-Westphalia	Thuringia	1	1	2021.024041	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_209	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.024041	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_209	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.018707	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_209	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.070635	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_209	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.070635	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_209		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_210		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_211		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_212		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_213	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.164330	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_213	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.164330	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_213	North Rhine-Westphalia	Lower Saxony	1	1	2021.176905	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_213	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.176905	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_213		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_214	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.086594	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_214	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.124558	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_214	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.124558	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_214	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.086594	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_214	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.186168	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_214	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.186168	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_214		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_215		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_216		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_217	Berlin	Berlin	0	0	2021.085114	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_217	Berlin	Berlin	1	0	2021.106199	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_217	Berlin	Berlin	2	1	2021.159167	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_217	Berlin	Baden-Wurttemberg	2	1	2021.159167	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_217	Berlin	Berlin	1	1	2021.106199	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_217	Berlin	Berlin	0	1	2021.085114	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_217		Berlin	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_218		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_219		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_220		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_221	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.077187	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_221	North Rhine-Westphalia	Berlin	0	1	2021.077187	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_221		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_222		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_223		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_224		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_225		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_226	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.836357	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_226	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.039292	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_226	North Rhine-Westphalia	Saxony	1	1	2021.039292	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_226	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.836357	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_226	North Rhine-Westphalia	Thuringia	1	1	2021.116985	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_226	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.116985	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_226		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_227	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.224350	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_227	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.224350	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_227		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_228		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_229		Saxony-Anhalt	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_230		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_231		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_233		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_234		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_235		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_236		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_237		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_238		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_239		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_242		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_243		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_246		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.129013	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.255432	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.255432	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.129013	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.189016	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.189016	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.238685	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2021.238685	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2021.250810	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2021.250810	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_247		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_249		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_250		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_252		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_253		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_254		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_255		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_256		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_257		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_258		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_259		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_260		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_261		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_262		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_265		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_266		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_267		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_268	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.044662	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_268	North Rhine-Westphalia	Bavaria	0	1	2021.044662	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_268		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_269	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.186569	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_269	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.186569	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_269		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_270		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_271		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_272		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_274		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_275		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_276	Hamburg	Hamburg	0	1	2021.203102	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_276	Hamburg	Hamburg	0	1	2021.203102	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_276		Hamburg	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_277		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_278		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_279		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_280		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_281		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_282		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_283		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_284		Mecklenburg-Western Pomerania	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_285		Mecklenburg-Western Pomerania	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_287		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_288		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_289	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.109642	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_289	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.109642	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_289		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_290		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_291		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_292		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_293		Mecklenburg-Western Pomerania	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_295		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_297		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_298	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.101196	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_298	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.101196	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_298		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_299		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_300		Brandenburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301	North Rhine-Westphalia	Bremen	0	1	2021.057243	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.057243	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301	North Rhine-Westphalia	Lower Saxony	1	1	2021.060498	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.060498	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301	North Rhine-Westphalia	Hesse	2	1	2021.076238	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2021.076238	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2021.198800	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301	North Rhine-Westphalia	Saarland	3	1	2021.198800	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_301		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_302		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_303		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_304		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_305		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_306		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_307		Brandenburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_308		Saxony-Anhalt	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_310	Saxony	Thuringia	0	1	2021.083717	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_310	Saxony	Saxony	0	1	2021.083717	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_310		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_311	Bavaria	Thuringia	0	1	2021.055435	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_311	Bavaria	Bavaria	0	0	2021.055435	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_311	Bavaria	Bavaria	1	1	2021.063202	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_311	Bavaria	Saxony-Anhalt	1	1	2021.063202	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_311		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_312		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_313		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_314		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_316		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_317		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_318	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.164047	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_318	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.164047	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_318	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.261160	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_318	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.261160	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_318		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_319		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_320		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_321		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_322		Mecklenburg-Western Pomerania	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_323		Mecklenburg-Western Pomerania	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_324		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_326		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_327		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_330	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.220108	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_330	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.220108	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_330		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_331	North Rhine-Westphalia	Saarland	0	1	2021.047302	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_331	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.047302	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_331		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_332		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_333	North Rhine-Westphalia	Berlin	0	1	2020.981758	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_333	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.981758	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_333		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_334	Hesse	Thuringia	0	1	2021.146004	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_334	Hesse	Hesse	0	1	2021.146004	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_334		Hesse	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_335		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_336	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.188469	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_336	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.188469	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_336		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_337		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_339		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_340		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_341		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_343		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_344		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_345		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_346	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.197441	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_346	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.197441	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_346		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_347		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_348		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_349	Bavaria	Bavaria	0	1	2021.036430	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_349	Bavaria	Saxony	0	0	2021.036430	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_349	Saxony	Saxony	1	1	2021.110979	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_349	Saxony	Saxony	1	0	2021.110979	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_349	Saxony	Saxony	2	1	2021.177843	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_349	Saxony	Saxony	2	1	2021.177843	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_349		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_350		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_352		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_353	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.213867	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_353	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2021.213867	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_353	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2021.272385	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_353	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.276202	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_353	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2021.276202	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_353	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.272385	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_353		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_354		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_355		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_356		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_357		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_358		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_360	Bavaria	Bavaria	0	1	2021.022354	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_360	Bavaria	Baden-Wurttemberg	0	1	2021.022354	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_360		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_361		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_362		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_363	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.967140	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_363	Schleswig-Holstein	Schleswig-Holstein	0	0	2020.967140	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_363	Schleswig-Holstein	Schleswig-Holstein	1	1	2020.970331	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_363	Schleswig-Holstein	Schleswig-Holstein	1	1	2020.970331	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_363		Schleswig-Holstein	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_365	Hamburg	Hamburg	0	0	2021.067924	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_365	Hamburg	Hamburg	1	1	2021.083090	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_365	Hamburg	Berlin	1	1	2021.083090	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_365	Hamburg	Hamburg	0	1	2021.067924	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_365		Hamburg	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_366		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_367		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_368	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.054108	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_368	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.054108	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_368		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_370	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.918106	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_370	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.918106	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_370		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_371		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_372		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_373		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_374		Saxony-Anhalt	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_375		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_376		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_377		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_378		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_379		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_380		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_381	Baden-Wurttemberg	Baden-Wurttemberg	0	1	2020.939011	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_381	Baden-Wurttemberg	Brandenburg	0	1	2020.939011	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_381		Baden-Wurttemberg	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_382		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_383		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384	Hamburg	Hamburg	0	1	2021.029007	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384	Hamburg	Hamburg	0	0	2021.029007	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384	Hamburg	Hamburg	1	1	2021.033435	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384	Hamburg	Hamburg	1	0	2021.033435	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384	Hamburg	Saxony-Anhalt	2	1	2021.119065	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384	Hamburg	Hamburg	2	0	2021.119065	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384	Hamburg	Hamburg	3	1	2021.169958	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384	Hamburg	Hamburg	3	1	2021.169958	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_384		Hamburg	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_385	Hamburg	Hamburg	0	1	2021.018143	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_385	Hamburg	Hamburg	0	0	2021.018143	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_385	Hamburg	Hamburg	1	1	2021.029897	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_385	Hamburg	Hamburg	1	1	2021.029897	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_385		Hamburg	-1	0	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_386		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_387		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_389		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_390		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_391		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_392		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_393		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_394		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_395		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_396		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_397		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_398		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.7-20210602_DTA_MCC_399		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_1	Hamburg	Hamburg	0	1	2020.591866	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_1	Hamburg	Saxony	0	0	2020.591866	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_1	Saxony	Hesse	1	1	2021.162186	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_1	Saxony	Saxony	1	1	2021.162186	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_1		Hamburg	-1	0	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_2		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_3		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	0	0	2020.655548	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	1	0	2020.673379	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	2	0	2020.675479	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	3	1	2020.697625	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	3	1	2020.697625	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	2	0	2020.675479	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	3	1	2020.682310	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	3	0	2020.682310	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	4	1	2020.688917	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Baden-Wurttemberg	4	0	2020.688917	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Baden-Wurttemberg	Baden-Wurttemberg	5	1	2020.881318	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Baden-Wurttemberg	Baden-Wurttemberg	5	1	2020.881318	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	1	0	2020.673379	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	2	1	2020.694250	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	2	0	2020.694250	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	3	0	2020.701204	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	4	1	2020.713463	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	4	1	2020.713463	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	3	1	2020.701204	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4	Saarland	Saarland	0	1	2020.655548	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_4		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	Saxony	0	1	2020.707771	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.707771	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.711684	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.777464	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	Baden-Wurttemberg	3	1	2020.786613	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	Schleswig-Holstein	3	1	2020.786613	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.777464	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2020.870259	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.872711	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	4	0	2020.872711	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	5	1	2020.880151	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	5	1	2020.880151	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2020.870259	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5	North Rhine-Westphalia	Bavaria	1	1	2020.711684	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_5		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.742569	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	Bavaria	1	1	2020.750145	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.750145	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.761919	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	Baden-Wurttemberg	2	1	2020.761919	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.742569	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.865654	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.865654	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.894380	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.894380	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_6		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_7	Bavaria	Bavaria	0	1	2020.805595	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_7	Bavaria	Bavaria	0	1	2020.805595	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_7		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_8		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_9		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_10		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_11		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.1.70-20210602_DTA_MCC_12		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_1		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_2	Bavaria	Bavaria	0	1	2021.025642	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_2	Bavaria	Baden-Wurttemberg	0	0	2021.025642	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_2	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2021.112176	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_2	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2021.112176	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_2		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_3		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_5		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_6		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_7		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_8	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.734322	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_8	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.734322	
+LIN-Germany-B.1.1.317-20210602_DTA_MCC_8		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_1		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_2	Bavaria	Bavaria	0	1	2020.787155	
+LIN-Germany-B.1.177-20210602_DTA_MCC_2	Bavaria	Bavaria	0	0	2020.787155	
+LIN-Germany-B.1.177-20210602_DTA_MCC_2	Bavaria	Bavaria	1	1	2020.814908	
+LIN-Germany-B.1.177-20210602_DTA_MCC_2	Bavaria	Bavaria	1	1	2020.814908	
+LIN-Germany-B.1.177-20210602_DTA_MCC_2		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_3		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Saxony-Anhalt	0	1	2020.702896	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Saxony-Anhalt	0	0	2020.702896	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Saxony-Anhalt	1	0	2020.704332	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Saxony-Anhalt	2	0	2020.713143	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Saxony-Anhalt	3	0	2020.724572	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Saxony-Anhalt	4	1	2020.739533	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Saxony-Anhalt	4	1	2020.739533	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	North Rhine-Westphalia	3	1	2020.724572	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Schleswig-Holstein	2	1	2020.713143	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4	Saxony-Anhalt	Berlin	1	1	2020.704332	
+LIN-Germany-B.1.177-20210602_DTA_MCC_4		Saxony-Anhalt	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_5		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_6		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_7	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.809235	
+LIN-Germany-B.1.177-20210602_DTA_MCC_7	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.809235	
+LIN-Germany-B.1.177-20210602_DTA_MCC_7		Schleswig-Holstein	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_8		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_9		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_10		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_11	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.788643	
+LIN-Germany-B.1.177-20210602_DTA_MCC_11	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.788643	
+LIN-Germany-B.1.177-20210602_DTA_MCC_11		Schleswig-Holstein	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_12		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_13		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_14	Bavaria	Bavaria	0	0	2020.750053	
+LIN-Germany-B.1.177-20210602_DTA_MCC_14	Bavaria	Bavaria	1	1	2020.758655	
+LIN-Germany-B.1.177-20210602_DTA_MCC_14	Bavaria	Baden-Wurttemberg	1	1	2020.758655	
+LIN-Germany-B.1.177-20210602_DTA_MCC_14	Bavaria	Hesse	0	1	2020.750053	
+LIN-Germany-B.1.177-20210602_DTA_MCC_14		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_15	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.754036	
+LIN-Germany-B.1.177-20210602_DTA_MCC_15	North Rhine-Westphalia	Schleswig-Holstein	0	1	2020.754036	
+LIN-Germany-B.1.177-20210602_DTA_MCC_15		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_16		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_17		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_18		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_19		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_20		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_21		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_22		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_23		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_24	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.861641	
+LIN-Germany-B.1.177-20210602_DTA_MCC_24	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.861641	
+LIN-Germany-B.1.177-20210602_DTA_MCC_24		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_25		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_26		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_27	Berlin	Saarland	0	1	2020.735764	
+LIN-Germany-B.1.177-20210602_DTA_MCC_27	Berlin	Berlin	0	1	2020.735764	
+LIN-Germany-B.1.177-20210602_DTA_MCC_27		Berlin	-1	0	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_28		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_29		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_30		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_31		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_32		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_33		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.177-20210602_DTA_MCC_34		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_1	Bavaria	Bavaria	0	0	2020.885208	
+LIN-Germany-B.1.160-20210602_DTA_MCC_1	Bavaria	Bavaria	1	1	2020.894654	
+LIN-Germany-B.1.160-20210602_DTA_MCC_1	Bavaria	Bavaria	1	1	2020.894654	
+LIN-Germany-B.1.160-20210602_DTA_MCC_1	Bavaria	Bavaria	0	1	2020.885208	
+LIN-Germany-B.1.160-20210602_DTA_MCC_1		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_2		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_3	Bavaria	Bavaria	0	1	2020.918022	
+LIN-Germany-B.1.160-20210602_DTA_MCC_3	Bavaria	Bavaria	0	1	2020.918022	
+LIN-Germany-B.1.160-20210602_DTA_MCC_3		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_4		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_5		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_6		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_7		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_8	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.735291	
+LIN-Germany-B.1.160-20210602_DTA_MCC_8	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.735291	
+LIN-Germany-B.1.160-20210602_DTA_MCC_8		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_11	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.900078	
+LIN-Germany-B.1.160-20210602_DTA_MCC_11	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.900078	
+LIN-Germany-B.1.160-20210602_DTA_MCC_11		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_12		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_13	Bavaria	Bavaria	0	1	2020.802559	
+LIN-Germany-B.1.160-20210602_DTA_MCC_13	Bavaria	Bavaria	0	0	2020.802559	
+LIN-Germany-B.1.160-20210602_DTA_MCC_13	Bavaria	Bavaria	1	1	2020.813867	
+LIN-Germany-B.1.160-20210602_DTA_MCC_13	Bavaria	Bavaria	1	1	2020.813867	
+LIN-Germany-B.1.160-20210602_DTA_MCC_13		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_14		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_15		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_16		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_17	Rhineland-Palatinate	Rhineland-Palatinate	0	1	2020.909729	
+LIN-Germany-B.1.160-20210602_DTA_MCC_17	Rhineland-Palatinate	Saarland	0	1	2020.909729	
+LIN-Germany-B.1.160-20210602_DTA_MCC_17		Rhineland-Palatinate	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_18	Saarland	Saarland	0	1	2020.757248	
+LIN-Germany-B.1.160-20210602_DTA_MCC_18	Saarland	Saarland	0	0	2020.757248	
+LIN-Germany-B.1.160-20210602_DTA_MCC_18	Saarland	Saarland	1	1	2020.778882	
+LIN-Germany-B.1.160-20210602_DTA_MCC_18	Saarland	Saarland	1	1	2020.778882	
+LIN-Germany-B.1.160-20210602_DTA_MCC_18		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_19		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_20	Saarland	Saarland	0	1	2020.715088	
+LIN-Germany-B.1.160-20210602_DTA_MCC_20	Saarland	Saarland	0	1	2020.715088	
+LIN-Germany-B.1.160-20210602_DTA_MCC_20		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_21		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_22		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_23		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_24	Bavaria	Bavaria	0	1	2020.794945	
+LIN-Germany-B.1.160-20210602_DTA_MCC_24	Bavaria	Bavaria	0	0	2020.794945	
+LIN-Germany-B.1.160-20210602_DTA_MCC_24	Bavaria	Bavaria	1	1	2020.881275	
+LIN-Germany-B.1.160-20210602_DTA_MCC_24	Bavaria	Bavaria	1	1	2020.881275	
+LIN-Germany-B.1.160-20210602_DTA_MCC_24		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_25		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_26		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_27		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_28	North Rhine-Westphalia	Schleswig-Holstein	0	1	2020.772774	
+LIN-Germany-B.1.160-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.772774	
+LIN-Germany-B.1.160-20210602_DTA_MCC_28		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_29	Bavaria	Bavaria	0	1	2020.864952	
+LIN-Germany-B.1.160-20210602_DTA_MCC_29	Bavaria	Bavaria	0	1	2020.864952	
+LIN-Germany-B.1.160-20210602_DTA_MCC_29		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_30		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_31		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_32		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_33		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_34		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_35		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_36		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	0	1	2020.719345	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	0	0	2020.719345	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	1	1	2020.776079	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	1	0	2020.776079	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	2	1	2020.781411	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	2	0	2020.781411	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	3	1	2020.831867	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	3	0	2020.831867	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	4	1	2020.904997	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37	Bavaria	Bavaria	4	1	2020.904997	
+LIN-Germany-B.1.160-20210602_DTA_MCC_37		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	0	0	2020.564491	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	1	0	2020.661008	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	2	0	2020.708659	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Hesse	3	1	2020.778116	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	3	1	2020.778116	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	2	0	2020.708659	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	3	0	2020.719166	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	4	1	2020.926822	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Baden-Wurttemberg	4	1	2020.926822	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	3	0	2020.719166	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	4	0	2020.728189	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony	5	1	2020.754276	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony-Anhalt	5	1	2020.754276	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	North Rhine-Westphalia	4	1	2020.728189	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Saxony-Anhalt	1	1	2020.661008	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38	Saxony	Baden-Wurttemberg	0	1	2020.564491	
+LIN-Germany-B.1.160-20210602_DTA_MCC_38		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_39		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_40	Baden-Wurttemberg	Baden-Wurttemberg	0	1	2021.009140	
+LIN-Germany-B.1.160-20210602_DTA_MCC_40	Baden-Wurttemberg	Baden-Wurttemberg	0	1	2021.009140	
+LIN-Germany-B.1.160-20210602_DTA_MCC_40		Baden-Wurttemberg	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_41		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_42		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_44	Saarland	Saarland	0	1	2020.889572	
+LIN-Germany-B.1.160-20210602_DTA_MCC_44	Saarland	Saarland	0	1	2020.889572	
+LIN-Germany-B.1.160-20210602_DTA_MCC_44		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_45	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.756630	
+LIN-Germany-B.1.160-20210602_DTA_MCC_45	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.756630	
+LIN-Germany-B.1.160-20210602_DTA_MCC_45	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.760044	
+LIN-Germany-B.1.160-20210602_DTA_MCC_45	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.760044	
+LIN-Germany-B.1.160-20210602_DTA_MCC_45	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.769732	
+LIN-Germany-B.1.160-20210602_DTA_MCC_45	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.769732	
+LIN-Germany-B.1.160-20210602_DTA_MCC_45		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_46		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_47	Saxony	Saxony	0	1	2020.910614	
+LIN-Germany-B.1.160-20210602_DTA_MCC_47	Saxony	Saarland	0	1	2020.910614	
+LIN-Germany-B.1.160-20210602_DTA_MCC_47		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_48		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_49		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_50		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_51	Bavaria	Bavaria	0	1	2020.823494	
+LIN-Germany-B.1.160-20210602_DTA_MCC_51	Bavaria	Bavaria	0	1	2020.823494	
+LIN-Germany-B.1.160-20210602_DTA_MCC_51		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_52		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_53		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_54		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_55		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_56		Bremen	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_57		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_58		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.160-20210602_DTA_MCC_59		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_1		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_2		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_3		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_4		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_5		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	0	1	2020.602287	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	0	0	2020.602287	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	1	0	2020.637573	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	2	0	2020.637824	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	3	1	2020.641053	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	3	0	2020.641053	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	4	0	2020.643395	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	5	1	2020.731615	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	5	1	2020.731615	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	4	0	2020.643395	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	5	1	2020.652841	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	5	0	2020.652841	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	6	1	2020.694202	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	6	0	2020.694202	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	7	1	2020.712270	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	North Rhine-Westphalia	7	0	2020.712270	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	8	0	2020.777195	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	North Rhine-Westphalia	Saarland	9	1	2020.786389	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	9	1	2020.786389	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	North Rhine-Westphalia	North Rhine-Westphalia	8	1	2020.777195	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	2	0	2020.637824	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	3	1	2020.644739	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	3	0	2020.644739	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	4	1	2020.646121	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	4	0	2020.646121	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	5	0	2020.650560	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	6	0	2020.656293	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	7	0	2020.662684	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	8	1	2020.679375	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	8	1	2020.679375	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	7	1	2020.662684	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	6	1	2020.656293	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Saarland	5	1	2020.650560	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6	Saarland	Thuringia	1	1	2020.637573	
+LIN-Germany-B.1.221-20210602_DTA_MCC_6		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	0	0	2020.589470	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	1	0	2020.605411	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	2	0	2020.627259	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	3	1	2020.736024	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	3	1	2020.736024	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Baden-Wurttemberg	2	1	2020.627259	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Schleswig-Holstein	1	1	2020.605411	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	0	0	2020.589470	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	1	0	2020.595833	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	2	0	2020.609735	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	3	0	2020.644942	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	4	1	2020.916840	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	4	1	2020.916840	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	3	1	2020.644942	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	2	0	2020.609735	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	3	0	2020.623906	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	4	1	2020.806495	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Baden-Wurttemberg	4	1	2020.806495	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	3	1	2020.623906	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Bavaria	1	0	2020.595833	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Baden-Wurttemberg	2	1	2020.667972	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Bavaria	Saarland	2	0	2020.667972	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Saarland	Saarland	3	1	2020.735889	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7	Saarland	Saarland	3	1	2020.735889	
+LIN-Germany-B.1.221-20210602_DTA_MCC_7		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_8		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_9	Bavaria	Bavaria	0	1	2020.759560	
+LIN-Germany-B.1.221-20210602_DTA_MCC_9	Bavaria	Bavaria	0	0	2020.759560	
+LIN-Germany-B.1.221-20210602_DTA_MCC_9	Bavaria	Bavaria	1	1	2020.782803	
+LIN-Germany-B.1.221-20210602_DTA_MCC_9	Bavaria	Bavaria	1	1	2020.782803	
+LIN-Germany-B.1.221-20210602_DTA_MCC_9		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_10	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.663727	
+LIN-Germany-B.1.221-20210602_DTA_MCC_10	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.670411	
+LIN-Germany-B.1.221-20210602_DTA_MCC_10	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.846845	
+LIN-Germany-B.1.221-20210602_DTA_MCC_10	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.846845	
+LIN-Germany-B.1.221-20210602_DTA_MCC_10	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.670411	
+LIN-Germany-B.1.221-20210602_DTA_MCC_10	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.663727	
+LIN-Germany-B.1.221-20210602_DTA_MCC_10		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_11		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_12		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_13	Saxony	Saxony	0	0	2020.744118	
+LIN-Germany-B.1.221-20210602_DTA_MCC_13	Saxony	Saxony	1	1	2021.001299	
+LIN-Germany-B.1.221-20210602_DTA_MCC_13	Saxony	Saxony	1	1	2021.001299	
+LIN-Germany-B.1.221-20210602_DTA_MCC_13	Saxony	Saxony	0	0	2020.744118	
+LIN-Germany-B.1.221-20210602_DTA_MCC_13	Saxony	Saxony	1	1	2020.751390	
+LIN-Germany-B.1.221-20210602_DTA_MCC_13	Saxony	Saarland	1	1	2020.751390	
+LIN-Germany-B.1.221-20210602_DTA_MCC_13		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.713837	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.718191	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.744918	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.744918	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2020.874186	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2020.874186	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.880154	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	4	0	2020.880154	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	5	1	2020.890754	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	5	1	2020.890754	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.718191	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.741379	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.741379	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.713837	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.736351	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.794236	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.794236	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.736351	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.747802	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2020.758990	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.801996	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.801996	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2020.758990	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.747802	
+LIN-Germany-B.1.221-20210602_DTA_MCC_14		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_15		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_16	Bavaria	Bavaria	0	1	2020.846497	
+LIN-Germany-B.1.221-20210602_DTA_MCC_16	Bavaria	Hamburg	0	1	2020.846497	
+LIN-Germany-B.1.221-20210602_DTA_MCC_16		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_17	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.627167	
+LIN-Germany-B.1.221-20210602_DTA_MCC_17	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.627167	
+LIN-Germany-B.1.221-20210602_DTA_MCC_17		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_18		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_19		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_20		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_21	Bavaria	Bavaria	0	1	2020.698120	
+LIN-Germany-B.1.221-20210602_DTA_MCC_21	Bavaria	Bavaria	0	1	2020.698120	
+LIN-Germany-B.1.221-20210602_DTA_MCC_21		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_22		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_23		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_24		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_25		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_26	Saxony-Anhalt	Saxony-Anhalt	0	1	2020.893227	
+LIN-Germany-B.1.221-20210602_DTA_MCC_26	Saxony-Anhalt	Saxony-Anhalt	0	1	2020.893227	
+LIN-Germany-B.1.221-20210602_DTA_MCC_26		Saxony-Anhalt	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_27		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.749161	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.824190	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.824190	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	Schleswig-Holstein	2	1	2020.840744	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.840744	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.749161	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.758426	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.764004	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.764004	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2020.777237	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.792235	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.792235	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2020.777237	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.758426	
+LIN-Germany-B.1.221-20210602_DTA_MCC_28		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_29	Saxony-Anhalt	Saxony-Anhalt	0	0	2020.789566	
+LIN-Germany-B.1.221-20210602_DTA_MCC_29	Saxony-Anhalt	Hamburg	1	1	2020.809921	
+LIN-Germany-B.1.221-20210602_DTA_MCC_29	Saxony-Anhalt	Saxony-Anhalt	1	1	2020.809921	
+LIN-Germany-B.1.221-20210602_DTA_MCC_29	Saxony-Anhalt	Saxony-Anhalt	0	1	2020.789566	
+LIN-Germany-B.1.221-20210602_DTA_MCC_29		Saxony-Anhalt	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_30		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_31		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_32		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_33		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_34	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.662407	
+LIN-Germany-B.1.221-20210602_DTA_MCC_34	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.662407	
+LIN-Germany-B.1.221-20210602_DTA_MCC_34		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.622902	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.626492	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.730148	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.730148	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2020.765638	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2020.765638	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.626492	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.630425	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2020.642105	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.663758	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	Thuringia	4	1	2020.663758	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	3	0	2020.642105	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	4	1	2020.672524	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	Saarland	4	1	2020.672524	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	2	0	2020.630425	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	3	1	2020.641132	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	Saxony-Anhalt	3	1	2020.641132	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.622902	
+LIN-Germany-B.1.221-20210602_DTA_MCC_35		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_36	Saarland	Schleswig-Holstein	0	1	2020.734093	
+LIN-Germany-B.1.221-20210602_DTA_MCC_36	Saarland	Saarland	0	1	2020.734093	
+LIN-Germany-B.1.221-20210602_DTA_MCC_36		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_37	Hesse	Lower Saxony	0	1	2020.742050	
+LIN-Germany-B.1.221-20210602_DTA_MCC_37	Hesse	Hesse	0	1	2020.742050	
+LIN-Germany-B.1.221-20210602_DTA_MCC_37		Hesse	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_38		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_39		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_40	Thuringia	Thuringia	0	1	2021.005157	
+LIN-Germany-B.1.221-20210602_DTA_MCC_40	Thuringia	Thuringia	0	1	2021.005157	
+LIN-Germany-B.1.221-20210602_DTA_MCC_40		Thuringia	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_41	North Rhine-Westphalia	Saxony	0	1	2020.801056	
+LIN-Germany-B.1.221-20210602_DTA_MCC_41	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.801056	
+LIN-Germany-B.1.221-20210602_DTA_MCC_41	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.028574	
+LIN-Germany-B.1.221-20210602_DTA_MCC_41	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2021.028574	
+LIN-Germany-B.1.221-20210602_DTA_MCC_41		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_42		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.221-20210602_DTA_MCC_43	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.804794	
+LIN-Germany-B.1.221-20210602_DTA_MCC_43	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.804794	
+LIN-Germany-B.1.221-20210602_DTA_MCC_43		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.36-20210602_DTA_MCC_1		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.36-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.835640	
+LIN-Germany-B.1.36-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.835640	
+LIN-Germany-B.1.36-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.844337	
+LIN-Germany-B.1.36-20210602_DTA_MCC_2	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.844337	
+LIN-Germany-B.1.36-20210602_DTA_MCC_2		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.36-20210602_DTA_MCC_3		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.36-20210602_DTA_MCC_4		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.36-20210602_DTA_MCC_6	Baden-Wurttemberg	Baden-Wurttemberg	0	1	2020.884804	
+LIN-Germany-B.1.36-20210602_DTA_MCC_6	Baden-Wurttemberg	Saxony-Anhalt	0	1	2020.884804	
+LIN-Germany-B.1.36-20210602_DTA_MCC_6		Baden-Wurttemberg	-1	0	1900.000000	
+LIN-Germany-B.1.36-20210602_DTA_MCC_7		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.36-20210602_DTA_MCC_8	Berlin	Berlin	0	1	2020.671288	
+LIN-Germany-B.1.36-20210602_DTA_MCC_8	Berlin	Berlin	0	1	2020.671288	
+LIN-Germany-B.1.36-20210602_DTA_MCC_8		Berlin	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_1		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_2	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.820076	
+LIN-Germany-B.1.258-20210602_DTA_MCC_2	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.820076	
+LIN-Germany-B.1.258-20210602_DTA_MCC_2		Schleswig-Holstein	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_3		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_4		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.675743	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.700452	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.700452	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.825843	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.825843	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.675743	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.755160	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.755160	
+LIN-Germany-B.1.258-20210602_DTA_MCC_5		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_7		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_8		Saxony-Anhalt	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_9		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_10		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_11		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_12	Bavaria	Bavaria	0	1	2020.859131	
+LIN-Germany-B.1.258-20210602_DTA_MCC_12	Bavaria	Bavaria	0	1	2020.859131	
+LIN-Germany-B.1.258-20210602_DTA_MCC_12		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_13	Baden-Wurttemberg	Baden-Wurttemberg	0	1	2020.860260	
+LIN-Germany-B.1.258-20210602_DTA_MCC_13	Baden-Wurttemberg	Baden-Wurttemberg	0	0	2020.860260	
+LIN-Germany-B.1.258-20210602_DTA_MCC_13	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2020.921600	
+LIN-Germany-B.1.258-20210602_DTA_MCC_13	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2020.921600	
+LIN-Germany-B.1.258-20210602_DTA_MCC_13		Baden-Wurttemberg	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_14		Hesse	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_15		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_16		Hamburg	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_17		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_18		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_19	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.728043	
+LIN-Germany-B.1.258-20210602_DTA_MCC_19	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.728043	
+LIN-Germany-B.1.258-20210602_DTA_MCC_19		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_20		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_22		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_23	Saarland	Saarland	0	1	2020.847107	
+LIN-Germany-B.1.258-20210602_DTA_MCC_23	Saarland	Saarland	0	1	2020.847107	
+LIN-Germany-B.1.258-20210602_DTA_MCC_23		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_24		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_25	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.806343	
+LIN-Germany-B.1.258-20210602_DTA_MCC_25	Schleswig-Holstein	Schleswig-Holstein	0	0	2020.806343	
+LIN-Germany-B.1.258-20210602_DTA_MCC_25	Schleswig-Holstein	Schleswig-Holstein	1	0	2020.809954	
+LIN-Germany-B.1.258-20210602_DTA_MCC_25	Schleswig-Holstein	Schleswig-Holstein	2	1	2020.902653	
+LIN-Germany-B.1.258-20210602_DTA_MCC_25	Schleswig-Holstein	Schleswig-Holstein	2	1	2020.902653	
+LIN-Germany-B.1.258-20210602_DTA_MCC_25	Schleswig-Holstein	Schleswig-Holstein	1	1	2020.809954	
+LIN-Germany-B.1.258-20210602_DTA_MCC_25		Schleswig-Holstein	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_26	Saarland	Saarland	0	1	2020.825500	
+LIN-Germany-B.1.258-20210602_DTA_MCC_26	Saarland	Saarland	0	0	2020.825500	
+LIN-Germany-B.1.258-20210602_DTA_MCC_26	Saarland	Saarland	1	1	2020.831811	
+LIN-Germany-B.1.258-20210602_DTA_MCC_26	Saarland	Saarland	1	1	2020.831811	
+LIN-Germany-B.1.258-20210602_DTA_MCC_26		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_27		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_28		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_29		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_30	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.811218	
+LIN-Germany-B.1.258-20210602_DTA_MCC_30	Schleswig-Holstein	Schleswig-Holstein	0	1	2020.811218	
+LIN-Germany-B.1.258-20210602_DTA_MCC_30		Schleswig-Holstein	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_31		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_32		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_33		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_34		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_35	Bavaria	Bavaria	0	0	2020.744080	
+LIN-Germany-B.1.258-20210602_DTA_MCC_35	Bavaria	Baden-Wurttemberg	1	1	2020.900000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_35	Bavaria	Saxony-Anhalt	1	1	2020.900000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_35	Bavaria	Bavaria	0	1	2020.744080	
+LIN-Germany-B.1.258-20210602_DTA_MCC_35		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_36		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_37		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_38		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_39		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_40	Saxony	Saxony	0	1	2020.936249	
+LIN-Germany-B.1.258-20210602_DTA_MCC_40	Saxony	Saxony	0	1	2020.936249	
+LIN-Germany-B.1.258-20210602_DTA_MCC_40		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_41	Bavaria	Bavaria	0	0	2020.727432	
+LIN-Germany-B.1.258-20210602_DTA_MCC_41	Bavaria	Bavaria	1	1	2020.787522	
+LIN-Germany-B.1.258-20210602_DTA_MCC_41	Bavaria	Bavaria	1	1	2020.787522	
+LIN-Germany-B.1.258-20210602_DTA_MCC_41	Bavaria	Bavaria	0	0	2020.727432	
+LIN-Germany-B.1.258-20210602_DTA_MCC_41	Bavaria	Bavaria	1	1	2020.767457	
+LIN-Germany-B.1.258-20210602_DTA_MCC_41	Bavaria	Bavaria	1	1	2020.767457	
+LIN-Germany-B.1.258-20210602_DTA_MCC_41		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_42		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_43		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_44	Bavaria	Bavaria	0	1	2020.743393	
+LIN-Germany-B.1.258-20210602_DTA_MCC_44	Bavaria	Bavaria	0	1	2020.743393	
+LIN-Germany-B.1.258-20210602_DTA_MCC_44		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_45	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.553436	
+LIN-Germany-B.1.258-20210602_DTA_MCC_45	North Rhine-Westphalia	Bavaria	1	1	2020.603764	
+LIN-Germany-B.1.258-20210602_DTA_MCC_45	North Rhine-Westphalia	Schleswig-Holstein	1	1	2020.603764	
+LIN-Germany-B.1.258-20210602_DTA_MCC_45	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.553436	
+LIN-Germany-B.1.258-20210602_DTA_MCC_45		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_48		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_49		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	0	0	2020.728302	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	1	0	2020.816254	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	2	0	2020.846681	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	3	1	2020.929310	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	3	0	2020.929310	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	4	1	2020.972046	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	4	1	2020.972046	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Lower Saxony	2	1	2020.846681	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	1	0	2020.816254	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	2	1	2020.932959	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	2	1	2020.932959	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	0	0	2020.728302	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	1	0	2020.807870	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Lower Saxony	2	1	2020.829943	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Thuringia	2	1	2020.829943	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50	Saxony-Anhalt	Saxony-Anhalt	1	1	2020.807870	
+LIN-Germany-B.1.258-20210602_DTA_MCC_50		Saxony-Anhalt	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_51		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_52		Thuringia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_53		Brandenburg	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_54		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_55		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_56		Berlin	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_57	Bavaria	Bavaria	0	1	2020.980103	
+LIN-Germany-B.1.258-20210602_DTA_MCC_57	Bavaria	Bavaria	0	1	2020.980103	
+LIN-Germany-B.1.258-20210602_DTA_MCC_57		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_58		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_59		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_60		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_61		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_62		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_63		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_64	Schleswig-Holstein	Berlin	0	1	2020.851646	
+LIN-Germany-B.1.258-20210602_DTA_MCC_64	Schleswig-Holstein	Schleswig-Holstein	0	0	2020.851646	
+LIN-Germany-B.1.258-20210602_DTA_MCC_64	Schleswig-Holstein	Schleswig-Holstein	1	1	2020.904034	
+LIN-Germany-B.1.258-20210602_DTA_MCC_64	Schleswig-Holstein	Schleswig-Holstein	1	1	2020.904034	
+LIN-Germany-B.1.258-20210602_DTA_MCC_64		Schleswig-Holstein	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_65	Saxony	Thuringia	0	1	2020.833382	
+LIN-Germany-B.1.258-20210602_DTA_MCC_65	Saxony	Saxony	0	1	2020.833382	
+LIN-Germany-B.1.258-20210602_DTA_MCC_65		Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_66	Bavaria	Bavaria	0	1	2020.749405	
+LIN-Germany-B.1.258-20210602_DTA_MCC_66	Bavaria	Bavaria	0	1	2020.749405	
+LIN-Germany-B.1.258-20210602_DTA_MCC_66		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_67		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_68		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_69		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_70		Schleswig-Holstein	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_71	Lower Saxony	Lower Saxony	0	1	2020.909309	
+LIN-Germany-B.1.258-20210602_DTA_MCC_71	Lower Saxony	Lower Saxony	0	0	2020.909309	
+LIN-Germany-B.1.258-20210602_DTA_MCC_71	Lower Saxony	Lower Saxony	1	0	2020.930545	
+LIN-Germany-B.1.258-20210602_DTA_MCC_71	Lower Saxony	Lower Saxony	2	1	2020.941920	
+LIN-Germany-B.1.258-20210602_DTA_MCC_71	Lower Saxony	Lower Saxony	2	1	2020.941920	
+LIN-Germany-B.1.258-20210602_DTA_MCC_71	Lower Saxony	Lower Saxony	1	1	2020.930545	
+LIN-Germany-B.1.258-20210602_DTA_MCC_71		Lower Saxony	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_72	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.066528	
+LIN-Germany-B.1.258-20210602_DTA_MCC_72	North Rhine-Westphalia	Lower Saxony	0	1	2021.066528	
+LIN-Germany-B.1.258-20210602_DTA_MCC_72		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_73		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_75	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.063568	
+LIN-Germany-B.1.258-20210602_DTA_MCC_75	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.063568	
+LIN-Germany-B.1.258-20210602_DTA_MCC_75		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_76		Saxony	-1	1	1900.000000	
+LIN-Germany-B.1.258-20210602_DTA_MCC_77	Saarland	Baden-Wurttemberg	0	0	2020.727928	
+LIN-Germany-B.1.258-20210602_DTA_MCC_77	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2020.987001	
+LIN-Germany-B.1.258-20210602_DTA_MCC_77	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2020.987001	
+LIN-Germany-B.1.258-20210602_DTA_MCC_77	Saarland	Saarland	0	0	2020.727928	
+LIN-Germany-B.1.258-20210602_DTA_MCC_77	Saarland	Saarland	1	1	2020.793988	
+LIN-Germany-B.1.258-20210602_DTA_MCC_77	Saarland	Saarland	1	1	2020.793988	
+LIN-Germany-B.1.258-20210602_DTA_MCC_77		Saarland	-1	0	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_4	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.115158	
+LIN-Germany-B.1.351-20210602_DTA_MCC_4	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.115158	
+LIN-Germany-B.1.351-20210602_DTA_MCC_4		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_5		Saarland	-1	1	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_6		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_7		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_8		Bavaria	-1	1	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_9		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_10	Bavaria	Bavaria	0	1	2021.146561	
+LIN-Germany-B.1.351-20210602_DTA_MCC_10	Bavaria	Bavaria	0	0	2021.146561	
+LIN-Germany-B.1.351-20210602_DTA_MCC_10	Bavaria	Bavaria	1	1	2021.235654	
+LIN-Germany-B.1.351-20210602_DTA_MCC_10	Bavaria	Bavaria	1	1	2021.235654	
+LIN-Germany-B.1.351-20210602_DTA_MCC_10		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_11		Rhineland-Palatinate	-1	1	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_12	Bavaria	Bavaria	0	1	2021.043724	
+LIN-Germany-B.1.351-20210602_DTA_MCC_12	Bavaria	Bavaria	0	1	2021.043724	
+LIN-Germany-B.1.351-20210602_DTA_MCC_12		Bavaria	-1	0	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_13		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-B.1.351-20210602_DTA_MCC_14	Baden-Wurttemberg	Baden-Wurttemberg	0	1	2020.980652	
+LIN-Germany-B.1.351-20210602_DTA_MCC_14	Baden-Wurttemberg	Baden-Wurttemberg	0	0	2020.980652	
+LIN-Germany-B.1.351-20210602_DTA_MCC_14	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2020.999110	
+LIN-Germany-B.1.351-20210602_DTA_MCC_14	Baden-Wurttemberg	Baden-Wurttemberg	1	1	2020.999110	
+LIN-Germany-B.1.351-20210602_DTA_MCC_14		Baden-Wurttemberg	-1	0	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_1		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_2		Bavaria	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_3	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.380928	
+LIN-Germany-C-20210602_DTA_MCC_3	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2021.380928	
+LIN-Germany-C-20210602_DTA_MCC_3		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_4		Baden-Wurttemberg	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_5		Berlin	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_6		Hesse	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_7		Hesse	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_8		Lower Saxony	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_9		North Rhine-Westphalia	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_10		Bavaria	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_11	North Rhine-Westphalia	North Rhine-Westphalia	0	0	2020.876144	
+LIN-Germany-C-20210602_DTA_MCC_11	North Rhine-Westphalia	North Rhine-Westphalia	1	0	2020.879194	
+LIN-Germany-C-20210602_DTA_MCC_11	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.883936	
+LIN-Germany-C-20210602_DTA_MCC_11	North Rhine-Westphalia	North Rhine-Westphalia	2	1	2020.883936	
+LIN-Germany-C-20210602_DTA_MCC_11	North Rhine-Westphalia	North Rhine-Westphalia	1	1	2020.879194	
+LIN-Germany-C-20210602_DTA_MCC_11	North Rhine-Westphalia	North Rhine-Westphalia	0	1	2020.876144	
+LIN-Germany-C-20210602_DTA_MCC_11		North Rhine-Westphalia	-1	0	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_12		Bavaria	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_13	Bavaria	Saxony	0	1	2020.901955	
+LIN-Germany-C-20210602_DTA_MCC_13	Bavaria	Bavaria	0	1	2020.901955	
+LIN-Germany-C-20210602_DTA_MCC_13		Bavaria	-1	0	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_14		Saarland	-1	1	1900.000000	
+LIN-Germany-C-20210602_DTA_MCC_15		Bavaria	-1	1	1900.000000	

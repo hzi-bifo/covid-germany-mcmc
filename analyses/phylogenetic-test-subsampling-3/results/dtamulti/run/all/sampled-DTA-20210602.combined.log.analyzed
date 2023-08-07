@@ -1,0 +1,270 @@
+
+     LogAnalyser v1.10.5 Prerelease #23570d1, 2002-2019
+                    MCMC Output analysis
+                             by
+           Andrew Rambaut and Alexei J. Drummond
+
+             Institute of Evolutionary Biology
+                  University of Edinburgh
+                     a.rambaut@ed.ac.uk
+
+               Department of Computer Science
+                   University of Auckland
+                  alexei@cs.auckland.ac.nz
+
+
+Analysing log file: results/dtamulti/run/all/sampled-DTA-20210602.combined.log
+burnIn   <= 1000050,   maxState  = 10000500
+statistic	mean	stdErr	median	hpdLower	hpdUpper	ESS	50hpdLower	50hpdUpper
+joint	-8242.6486	520.9742	-8234.9577	-8274.9857	-8196.6378	4940.8188	-8245.8504	-8220.3152	
+prior	-854.7808	537.121	-849.4658	-907.3595	-791.1593	10115.2103	-869.3318	-830.9717	
+likelihood	-7387.8677	41.7149	-7385.9513	-7437.0138	-7333.5834	386.1617	-7404.5897	-7369.5892	
+Current Tree	0	0	0	0	0	�	0	0	
+location.clock.rate	8.5528E-3	7.405E-3	8.494E-3	7.8127E-3	9.1508E-3	16560.681	8.2551E-3	8.6959E-3	
+location.meanRate	8.5528E-3	7.405E-3	8.494E-3	7.8127E-3	9.1508E-3	16560.681	8.2551E-3	8.6959E-3	
+location.rates.Baden-Wurttemberg.Bavaria	3.6642	1.0146	3.5872	1.7882	5.6423	3070.2685	2.7707	4.0929	
+location.rates.Baden-Wurttemberg.Berlin	0.4263	0.3265	0.3663	3.5257E-5	1.0426	828.682	3.5257E-5	0.3663	
+location.rates.Baden-Wurttemberg.Brandenburg	0.1296	0.2935	0.0896	4.8559E-4	0.2784	196.4163	0.021	0.1051	
+location.rates.Baden-Wurttemberg.Bremen	0.2672	0.2803	0.2275	3.5135E-3	0.5363	255.6862	0.0987	0.2797	
+location.rates.Baden-Wurttemberg.Hamburg	0.2178	0.1937	0.1633	2.2571E-4	0.6085	770.5489	2.0182E-4	0.1633	
+location.rates.Baden-Wurttemberg.Hesse	0.2482	0.2312	0.1948	1.8945E-4	0.6325	391.8882	4.2197E-4	0.1949	
+location.rates.Baden-Wurttemberg.Lower Saxony	0.1595	0.1332	0.1269	6.3043E-5	0.4136	768.6056	7.5373E-5	0.1269	
+location.rates.Baden-Wurttemberg.Mecklenburg-Western Pomerania	0.0893	0.1097	0.0624	3.2133E-4	0.241	274.8328	5.6313E-4	0.0626	
+location.rates.Baden-Wurttemberg.North Rhine-Westphalia	21.3418	2.5793	21.3083	17.0772	25.9489	563.7867	19.7839	22.7713	
+location.rates.Baden-Wurttemberg.Rhineland-Palatinate	0.3225	0.2541	0.2726	1.2008E-3	0.735	354.6449	0.0531	0.3004	
+location.rates.Baden-Wurttemberg.Saarland	0.2497	0.2037	0.1986	1.7405E-3	0.6526	770.3963	0.0112	0.206	
+location.rates.Baden-Wurttemberg.Saxony	0.5696	0.3329	0.5121	0.0461	1.2196	1422.8551	0.2578	0.6439	
+location.rates.Baden-Wurttemberg.Saxony-Anhalt	0.1626	0.2162	0.1143	3.4528E-4	0.4307	252.2448	3.4528E-4	0.1143	
+location.rates.Baden-Wurttemberg.Schleswig-Holstein	0.1168	0.2024	0.0743	1.3E-4	0.3219	196.0827	1.6608E-4	0.0743	
+location.rates.Baden-Wurttemberg.Thuringia	0.2068	0.1925	0.1684	2.2941E-3	0.4803	292.165	0.0421	0.19	
+location.rates.Bavaria.Berlin	1.3771	0.6388	1.2822	0.2765	2.6184	3039.2652	0.7627	1.5253	
+location.rates.Bavaria.Brandenburg	0.1645	0.1661	0.1123	7.2913E-5	0.5011	716.1332	7.2913E-5	0.1123	
+location.rates.Bavaria.Bremen	0.2629	0.2781	0.1831	1.9074E-4	0.7683	374.6685	1.9074E-4	0.1831	
+location.rates.Bavaria.Hamburg	0.5978	0.4087	0.5165	2.5986E-3	1.3761	1456.9043	0.18	0.6541	
+location.rates.Bavaria.Hesse	0.3492	0.3406	0.2495	1.7419E-4	1.0328	665.6726	1.7419E-4	0.2495	
+location.rates.Bavaria.Lower Saxony	0.7803	0.4436	0.7025	0.0868	1.6731	1251.6535	0.3419	0.8586	
+location.rates.Bavaria.Mecklenburg-Western Pomerania	0.5496	0.3224	0.4943	0.0123	1.1744	998.0021	0.2189	0.5985	
+location.rates.Bavaria.North Rhine-Westphalia	5.11	1.7906	4.9821	1.8914	8.9207	2752.0353	3.5876	5.8987	
+location.rates.Bavaria.Rhineland-Palatinate	1.4285	0.6122	1.3528	0.4156	2.6474	1785.4766	0.8197	1.5823	
+location.rates.Bavaria.Saarland	0.746	0.4779	0.6528	0.0302	1.6389	1169.5378	0.2955	0.823	
+location.rates.Bavaria.Saxony	2.4679	0.8834	2.4022	0.8104	4.1774	2974.533	1.6254	2.7851	
+location.rates.Bavaria.Saxony-Anhalt	0.8846	0.4823	0.812	0.0585	1.8185	1994.7789	0.3633	0.9539	
+location.rates.Bavaria.Schleswig-Holstein	1.3921	0.5702	1.3242	0.4428	2.5431	3453.9314	0.8607	1.5796	
+location.rates.Bavaria.Thuringia	1.9634	0.6735	1.8903	0.741	3.2264	1103.9197	1.3758	2.1958	
+location.rates.Berlin.Brandenburg	2.5198	0.8228	2.4369	1.034	4.1119	3691.0894	1.7725	2.8261	
+location.rates.Berlin.Bremen	0.6747	0.4373	0.5861	0.0254	1.5162	690.5498	0.2256	0.6977	
+location.rates.Berlin.Hamburg	0.6163	0.4536	0.5245	4.0065E-3	1.4741	1039.8978	0.0635	0.5762	
+location.rates.Berlin.Hesse	0.415	0.3745	0.3098	1.7067E-4	1.1404	941.1605	0.0111	0.3184	
+location.rates.Berlin.Lower Saxony	0.5153	0.3647	0.4387	0.0141	1.2313	1422.2672	0.1344	0.5339	
+location.rates.Berlin.Mecklenburg-Western Pomerania	0.7971	0.4487	0.717	0.0926	1.6768	2641.9553	0.3471	0.8643	
+location.rates.Berlin.North Rhine-Westphalia	1.7649	0.818	1.6331	0.3989	3.4073	2560.3146	0.946	1.9502	
+location.rates.Berlin.Rhineland-Palatinate	0.5059	0.3759	0.4098	0.0282	1.2344	1284.6183	0.1089	0.4594	
+location.rates.Berlin.Saarland	1.7518	0.7258	1.6491	0.4443	3.1111	1309.5617	1.0592	1.9187	
+location.rates.Berlin.Saxony	2.9362	0.9567	2.835	1.1372	4.8027	4543.5574	2.0662	3.2707	
+location.rates.Berlin.Saxony-Anhalt	1.2065	0.5586	1.1365	0.2249	2.3164	2898.4214	0.6263	1.3175	
+location.rates.Berlin.Schleswig-Holstein	0.984	0.504	0.8952	0.1689	1.9706	1949.8335	0.4679	1.0758	
+location.rates.Berlin.Thuringia	0.9253	0.4902	0.8461	0.1388	1.8877	2386.7036	0.404	1.0011	
+location.rates.Brandenburg.Bremen	0.2863	0.3089	0.1881	1.1628E-3	0.8865	549.1479	1.999E-3	0.1884	
+location.rates.Brandenburg.Hamburg	0.3202	0.3508	0.2144	6.7927E-4	0.9468	412.7058	7.1309E-4	0.2145	
+location.rates.Brandenburg.Hesse	0.3104	0.3059	0.2187	8.7875E-5	0.9157	652.0788	8.7875E-5	0.2187	
+location.rates.Brandenburg.Lower Saxony	0.2942	0.3	0.1998	4.4203E-4	0.8839	703.9702	1.2157E-3	0.2	
+location.rates.Brandenburg.Mecklenburg-Western Pomerania	0.3149	0.3117	0.2187	4.1872E-5	0.9365	884.2328	4.1872E-5	0.2187	
+location.rates.Brandenburg.North Rhine-Westphalia	0.3401	0.3426	0.2279	3.4178E-4	1.0272	940.5169	1.9396E-3	0.2288	
+location.rates.Brandenburg.Rhineland-Palatinate	0.2773	0.3005	0.182	2.4228E-4	0.8778	480.7156	5.1015E-4	0.1821	
+location.rates.Brandenburg.Saarland	0.3165	0.312	0.2231	4.088E-4	0.9372	885.6327	8.2026E-4	0.2233	
+location.rates.Brandenburg.Saxony	0.5632	0.4631	0.465	0.0154	1.3406	573.6089	0.0855	0.511	
+location.rates.Brandenburg.Saxony-Anhalt	0.2903	0.3007	0.1996	8.5174E-4	0.879	643.0607	2.6377E-3	0.2014	
+location.rates.Brandenburg.Schleswig-Holstein	0.3054	0.3245	0.2042	1.3645E-5	0.9259	596.7902	1.3645E-5	0.2042	
+location.rates.Brandenburg.Thuringia	0.3138	0.3003	0.2212	1.0782E-3	0.9176	917.7297	6.6225E-3	0.2263	
+location.rates.Bremen.Hamburg	0.4082	0.4618	0.2774	7.754E-5	1.1863	366.1961	9.2856E-5	0.2774	
+location.rates.Bremen.Hesse	0.5802	0.4325	0.4739	0.0122	1.4308	1250.4338	0.0835	0.5158	
+location.rates.Bremen.Lower Saxony	0.2957	0.2909	0.2107	7.0733E-4	0.8647	925.4885	5.0754E-3	0.2137	
+location.rates.Bremen.Mecklenburg-Western Pomerania	0.323	0.4523	0.2145	2.4042E-4	0.9067	255.4115	1.3141E-3	0.2153	
+location.rates.Bremen.North Rhine-Westphalia	0.3483	0.3425	0.2472	7.8703E-4	1.024	886.0764	1.3258E-3	0.2476	
+location.rates.Bremen.Rhineland-Palatinate	0.3003	0.2792	0.2204	6.9557E-4	0.8559	996.1405	7.6289E-4	0.2204	
+location.rates.Bremen.Saarland	0.3187	0.4192	0.2028	5.1781E-4	0.9576	287.9292	1.0903E-3	0.2033	
+location.rates.Bremen.Saxony	0.2872	0.3195	0.1858	2.4178E-5	0.9016	459.9365	2.4178E-5	0.1858	
+location.rates.Bremen.Saxony-Anhalt	0.2785	0.2901	0.186	3.8074E-4	0.8628	731.8309	3.1863E-4	0.186	
+location.rates.Bremen.Schleswig-Holstein	0.2979	0.3013	0.2061	5.6702E-5	0.9084	843.8812	5.6702E-5	0.2061	
+location.rates.Bremen.Thuringia	0.294	0.3147	0.1951	1.477E-3	0.9047	389.4687	5.251E-3	0.1977	
+location.rates.Hamburg.Hesse	0.3003	0.3216	0.2009	1.2404E-3	0.8838	429.5984	2.9248E-3	0.2019	
+location.rates.Hamburg.Lower Saxony	0.2646	0.2711	0.1832	6.367E-4	0.79	765.1112	1.0794E-3	0.1836	
+location.rates.Hamburg.Mecklenburg-Western Pomerania	0.2456	0.2517	0.1644	3.3259E-4	0.7662	852.4711	1.7698E-4	0.1644	
+location.rates.Hamburg.North Rhine-Westphalia	0.8488	0.6119	0.7078	0.0193	2.0504	1265.9579	0.1362	0.7776	
+location.rates.Hamburg.Rhineland-Palatinate	0.8326	0.5272	0.7257	0.0666	1.8198	831.9334	0.2583	0.8309	
+location.rates.Hamburg.Saarland	0.4611	0.379	0.3661	1.0437E-3	1.1896	946.6404	0.0129	0.374	
+location.rates.Hamburg.Saxony	1.0238	0.5488	0.9342	0.1302	2.1155	1905.4671	0.5024	1.1632	
+location.rates.Hamburg.Saxony-Anhalt	0.5372	0.4068	0.4463	0.0197	1.2857	720.1068	0.0955	0.4912	
+location.rates.Hamburg.Schleswig-Holstein	0.8952	0.5257	0.7968	0.0771	1.9197	2429.8916	0.3482	0.9561	
+location.rates.Hamburg.Thuringia	0.319	0.4054	0.2015	1.215E-4	0.9671	313.5667	1.215E-4	0.2015	
+location.rates.Hesse.Lower Saxony	0.4946	0.3774	0.404	2.2885E-3	1.2326	1288.6466	0.1046	0.4839	
+location.rates.Hesse.Mecklenburg-Western Pomerania	0.2572	0.2765	0.1716	2.9353E-4	0.8075	424.5569	3.7164E-4	0.1716	
+location.rates.Hesse.North Rhine-Westphalia	1.7558	0.8631	1.6195	0.3129	3.4512	1524.2936	0.8728	1.916	
+location.rates.Hesse.Rhineland-Palatinate	0.2813	0.2833	0.1956	5.6584E-5	0.8293	597.8393	5.6584E-5	0.1956	
+location.rates.Hesse.Saarland	0.5276	0.4018	0.4347	0.0102	1.3156	1094.7162	0.0716	0.4768	
+location.rates.Hesse.Saxony	0.3564	0.3678	0.2429	8.8615E-4	1.0919	930.3068	4.7722E-3	0.2442	
+location.rates.Hesse.Saxony-Anhalt	0.2723	0.294	0.1839	4.9606E-4	0.8156	433.8195	6.2507E-4	0.1839	
+location.rates.Hesse.Schleswig-Holstein	0.7876	0.4776	0.6972	0.0783	1.7372	1053.0697	0.2682	0.8011	
+location.rates.Hesse.Thuringia	0.3576	0.3667	0.2525	4.6398E-4	1.0371	637.4803	4.6398E-4	0.2525	
+location.rates.Lower Saxony.Mecklenburg-Western Pomerania	0.4154	0.4282	0.2965	2.481E-4	1.1665	405.7317	2.481E-4	0.2965	
+location.rates.Lower Saxony.North Rhine-Westphalia	1.2577	0.799	1.1023	9.7725E-3	2.7432	737.4823	0.4445	1.3343	
+location.rates.Lower Saxony.Rhineland-Palatinate	0.3657	0.4571	0.2389	8.9675E-4	1.0835	337.1245	1.098E-3	0.239	
+location.rates.Lower Saxony.Saarland	0.3101	0.3202	0.2036	2.1673E-4	0.9486	646.6327	1.1449E-3	0.2044	
+location.rates.Lower Saxony.Saxony	0.3914	0.3789	0.2785	6.3108E-4	1.1591	921.9847	1.4369E-3	0.279	
+location.rates.Lower Saxony.Saxony-Anhalt	0.5522	0.491	0.4176	9.0578E-4	1.5321	938.8298	0.0162	0.4317	
+location.rates.Lower Saxony.Schleswig-Holstein	0.3648	0.3491	0.267	1.186E-5	1.0674	915.3166	2.5987E-5	0.2671	
+location.rates.Lower Saxony.Thuringia	0.3256	0.3233	0.2294	1.967E-4	0.9666	637.866	7.4185E-4	0.2299	
+location.rates.Mecklenburg-Western Pomerania.North Rhine-Westphalia	0.3552	0.3585	0.2507	3.0406E-4	1.0579	754.0695	4.7128E-4	0.2507	
+location.rates.Mecklenburg-Western Pomerania.Rhineland-Palatinate	0.3505	0.3728	0.2415	9.5881E-4	1.0336	647.6132	1.0642E-3	0.2416	
+location.rates.Mecklenburg-Western Pomerania.Saarland	0.3004	0.3148	0.2009	2.321E-4	0.9552	448.7003	2.321E-4	0.2009	
+location.rates.Mecklenburg-Western Pomerania.Saxony	0.3036	0.3079	0.2125	1.5009E-4	0.9083	639.3324	1.5009E-4	0.2125	
+location.rates.Mecklenburg-Western Pomerania.Saxony-Anhalt	0.3543	0.3341	0.2497	1.6412E-3	1.0295	778.3951	6.4517E-3	0.2519	
+location.rates.Mecklenburg-Western Pomerania.Schleswig-Holstein	0.2839	0.2948	0.1891	7.5762E-4	0.8913	852.3017	1.5608E-3	0.1899	
+location.rates.Mecklenburg-Western Pomerania.Thuringia	0.3049	0.2983	0.2126	2.7838E-5	0.8936	1015.3698	2.7838E-5	0.2126	
+location.rates.North Rhine-Westphalia.Rhineland-Palatinate	3.7979	0.7833	3.7422	2.3708	5.3851	3437.5845	3.1405	4.1711	
+location.rates.North Rhine-Westphalia.Saarland	4.6657	0.9117	4.6104	2.9313	6.4322	3230.5733	3.9396	5.1341	
+location.rates.North Rhine-Westphalia.Saxony	8.6323	1.3241	8.5515	6.138	11.2786	3530.3978	7.5772	9.3185	
+location.rates.North Rhine-Westphalia.Saxony-Anhalt	3.8233	0.7528	3.7805	2.4388	5.3287	4334.4323	3.213	4.2288	
+location.rates.North Rhine-Westphalia.Schleswig-Holstein	3.7255	0.7634	3.6728	2.306	5.2552	4485.5474	3.0738	4.0794	
+location.rates.North Rhine-Westphalia.Thuringia	2.8814	0.6547	2.8302	1.68	4.1681	5246.0635	2.3511	3.2178	
+location.rates.Rhineland-Palatinate.Saarland	0.4017	0.3603	0.3044	9.4526E-4	1.1033	972.0247	9.4526E-4	0.3044	
+location.rates.Rhineland-Palatinate.Saxony	0.3545	0.3438	0.2539	4.579E-4	1.0511	1040.1439	4.579E-4	0.2539	
+location.rates.Rhineland-Palatinate.Saxony-Anhalt	0.3065	0.3021	0.2118	6.0096E-4	0.9347	800.1803	5.6601E-3	0.2143	
+location.rates.Rhineland-Palatinate.Schleswig-Holstein	0.2586	0.2711	0.1719	1.0552E-3	0.788	822.5469	1.4787E-3	0.1721	
+location.rates.Rhineland-Palatinate.Thuringia	0.5146	0.3748	0.4279	1.1017E-3	1.2506	977.3331	0.1096	0.5051	
+location.rates.Saarland.Saxony	0.2757	0.2962	0.1835	5.4529E-6	0.855	490.2808	5.4529E-6	0.1835	
+location.rates.Saarland.Saxony-Anhalt	0.2879	0.2813	0.2011	8.6919E-4	0.8495	1024.8702	3.2104E-3	0.203	
+location.rates.Saarland.Schleswig-Holstein	0.2831	0.3009	0.182	5.8994E-4	0.9006	672.6196	8.3445E-4	0.182	
+location.rates.Saarland.Thuringia	0.2838	0.2649	0.2076	5.1115E-4	0.8178	1074.4225	9.6026E-4	0.2079	
+location.rates.Saxony.Saxony-Anhalt	0.924	0.5422	0.8217	0.0763	1.9997	2169.1105	0.3687	1.0083	
+location.rates.Saxony.Schleswig-Holstein	0.9859	0.5256	0.8978	0.1177	2.028	2643.9189	0.4711	1.0967	
+location.rates.Saxony.Thuringia	0.4529	0.4155	0.3365	1.3604E-3	1.2769	692.4809	0.011	0.3421	
+location.rates.Saxony-Anhalt.Schleswig-Holstein	0.3088	0.4374	0.1922	1.1069E-3	0.9164	293.4693	1.7528E-3	0.1925	
+location.rates.Saxony-Anhalt.Thuringia	0.8458	0.4928	0.7477	0.072	1.7746	2486.0952	0.272	0.8336	
+location.rates.Schleswig-Holstein.Thuringia	0.2817	0.311	0.1856	1.4097E-3	0.8683	470.5163	1.4097E-3	0.1857	
+location.rates.Bavaria.Baden-Wurttemberg	3.8659	1.2134	3.7283	1.7459	6.178	962.2968	2.7868	4.2628	
+location.rates.Berlin.Baden-Wurttemberg	1.4997	0.76	1.3884	0.2586	2.928	1048.6942	0.7862	1.6721	
+location.rates.Brandenburg.Baden-Wurttemberg	0.475	0.4417	0.3524	3.6749E-4	1.3407	1005.494	3.6749E-4	0.3524	
+location.rates.Bremen.Baden-Wurttemberg	0.4306	0.4178	0.309	6.5944E-4	1.2348	674.124	9.1034E-4	0.309	
+location.rates.Hamburg.Baden-Wurttemberg	0.3073	0.3266	0.1979	4.1077E-4	0.9752	772.0341	4.1077E-4	0.1979	
+location.rates.Hesse.Baden-Wurttemberg	1.2368	0.6556	1.1201	0.1688	2.4795	1484.5552	0.6264	1.3807	
+location.rates.Lower Saxony.Baden-Wurttemberg	0.9526	0.5866	0.8465	0.0455	2.0651	1947.4091	0.3679	1.0465	
+location.rates.Mecklenburg-Western Pomerania.Baden-Wurttemberg	0.3454	0.346	0.2367	1.2447E-3	1.0676	626.5582	4.1753E-3	0.2392	
+location.rates.North Rhine-Westphalia.Baden-Wurttemberg	12.1677	1.8228	12.0742	8.6557	15.7527	3812.0459	10.6912	13.0771	
+location.rates.Rhineland-Palatinate.Baden-Wurttemberg	1.4799	0.7516	1.3788	0.2293	2.9687	2305.8341	0.8405	1.7987	
+location.rates.Saarland.Baden-Wurttemberg	0.8928	0.5474	0.7857	0.1003	1.9521	1071.4731	0.3707	0.9528	
+location.rates.Saxony.Baden-Wurttemberg	3.0497	1.0372	2.9367	1.2416	5.1363	6428.2014	2.1477	3.4891	
+location.rates.Saxony-Anhalt.Baden-Wurttemberg	1.1059	0.6694	0.9878	0.0427	2.3933	1115.3953	0.4042	1.2033	
+location.rates.Schleswig-Holstein.Baden-Wurttemberg	1.3577	0.7203	1.2417	0.2314	2.729	1096.6143	0.681	1.5004	
+location.rates.Thuringia.Baden-Wurttemberg	0.3343	0.3599	0.2283	9.9859E-5	1.0002	409.9282	9.9859E-5	0.2283	
+location.rates.Berlin.Bavaria	1.0153	0.6052	0.9046	0.0707	2.2106	1922.1261	0.3843	1.0885	
+location.rates.Brandenburg.Bavaria	0.3233	0.346	0.2238	2.2904E-4	0.962	448.8689	2.2904E-4	0.2238	
+location.rates.Bremen.Bavaria	0.3496	0.4152	0.2297	4.4842E-5	1.0165	311.3436	4.4842E-5	0.2297	
+location.rates.Hamburg.Bavaria	0.9461	0.5791	0.8279	0.063	2.0748	1611.4692	0.3181	0.9871	
+location.rates.Hesse.Bavaria	1.0868	0.6441	0.979	1.0032E-3	2.2932	1224.118	0.5064	1.2605	
+location.rates.Lower Saxony.Bavaria	0.4104	0.4113	0.2894	1.5728E-4	1.2315	584.2862	1.5728E-4	0.2894	
+location.rates.Mecklenburg-Western Pomerania.Bavaria	0.3185	0.3197	0.221	1.005E-3	0.953	944.8843	1.5575E-3	0.2214	
+location.rates.North Rhine-Westphalia.Bavaria	11.8329	1.7441	11.7313	8.6047	15.395	2232.0295	10.5218	12.7977	
+location.rates.Rhineland-Palatinate.Bavaria	0.8174	0.5738	0.7031	1.9652E-4	1.9198	1338.4542	0.198	0.8437	
+location.rates.Saarland.Bavaria	0.396	0.3826	0.2779	1.4151E-3	1.1611	601.2805	4.451E-3	0.2805	
+location.rates.Saxony.Bavaria	3.2604	1.2766	3.0972	0.9691	5.7026	1384.192	1.9963	3.6045	
+location.rates.Saxony-Anhalt.Bavaria	0.758	0.5234	0.643	0.013	1.7699	1438.6397	0.16	0.7166	
+location.rates.Schleswig-Holstein.Bavaria	1.6799	0.8366	1.5504	0.2784	3.2814	1076.2094	0.8612	1.8529	
+location.rates.Thuringia.Bavaria	0.9034	0.5877	0.7937	0.0166	2.0326	1901.4849	0.2409	0.9195	
+location.rates.Brandenburg.Berlin	0.5022	0.5254	0.3504	8.5881E-4	1.4457	417.504	1.056E-3	0.3506	
+location.rates.Bremen.Berlin	0.3307	0.3326	0.228	3.6176E-4	0.983	793.517	4.6125E-4	0.2281	
+location.rates.Hamburg.Berlin	0.3306	0.364	0.2197	1.5507E-4	1.0139	365.4172	1.5507E-4	0.2197	
+location.rates.Hesse.Berlin	0.3343	0.3055	0.2495	2.8804E-4	0.9402	1260.7448	0.0193	0.2618	
+location.rates.Lower Saxony.Berlin	0.3432	0.342	0.2388	3.3283E-4	1.022	676.79	3.3283E-4	0.2388	
+location.rates.Mecklenburg-Western Pomerania.Berlin	0.291	0.2998	0.1928	2.3651E-4	0.8927	737.4188	5.2467E-4	0.193	
+location.rates.North Rhine-Westphalia.Berlin	4.9645	0.9984	4.8905	3.1306	7.0061	3211.7599	4.236	5.5548	
+location.rates.Rhineland-Palatinate.Berlin	0.3405	0.3459	0.2333	2.5154E-5	1.0186	845.1145	2.5154E-5	0.2333	
+location.rates.Saarland.Berlin	0.3647	0.5014	0.2395	6.9824E-6	1.0286	257.787	6.9824E-6	0.2395	
+location.rates.Saxony.Berlin	1.1208	0.6887	1.0023	0.0303	2.4529	1843.8751	0.3899	1.2157	
+location.rates.Saxony-Anhalt.Berlin	0.3526	0.3623	0.2423	6.0079E-4	1.0432	546.7944	3.8213E-3	0.2445	
+location.rates.Schleswig-Holstein.Berlin	0.4299	0.4256	0.304	1.0588E-3	1.2717	670.2293	1.7888E-3	0.3043	
+location.rates.Thuringia.Berlin	0.3717	0.4126	0.2491	2.3502E-4	1.1032	473.2352	2.8697E-4	0.2491	
+location.rates.Bremen.Brandenburg	0.301	0.3025	0.2097	1.1254E-3	0.9122	616.4187	2.7452E-3	0.2109	
+location.rates.Hamburg.Brandenburg	0.2492	0.2803	0.1694	1.5342E-5	0.7356	408.3657	1.5342E-5	0.1694	
+location.rates.Hesse.Brandenburg	0.2408	0.2533	0.1663	1.6359E-4	0.7406	504.7288	1.6359E-4	0.1663	
+location.rates.Lower Saxony.Brandenburg	0.3118	0.3144	0.2177	3.4469E-4	0.9566	881.0066	1.2352E-3	0.2183	
+location.rates.Mecklenburg-Western Pomerania.Brandenburg	0.2912	0.3157	0.1929	1.2554E-4	0.8904	425.3774	1.2554E-4	0.1929	
+location.rates.North Rhine-Westphalia.Brandenburg	0.7482	0.3145	0.7068	0.2139	1.3625	3304.2125	0.475	0.872	
+location.rates.Rhineland-Palatinate.Brandenburg	0.2431	0.2519	0.1652	2.2923E-4	0.7355	662.6013	2.6765E-4	0.1653	
+location.rates.Saarland.Brandenburg	0.2507	0.277	0.167	7.5909E-4	0.7558	443.2435	1.1998E-3	0.167	
+location.rates.Saxony.Brandenburg	0.4712	0.3403	0.3919	8.6011E-3	1.1414	1652.9373	0.0845	0.4392	
+location.rates.Saxony-Anhalt.Brandenburg	0.5468	0.3837	0.4606	0.012	1.3006	1649.0301	0.1279	0.5331	
+location.rates.Schleswig-Holstein.Brandenburg	0.2923	0.3107	0.1993	1.1927E-3	0.8789	652.2442	2.6439E-3	0.2003	
+location.rates.Thuringia.Brandenburg	0.2664	0.2861	0.1834	1.2543E-4	0.7764	398.886	1.2543E-4	0.1834	
+location.rates.Hamburg.Bremen	0.7409	0.5378	0.6444	0.0211	1.6448	615.4515	0.2184	0.7767	
+location.rates.Hesse.Bremen	0.2651	0.2712	0.1847	3.0488E-4	0.8209	801.3222	3.319E-3	0.1871	
+location.rates.Lower Saxony.Bremen	0.8648	0.5296	0.7706	0.0509	1.9031	2064.0749	0.3183	0.9304	
+location.rates.Mecklenburg-Western Pomerania.Bremen	0.3189	0.3199	0.2141	2.229E-4	0.9689	691.1564	2.229E-4	0.2141	
+location.rates.North Rhine-Westphalia.Bremen	1.4266	0.4584	1.3804	0.6049	2.3378	4525.9964	1.0358	1.6207	
+location.rates.Rhineland-Palatinate.Bremen	0.2853	0.2785	0.1991	1.2625E-3	0.8508	987.9201	7.1976E-3	0.2008	
+location.rates.Saarland.Bremen	0.2542	0.2665	0.1685	3.8406E-4	0.7744	681.3804	7.4652E-4	0.1686	
+location.rates.Saxony.Bremen	0.3905	0.3554	0.2893	7.8454E-4	1.0891	911.5949	4.2597E-3	0.2907	
+location.rates.Saxony-Anhalt.Bremen	0.2853	0.2815	0.1979	1.5859E-4	0.8473	866.2579	3.2093E-4	0.1981	
+location.rates.Schleswig-Holstein.Bremen	0.2989	0.3031	0.2051	6.1497E-4	0.8984	514.4044	6.9895E-4	0.2052	
+location.rates.Thuringia.Bremen	0.2877	0.283	0.2038	1.6135E-4	0.8492	867.963	8.6219E-4	0.2045	
+location.rates.Hesse.Hamburg	0.582	0.4199	0.4822	0.0202	1.4109	1195.9635	0.1328	0.5589	
+location.rates.Lower Saxony.Hamburg	0.5493	0.4667	0.4401	3.5107E-4	1.4496	581.1861	3.5107E-4	0.4401	
+location.rates.Mecklenburg-Western Pomerania.Hamburg	0.3164	0.3118	0.2174	2.4424E-4	0.9427	925.5269	2.4424E-4	0.2174	
+location.rates.North Rhine-Westphalia.Hamburg	4.166	0.8434	4.1261	2.5025	5.7647	3213.9908	3.5037	4.6152	
+location.rates.Rhineland-Palatinate.Hamburg	0.4136	0.4185	0.2864	5.0937E-5	1.2354	765.4863	5.0937E-5	0.2864	
+location.rates.Saarland.Hamburg	0.4058	0.3881	0.2965	7.3805E-4	1.161	656.9896	1.197E-3	0.2968	
+location.rates.Saxony.Hamburg	0.348	0.3491	0.2379	1.0168E-4	1.0408	553.967	1.3197E-4	0.2379	
+location.rates.Saxony-Anhalt.Hamburg	0.2983	0.3532	0.1941	4.561E-4	0.8876	378.213	5.5267E-4	0.1942	
+location.rates.Schleswig-Holstein.Hamburg	1.5984	0.8075	1.4663	0.2904	3.2014	1906.7177	0.7858	1.761	
+location.rates.Thuringia.Hamburg	0.4826	0.403	0.3815	3.7302E-5	1.2664	1200.912	0.0207	0.4003	
+location.rates.Lower Saxony.Hesse	0.3404	0.337	0.234	6.8132E-6	1.0064	905.6976	6.8132E-6	0.234	
+location.rates.Mecklenburg-Western Pomerania.Hesse	0.3365	0.3204	0.2363	4.2637E-4	0.9801	1004.5326	8.2232E-3	0.2431	
+location.rates.North Rhine-Westphalia.Hesse	2.9494	0.7092	2.9026	1.5851	4.3322	3074.2329	2.3953	3.327	
+location.rates.Rhineland-Palatinate.Hesse	0.3107	0.3709	0.1986	5.0166E-4	0.9443	385.337	5.0166E-4	0.1986	
+location.rates.Saarland.Hesse	0.3124	0.308	0.2172	1.5045E-4	0.9307	734.7118	1.5045E-4	0.2172	
+location.rates.Saxony.Hesse	3.1083	1.0164	2.9974	1.2799	5.1232	5521.1204	2.187	3.4814	
+location.rates.Saxony-Anhalt.Hesse	0.4325	0.3976	0.3225	9.1863E-4	1.2255	754.5132	1.2654E-3	0.3227	
+location.rates.Schleswig-Holstein.Hesse	0.4751	0.4419	0.3473	4.0159E-4	1.3741	975.7447	2.734E-3	0.3489	
+location.rates.Thuringia.Hesse	0.8892	0.5676	0.7859	0.0263	1.9931	1325.7854	0.2656	0.9249	
+location.rates.Mecklenburg-Western Pomerania.Lower Saxony	0.3029	0.314	0.2023	1.7173E-5	0.9288	784.1421	1.7173E-5	0.2023	
+location.rates.North Rhine-Westphalia.Lower Saxony	3.8651	0.7768	3.808	2.3666	5.3587	4095.8137	3.0882	4.1232	
+location.rates.Rhineland-Palatinate.Lower Saxony	0.2911	0.2928	0.2025	3.6712E-4	0.8608	543.6154	8.1963E-4	0.2027	
+location.rates.Saarland.Lower Saxony	0.5239	0.3887	0.4395	2.3983E-3	1.2765	1057.4903	0.1043	0.5018	
+location.rates.Saxony.Lower Saxony	0.4486	0.4081	0.3327	7.2614E-4	1.2513	828.3378	5.8299E-4	0.3327	
+location.rates.Saxony-Anhalt.Lower Saxony	1.0123	0.6386	0.905	0.0374	2.259	1536.2886	0.2777	1.0568	
+location.rates.Schleswig-Holstein.Lower Saxony	0.7818	0.5673	0.6719	3.056E-3	1.7308	593.5305	0.2331	0.8149	
+location.rates.Thuringia.Lower Saxony	0.5788	0.4153	0.4876	0.0151	1.4028	1816.2834	0.1241	0.5483	
+location.rates.North Rhine-Westphalia.Mecklenburg-Western Pomerania	0.5528	0.2568	0.5142	0.1228	1.0585	3726.5831	0.3113	0.6239	
+location.rates.Rhineland-Palatinate.Mecklenburg-Western Pomerania	0.4815	0.397	0.3823	6.8677E-4	1.2655	866.7916	2.8686E-3	0.3838	
+location.rates.Saarland.Mecklenburg-Western Pomerania	0.2542	0.2538	0.1747	2.896E-4	0.7614	529.5623	2.896E-4	0.1747	
+location.rates.Saxony.Mecklenburg-Western Pomerania	0.5485	0.3762	0.4655	5.2494E-3	1.2766	1495.5001	0.1664	0.5724	
+location.rates.Saxony-Anhalt.Mecklenburg-Western Pomerania	0.5333	0.4385	0.4279	1.1548E-3	1.3903	813.34	2.0564E-3	0.4288	
+location.rates.Schleswig-Holstein.Mecklenburg-Western Pomerania	0.2778	0.2835	0.1888	3.7564E-5	0.8469	696.6051	5.1911E-5	0.1888	
+location.rates.Thuringia.Mecklenburg-Western Pomerania	0.2558	0.271	0.168	2.7971E-4	0.8124	661.9695	4.3288E-4	0.1681	
+location.rates.Rhineland-Palatinate.North Rhine-Westphalia	0.949	0.7286	0.7739	3.2293E-3	2.3569	750.3168	0.2004	0.9181	
+location.rates.Saarland.North Rhine-Westphalia	3.3055	1.2289	3.1742	1.069	5.6868	1989.8789	2.2227	3.797	
+location.rates.Saxony.North Rhine-Westphalia	2.7731	1.2054	2.616	0.7047	5.0359	1161.1297	1.6714	3.1533	
+location.rates.Saxony-Anhalt.North Rhine-Westphalia	0.7622	0.5833	0.6304	5.6785E-4	1.9236	1091.6144	0.0456	0.666	
+location.rates.Schleswig-Holstein.North Rhine-Westphalia	0.7726	0.5754	0.6432	5.3127E-3	1.8831	1379.5398	0.1377	0.7593	
+location.rates.Thuringia.North Rhine-Westphalia	1.1504	0.8526	0.9706	0.0189	2.6836	546.0779	0.1452	1.0601	
+location.rates.Saarland.Rhineland-Palatinate	0.4132	0.4465	0.3095	1.3111E-4	1.1025	288.5967	1.3111E-4	0.3095	
+location.rates.Saxony.Rhineland-Palatinate	1.4615	0.7055	1.3657	0.2796	2.8547	1550.0202	0.7539	1.6224	
+location.rates.Saxony-Anhalt.Rhineland-Palatinate	0.2784	0.2782	0.1931	5.8994E-4	0.8375	904.6494	1.4856E-3	0.1938	
+location.rates.Schleswig-Holstein.Rhineland-Palatinate	0.3067	0.3073	0.2097	2.5443E-4	0.9358	576.5367	7.3242E-4	0.2099	
+location.rates.Thuringia.Rhineland-Palatinate	0.5506	0.4187	0.4443	7.8379E-4	1.3757	1175.5565	0.0957	0.4967	
+location.rates.Saxony.Saarland	1.0317	0.5578	0.9316	0.1544	2.1098	2614.0655	0.4096	1.0658	
+location.rates.Saxony-Anhalt.Saarland	0.2862	0.2959	0.1921	1.3446E-4	0.8811	812.1473	3.0283E-4	0.1922	
+location.rates.Schleswig-Holstein.Saarland	0.5944	0.4652	0.4888	2.8525E-3	1.47	922.1573	0.0731	0.5409	
+location.rates.Thuringia.Saarland	0.2758	0.2873	0.1878	4.1406E-5	0.8439	699.5311	6.5736E-5	0.1878	
+location.rates.Saxony-Anhalt.Saxony	1.0274	0.5713	0.9251	0.1424	2.1366	2159.2132	0.4333	1.0972	
+location.rates.Schleswig-Holstein.Saxony	0.4187	0.3896	0.3045	4.1757E-4	1.1997	929.2496	0.0118	0.3133	
+location.rates.Thuringia.Saxony	1.8348	0.7813	1.7323	0.4282	3.3044	2862.6372	1.1619	2.1435	
+location.rates.Schleswig-Holstein.Saxony-Anhalt	0.3028	0.298	0.2136	7.6373E-4	0.8911	626.0934	7.9363E-4	0.2136	
+location.rates.Thuringia.Saxony-Anhalt	0.3081	0.2975	0.2189	3.1233E-4	0.9073	1090.9311	9.4815E-4	0.2193	
+location.rates.Thuringia.Schleswig-Holstein	0.2748	0.2959	0.1783	5.7714E-4	0.8581	500.0468	1.0016E-3	0.1786	
+location.branchRates	0	0	0	0	0	�	0	0	
+c_location.count[1]	0	0	0	0	0	�	0	0	
+c_import.count[1]	0	0	0	0	0	�	0	0	
+c_export.count[1]	0	0	0	0	0	�	0	0	
+c_allTransitions[1]	1910.7585	531.3537	1909	1821	2000	16667.5919	1872	1931	
+

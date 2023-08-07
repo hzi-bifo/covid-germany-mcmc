@@ -1,0 +1,366 @@
+---
+title: "COVID-19 Germany introductions"
+subtitle: "Extract Germany transmission lineages (BEAST + DTA MCC trees)"
+author: "BRICS"
+date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
+layout: page
+editor_options: 
+  chunk_output_type: inline
+params: 
+  inputpath  :  "../../../data/phylogenetic/"
+  cluster_f  : DTA_MCC
+  minsize    : 100
+  uklimit    : "2020-01-23"
+  cutoffs    : 0.975, 0.95, 0.75, 0.5, 0.25, 0.05, 0.025
+  metadata   : "../results/gisaid-20210602-metadata-sampled-unsampled.tsv"
+  intreepath : "../results/beast/run/all/"
+  outputpath : "../results/beast/run/lin-samp/"
+  state      : "Germany"
+  
+---
+
+```{r rsetup, include=FALSE}
+    
+  # intreepath : "../results/beast/run/tree-rich/"
+  # outputpath : "../results/beast/run/lin-rich/"
+
+
+
+  # metadata   : "../results/gisaid-20210602-metadata-sampled-unsampled.tsv"
+  # metadata   : "../results/gisaid-20210602-metadata-sampled.tsv"
+  # metadata   : "../../../../data/data/gisaid-20210602-metadata.tsv"
+  # intreepath : "../results/beast/run/tree-rich/"
+  # intreepath : "../results/beast/run/all/"
+
+    library(tictoc)
+    library(dplyr)
+    library(lubridate)
+    library(ape)
+    library(tidytree)
+    library(parallel)
+    library(beastio)
+    source("treeutils.R")
+    source("clusterutils.R")
+
+    inputpath  <- params$inputpath
+    outputpath <- params$outputpath
+    intreepath <- params$intreepath
+    cluster_f  <- params$cluster_f
+    minsize    <- params$minsize
+    state      <- params$state
+  
+    uklimit    <- decimal_date(as.Date(params$uklimit))  
+    cutoffs    <- as.numeric(unlist(strsplit(params$cutoffs, split=',')))
+    #cutoffs <- c(cutoffs, NA)
+    #DEBUG
+    #cutoffs <- c(NA) # !!!!!!!
+
+    figpath    <- paste0(outputpath, "figures/")
+    cachepath  <- paste0(outputpath, "cacheMCC/")
+    dir.create(outputpath, recursive = TRUE, showWarnings = FALSE)
+    dir.create(figpath, recursive = TRUE, showWarnings = FALSE)
+
+    knitr::opts_chunk$set(tidy=FALSE, cache=FALSE, cache.path = cachepath, 
+                          dev="png", dpi=150, fig.path=figpath, 
+                          message=FALSE, error=FALSE, warning=TRUE, echo=FALSE)
+
+    #metadata              <- read.csv(paste0(inputpath, "metadata.csv"))
+    metadata <- read.table(params$metadata, sep="\t", head=TRUE, na.strings=c("NA", ""), fill=TRUE, stringsAsFactors=FALSE, quote="|")
+    #metadata <- read.table(params$metadata, sep=",", head=TRUE, na.strings=c("NA", ""), fill=TRUE, stringsAsFactors=FALSE, quote="|")
+    #metadata$sample_date  <- ymd(metadata$sample_date)
+    #metadata$sample_date  <- ymd(metadata$Submission.date)
+    #metadata$sample_date  <- ymd(metadata$collection_date)
+    metadata$sample_date  <- ymd(metadata$Collection.date)
+    #metadata$sample_date  <- ymd(metadata$date_corrected)
+    metadata$decimal_date <- decimal_date(metadata$sample_date)    
+    #metadata$taxon_label  <- metadata$sequence_name
+    metadata$taxon_label  <- metadata$Accession.ID
+    #metadata$taxon_label  <- metadata$accession_id
+    #metadata$taxon_label <- gsub("/", "_", as.character(metadata$sequence_name))
+    metadata <- metadata[, -which(colnames(metadata) == "AA.Substitutions")]
+    
+    treefiles <- list.files(path = intreepath, pattern = "*.tree$")
+    
+    # #DEBUG
+    # treefiles <- c("A-DTA-20210602.MCC.tree", "B.1.221-DTA-20210602.MCC.tree")
+    
+    # Calculating limit for each lineage    
+    # suppressWarnings(
+    #   lineageFirstCase <- metadata %>% select(Pango.lineage, decimal_date) %>% dplyr::filter(!is.na(Pango.lineage)) %>% group_by(Pango.lineage) %>% summarise(min.date = min(decimal_date, na.rm = TRUE)) %>% arrange(Pango.lineage) 
+    # )
+    # lineageLimit = sapply(treefiles, function (x) { y <- lineageFirstCase$min.date[lineageFirstCase$Pango.lineage == gsub("-.*", "", x)]; if (length(y) == 0) return(uklimit); return(y);} )
+    lineageLimit = sapply(treefiles, function (x) { if (length(grep("^B.1.1.7", x)) > 0) return( decimal_date(as.Date("2020-12-20"))); return(uklimit); } )
+    
+    
+    
+
+    
+```
+
+
+# Summary
+
+This notebook extracts TMRCAs and other summary statistics of the `r cluster_f` clusters from MCC trees from BEAST.
+
+## Input
+- Metadata table in `.csv` format. Should contain a `sequence_name` and `sample_date` column.
+- Set of MCC trees for with DTA reconstructions save in `r intreepath`.
+
+## Steps
+- Extract a table of nodes and heights for each lineage in each tree. 
+- Extract TMRCAs and sizes for each lineage in each tree.
+- Extract subtrees for all lineages with at least `r minsize` tips.
+- Extract lineage assignment for all Germany sequences in each tree replicate.
+- Extract the lineage assignment for a threshold of 0.5
+
+## Output
+- `.csv` files with nodes and heights for each lineage in each tree.
+- `.csv` file with lineage assignments for all Germany sequences for each threshold. 
+- `.csv` file with lineage assignments for all Germany sequences for threshold of 0.5. 
+- Newick trees for all lineages with at least `r minsize` tips. 
+
+
+
+# Extract clusters
+
+```{r extractClustersMCC, results="asis", warning=FALSE, message=FALSE, cache=TRUE, eval=TRUE}
+       
+      
+    #tic(cat(paste0("\n\nTotal time for ", replicates, " trees: ", replicates)))
+    clusterStats <- c()   
+    clusterStatsSingles <- c()   
+    firstRound = TRUE
+    for (treefile in treefiles) {
+        tic(cat(paste0("\n\n**Loading ", treefile, ":** ")))
+        tree       <- read.beast(paste0(intreepath, treefile))
+        treemeta   <- droplevels(metadata[match(tree@phylo$tip.label, metadata$taxon_label), ])
+        mostrecent <- max(treemeta$decimal_date, na.rm = TRUE)
+        write.table(treemeta, paste0(outputpath, gsub("\\.tree", "", treefile), ".metadata.tsv"), row.names=FALSE, quote=FALSE, sep="\t")
+        toc()
+    
+        treeLimit <- lineageLimit[treefile]
+
+        cat(paste0("\n\n - Most recent tip: ", format.Date(round_date(date_decimal(mostrecent), unit = "day")), " (", mostrecent, ")\n"))
+        cat(paste0(" - Maximum Germany node height: ", mostrecent - treeLimit, "\n\n"))
+
+        tic(cat("\n - Extract clusters from trees: "))
+        treepath <- paste0(outputpath, gsub("\\.tree", "", treefile), "/")
+        dir.create(treepath, recursive = TRUE, showWarnings = FALSE)
+        
+        treeClusterStats <- c()
+        treeClusterStatsSingles <- c()
+        for (cutoff in cutoffs) {
+          
+            # Extract clusters
+            #prefix    <- paste0(strsplit(treefile, "-")[[1]][1], "_",cluster_f,"_")
+	          #prefix    <- paste0(gsub("gisaid-", paste0("LIN-", state, "-"), gsub(".tree", "", treefile)), "_",cluster_f,"_")
+	          prefix    <- paste0("LIN-", state, "-", gsub("-DTA-", "-", gsub(".MCC.tree$", "", treefile)), "_", cluster_f, "_")
+            # #treetable <- getClusterTable(tree, "Germany", prefix = prefix, cutoff = cutoff, maxheight = (mostrecent - uklimit), debug = FALSE) 
+            # treetable <- getClusterTable(tree, state, prefix = prefix, cutoff = cutoff, maxheight = (mostrecent - uklimit), debug = FALSE) 
+            treetable <- getClusterTable(tree, state, prefix = prefix, cutoff = cutoff, maxheight = (mostrecent - treeLimit), debug = FALSE) 
+            write.csv(treetable, paste0(treepath, gsub("\\.tree", "_", treefile), cutoff, ".treetable.csv"), quote=FALSE, row.names=TRUE)
+            
+            
+            
+            # Should remove singletons?
+            clusterSamples      <- treetable[treetable$types == "sample", ]
+            #clusterSamples      <- treetable[treetable$types == "sample" & !grepl("^inode[0-9]+$", treetable$taxon), ]
+            clusterMeta         <- droplevels(metadata[match(clusterSamples$taxon, metadata$taxon_label), ])
+            clusterMeta$cluster <- clusterSamples$cluster[match(clusterMeta$taxon_label, clusterSamples$taxon)]
+            
+            # Save summary file
+            clusterSizes   <- table(clusterMeta$cluster)
+            clusterNames   <- names(clusterSizes)[clusterSizes > 1]
+            clusterSingles <- names(clusterSizes)[clusterSizes == 1]
+            
+            mostrecent <- max(clusterMeta$decimal_date)
+            
+            tmrcas      <- sapply(clusterNames, function(x) mostrecent - max(treetable$heights[treetable$cluster == x], na.rm = TRUE))
+            tmrcaNodes  <- sapply(clusterNames, function(x) which(treetable$heights == max(treetable$heights[treetable$cluster == x], na.rm=TRUE) ))
+            heightRange <- t(sapply(seq_along(tmrcas), function(x) {
+                                    result <- mostrecent - c(unlist(tree@data$height_0.95_HPD[tree@data$node == tmrcaNodes[x]]), 
+                                                             unlist(tree@data$height_range[tree@data$node == tmrcaNodes[x]]))
+                                    if (length(result) < 4) {
+                                        return( rep(tmrcas[x], 4))
+                                    } else {
+                                        return(result)
+                                    }
+                                  }))
+            if (length(tmrcas) == 0) {
+		    heightRange <- data.frame(matrix(ncol=4, nrow=0))
+	    }
+            colnames(heightRange) <- c("tmrca_HPD_upper", "tmrca_HPD_lower", "tmrca_range_upper", "tmrca_range_lower")
+
+            oldest  <- sapply(clusterNames, function(x) min(clusterMeta$decimal_date[clusterMeta$cluster == x], na.rm = TRUE))
+            newest  <- sapply(clusterNames, function(x) max(clusterMeta$decimal_date[clusterMeta$cluster == x], na.rm = TRUE))
+            seqs    <- sapply(clusterNames, function(x) sum(clusterMeta$cluster == x, na.rm = TRUE))
+
+            
+            if (length(tmrcas) == 0) {
+              result <- data.frame(matrix(ncol=8, nrow=0))
+              colnames(result) <- c("cluster", "seqs", "tmrca", "tmrca_calendar", 
+                                 "oldest", "mostrecent", "treefile", "cutoff")
+            } else {
+              result <- data.frame(cluster=clusterNames, seqs=seqs, tmrca=tmrcas, tmrca_calendar=round_date(date_decimal(tmrcas), unit="day"), 
+                                 oldest=oldest, mostrecent=newest, treefile=treefile, cutoff=cutoff)
+            }
+            result <- cbind(result, heightRange)
+            treeClusterStats <- rbind(treeClusterStats, result)
+            
+            
+            if (length(clusterSingles) == 0) {
+              resultSingles <- data.frame(matrix(ncol=5, nrow=0))
+              colnames(resultSingles) <- c("cluster", "seqs", "tmrca", "treefile", "cutoff")
+            } else {
+              resultSingles <- data.frame(cluster=clusterSingles, 
+                                        seqs=sapply(clusterSingles, function(x) sum(clusterMeta$cluster == x, na.rm = TRUE)), 
+                                        tmrca=sapply(clusterSingles, function(x) mostrecent - max(treetable$heights[treetable$cluster == x], na.rm = TRUE)),
+                                        treefile=treefile, cutoff=cutoff)
+            }
+            treeClusterStatsSingles <- rbind(treeClusterStatsSingles, resultSingles)
+            
+            # Extract and save trees for all clusters with >minsize tips
+            clusterpath <- paste0(treepath, gsub("\\.tree", "_", treefile), cutoff, "/")
+            dir.create(clusterpath, recursive = TRUE, showWarnings = FALSE)
+            
+            bigClusters <- names(seqs)[which(seqs >= minsize)]
+            for (cluster in bigClusters) {
+                clusterIds  <- as.character(na.omit(clusterSamples$taxon[clusterSamples$cluster == cluster,drop=TRUE]))
+                clusterMRCA <- getMRCA(tree@phylo, clusterIds)
+                
+                #clustertable <- treetable[treetable$cluster == cluster & !is.na(treetable$cluster), ]
+                #clustertable <- clustertable[order(clustertable$heights, decreasing=TRUE), ]
+                #clusterMRCA2 <- as.numeric(rownames(clustertable)[1])
+
+                clusterTree  <- treeio::tree_subset(tree, clusterMRCA, levels_back=0)    
+                #write.tree(clusterTree@phylo, paste0(clusterpath, cluster, ".tree"))
+                write.beast(clusterTree, paste0(clusterpath, cluster, ".tree"))
+            }
+        }
+        
+        write.csv(treeClusterStats, paste0(outputpath, gsub("\\.tree", "_", treefile), cluster_f,".csv"), row.names=FALSE, quote=FALSE)
+        # clusterStats <- rbind(clusterStats, treeClusterStats)
+        # 
+        # clusterStatsSingles <- rbind(clusterStatsSingles, treeClusterStatsSingles)
+        
+        if (firstRound) {
+          write.table(treeClusterStats, paste0(outputpath, "clusters_",cluster_f,".tsv"), row.names=FALSE, quote=FALSE, sep="\t")
+        } else {
+          write.table(treeClusterStats, paste0(outputpath, "clusters_",cluster_f,".tsv"), row.names=FALSE, quote=FALSE, sep="\t", col.names=FALSE, append = TRUE)
+        }
+
+	      if (firstRound) {
+      	   write.table(treeClusterStatsSingles, paste0(outputpath, "clusters_",cluster_f,"_singles.tsv"), row.names=FALSE, quote=FALSE, sep="\t")
+      	} else {
+      	   write.table(treeClusterStatsSingles, paste0(outputpath, "clusters_",cluster_f,"_singles.tsv"), row.names=FALSE, quote=FALSE, sep="\t", col.names=FALSE, append = TRUE)
+      	}
+        
+        toc()
+      	firstRound = FALSE
+            
+    }
+   #  # write.csv(clusterStats, paste0(outputpath, "clusters_",cluster_f,".csv"), row.names=FALSE, quote=FALSE)
+   #  write.table(clusterStats, paste0(outputpath, "clusters_",cluster_f,".tsv"), row.names=FALSE, quote=FALSE, sep="\t")
+   #  #toc()
+   # 
+   # write.table(clusterStatsSingles, paste0(outputpath, "clusters_",cluster_f,"_singles.tsv"), row.names=FALSE, quote=FALSE, sep="\t")
+   # 
+    
+```
+
+# Extract cluster samples
+
+```{r extractClusterSamples, results="asis", eval=TRUE}
+      
+    treedirs <- gsub("\\.tree", "", treefiles)
+          
+    allSamples <- c()     
+    firstRound = TRUE
+    for (dir in treedirs) {
+        tic(cat(paste0("\n\nProcessing ", dir, ": ")))
+      
+        treesamples <- NULL
+        #treetables  <- list.files(path = paste0(outputpath, dir, "/"), pattern = "*.treetable.csv$")
+        for (cutoff in cutoffs) {
+            treetable        <- read.csv(paste0(outputpath, dir, "/", dir, "_", cutoff, ".treetable.csv"))
+            ukseqs           <- droplevels(treetable[treetable$location == "Germany" & treetable$types == "sample", c("taxon", "cluster")])
+            colnames(ukseqs) <- c("taxon", paste0("cutoff_", cutoff))
+            
+            if (is.null(treesamples)) {
+                treesamples <- ukseqs[order(ukseqs$taxon), ]
+            } else {
+                # Reorder
+                ukseqs <- ukseqs[match(treesamples$taxon, ukseqs$taxon), ]
+                            
+                # Check and bind
+                if (all(ukseqs$taxon == treesamples$taxon)) {
+                    treesamples[[paste0("cutoff_",cutoff)]] <- ukseqs[[paste0("cutoff_",cutoff)]]
+                } else {
+                   stop(sprintf("Tree with cutoff %d contains different Germany taxa", cutoff))
+                }
+                
+            }
+        }
+        # allSamples <- rbind(allSamples, treesamples)
+        toc()
+        if (firstRound) {
+          write.table(treesamples, paste0(outputpath, "clusterSamples_",cluster_f,".tsv"), quote=FALSE, row.names=FALSE, sep="\t")
+        } else {
+          write.table(treesamples, paste0(outputpath, "clusterSamples_",cluster_f,".tsv"), quote=FALSE, row.names=FALSE, sep="\t",  col.names=FALSE, append = TRUE)
+        }
+      	firstRound = FALSE
+    }
+    # # write.csv(allSamples, paste0(outputpath, "clusterSamples_",cluster_f,".csv"), quote=FALSE, row.names=FALSE)
+    # write.table(allSamples, paste0(outputpath, "clusterSamples_",cluster_f,".tsv"), quote=FALSE, row.names=FALSE, sep="\t")
+
+
+```
+
+# Extract 50%, 75% and 95% clusterings
+
+```{r extractThreshold, results="asis"}
+      
+    thresholds <- c(0.5, 0.75, 0.95)   
+      
+    # clusterStatsAll <- read.csv(paste0(outputpath, "clusters_",cluster_f,".csv"))
+    # clusterSamples  <- read.csv(paste0(outputpath, "clusterSamples_",cluster_f,".csv"))
+    clusterStatsAll <- read.table(paste0(outputpath, "clusters_",cluster_f,".tsv"), sep="\t", head=TRUE, na.strings=c("NA", ""), fill=TRUE, stringsAsFactors=FALSE, quote="|")
+    clusterSamples  <- read.table(paste0(outputpath, "clusterSamples_",cluster_f,".tsv"), sep="\t", head=TRUE, na.strings=c("NA", ""), fill=TRUE, stringsAsFactors=FALSE, quote="|")
+    
+    
+    
+    
+    cat("\n\n")
+    for (threshold in thresholds) {
+        if (is.na(threshold)) {
+          clusterStats <- clusterStatsAll[is.na(clusterStatsAll$cutoff), ]
+	} else {
+        clusterStats <- clusterStatsAll[clusterStatsAll$cutoff == threshold, ]
+	}
+        # write.csv(clusterStats, paste0(outputpath, "clusters_",cluster_f,"_", threshold, ".csv"), quote=FALSE, row.names=FALSE)
+        write.table(clusterStats, paste0(outputpath, "clusters_",cluster_f,"_", threshold, ".tsv"), quote=FALSE, row.names=FALSE, sep="\t")
+        
+        clusterMeta         <- droplevels(metadata[match(clusterSamples$taxon, metadata$taxon_label), ])
+        clusterMeta$cluster <- clusterSamples[match(clusterMeta$taxon_label, clusterSamples$taxon), paste0("cutoff_", threshold)]
+        
+        # write.csv(clusterMeta, paste0(outputpath, "clusterSamples_",cluster_f,"_", threshold,".csv"), quote=FALSE, row.names=FALSE)
+        write.table(clusterMeta, paste0(outputpath, "clusterSamples_",cluster_f,"_", threshold,".tsv"), quote=FALSE, row.names=FALSE, sep="\t")
+        
+        cat(paste0("- Posterior probability limit ", threshold, " (", nrow(clusterStats), " transmission lineages)\n"))  
+    }
+
+    cat("\n\n")
+```
+
+
+
+
+# Session info
+
+```{r sessionInfo, results='markup'}
+    sessionInfo()
+```

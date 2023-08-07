@@ -1,0 +1,3496 @@
+---
+title: "SARS-CoV-19 introductions"
+subtitle: "Transmission Lineage Breakdown for Germany"
+
+date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    keep_tex: true
+    fig_crop: false
+layout: page
+editor_options: 
+  chunk_output_type: inline
+params: 
+  inputpath  :  "../../../data/phylogenetic/"
+  cluster_f  : "DTA"
+  startDate       : "2020-01-01"
+  endDate         : "2021-06-02"
+  device     : "pdf"
+  metadata   : "../results/gisaid-20210602-metadata-sampled-unsampled.tsv"
+  metadataAllSequences   : "../../../../data/data/gisaid-20210602-metadata.tsv"
+  oldestCase : "2020-02-27"
+  outputfolder    : "../results/beast/run/lin-ius-3/"
+  caseDataGermany : "../data/cases-rki-by-state.csv"
+
+---
+
+```{r rsetup, include=FALSE}
+  # outputpath : "../results/trees-gisaid-Hamburg-20210417-lin-rich/"
+  # state      : "Hamburg"
+
+# case file: https://github.com/CSSEGISandData/COVID-19
+# case file details: https://github.com/GoogleCloudPlatform/covid-19-open-data
+  
+    library(lubridate)
+    library(gplots)
+    library(viridis)
+    library(tictoc)
+    library(stringr)
+    library(dplyr)
+    library(knitr)
+    library(ggrepel)
+    source("../reports/palettes.R")
+    source("../reports/plotutils.R")
+    source("../reports/reportutils.R")
+    #source("../scripts/clusterutils.R")
+    library(vegan)
+    library(tidyr)
+
+    library(raster)
+    library(ggplot2)
+    library(colorspace)
+    library(maptools)
+    library(treemapify)
+    library(ecodist) # "bray-curtis", 
+
+    inputpath  <- params$inputpath
+    cluster_f  <- params$cluster_f
+    
+    startDate  <- as.Date(params$startDate)
+    endDate    <- as.Date(params$endDate)
+    # outputpath <- params$outputpath
+    # state      <- params$state
+    
+    figpath    <- paste0(params$outputfolder, "figures/lineage_breakdown_figures_", params$device, "/")
+    dir.create(figpath, recursive = TRUE, showWarnings = FALSE)
+    
+    cachepath  <- paste0(params$outputfolder, "figures/cache/lineageBreakdown_", params$device, "/")
+
+
+    knitr::opts_chunk$set(tidy=FALSE, cache=FALSE, cache.path = cachepath, 
+                          dev=params$device, fig.path=figpath, dpi=300,
+                          message=FALSE, error=TRUE, warning=TRUE, echo=FALSE)
+    
+    
+    
+    dateBreaks  <- seq.Date(startDate, endDate+6, by="day")
+    
+    metadata <- load_metadata(params$metadata)
+    metadataAllSequences <- load_metadata(params$metadataAllSequences)
+    
+    set_instate <- function(metadata, state) {
+      return(sapply(str_split(paste0(metadata$Location,"/",metadata$Additional.location.information), "/"), function(x) {return(str_trim(x[2]) == "Germany" & (grepl(state, x[3], fixed=TRUE) | ( length(x) >= 4 & grepl(state, x[4], fixed=TRUE) )) );}))
+    } 
+    
+    # metadata$instate      <- set_instate(metadata, state)
+    
+    labelDates <- list("oldestCase" = as.Date(params$oldestCase), 
+                       "oldestSeq"  = as.Date(min(metadata$sample_date[metadata$instate])))
+    
+
+    stateFiles = data.frame(state = c("Germany"), 
+                            state.name = c("Germany"),
+                            adm.level = c(2),
+                            outputpath=c("../results/beast/run/lin-ius-3/") )
+                            # outputpath=c("../results/beast/run/lin-rich-sk/") )
+                            # outputpath=c("../results/beast/run/lin/") )
+    
+    stateInfo <- list()
+    stateInfo$metadata_instate <- data.frame(matrix(0, nrow=nrow(metadata), ncol=0))
+    for (i in 1:nrow(stateFiles)) {
+      state <- stateFiles$state[i]
+      state.name <- stateFiles$state.name[i]
+      # DEBUG TODO
+      #stateInfo$metadata_instate <- cbind(stateInfo$metadata_instate, rep(FALSE, nrow(metadata)))
+      if (stateFiles$adm.level[i] == 3)
+        stateInfo$metadata_instate <- cbind(stateInfo$metadata_instate, set_instate(metadata, state.name))
+      else if (stateFiles$adm.level[i] == 2)
+        stateInfo$metadata_instate <- cbind(stateInfo$metadata_instate, metadata$country == state)
+      colnames(stateInfo$metadata_instate)[ncol(stateInfo$metadata_instate)] <- state
+    }
+    
+    stateInfo$stateOrder <- c(1)
+
+    
+    # for comments and documents before codes.
+    states <- paste(stateFiles$state)
+
+    rsumstate <- function(f) {
+      return(sapply(seq(nrow(stateFiles)), function(s) { return (paste(stateFiles$state[s], ":", f(stateFiles$state[s], s, stateInfo$clusterStatsMCC[[s]]))); }))
+    }
+    
+    case_data <- read.table("../data/time_series_covid19_confirmed_global.csv", sep = ",", quote = "\"", stringsAsFactors = FALSE)
+    case_data_date <- as.Date(unlist(case_data[1,5:ncol(case_data)]), format="%m/%d/%y")
+    case_data_value <- sapply(case_data[2:nrow(case_data), 5:ncol(case_data)], as.numeric)
+    case_data_country <- case_data[2:nrow(case_data),2]
+    case_data <- aggregate(case_data_value, data.frame(country = case_data_country), sum)
+    case_data_country <- case_data[,1]
+    case_data <- case_data[,2:ncol(case_data)]
+    case_data[,2:ncol(case_data)] <- case_data[,2:ncol(case_data)] - case_data[,1:(ncol(case_data)-1)]
+    rownames(case_data) <- case_data_country
+    
+    # 
+    # 
+    # 
+    # case_data_value <- case_data[,2:ncol(case_data)]
+    # case_data <- t(case_data_value)
+    # colnames(case_data) <- case_data_country
+    # rownames(case_data) <- case_data_date
+    # germany_cases <- data.frame(date = case_data_date, case = case_data[,] )
+    
+
+    
+   deCountyDaily <- getDeCountyDaily(params$caseDataGermany, "../data/germany-subdivisions.csv", metadataAllSequences)
+   deCounty <- getDeInfo("../data/germany-data.csv", deCountyDaily, as.Date("2020-10-01"))
+    
+dePal[["NA"]] <- dePal$oth
+
+
+```
+
+# Summary
+This notebook plots breakdowns of `r states` transmission lineages over time (using only the assignment on the MCC trees).
+
+## Data and Method
+- GISAID sequences are retried at `r endDate`. 1,819,996 sequences are retrieved.
+- Data is sampled evenly, for each epi-week 100 samples from Germany and 25 samples from every other country are kept. For special sub-clusters, 5 earliest and 5 oldest samples are also kept as the sampled sequence. Resuting a clustering of 72,579 samples.
+- An initial hierarchical clustering of samples based on their pango-lineages is done.
+- Data is partitioned to huge sub-trees. 
+- Initial tree is calculated for each huge sub-tree via sarscov2phylo tool.
+- Polytomy resolution and branch length assignment is done via BEAST MCMC.
+- Location (Germany and non-Germany) is assigned to internal nodes based on a DTA model via BEAST MCMC.
+- Imported lineages are calculated.
+- Unsampled sequences from Germany re-attached to imported lineages. Finally 113,070 samples from Germany are clustered in different importation lineages.
+<!-- 93989+186+272+614+8489+1879+2092+209+1999+481+334 tried to be added -->
+
+
+
+
+
+
+```{r load-data, cache=TRUE}
+
+stateInfo$clusterStatsMCC <- stateInfo$clusterSamplesMCC <- stateInfo$cutoff <- list()
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  state.name <- stateFiles$state.name[s]
+  outputpath <- stateFiles$outputpath[s]
+  
+  # # clusterStatsMCC   <- read.csv(paste0(outputpath, "clusters_", cluster_f, "_MCC_0.5.csv"))
+  # clusterStatsMCC   <- read.table(paste0(outputpath, "clusters_", cluster_f, "_MCC_NA.tsv"), sep="\t", head=TRUE, na.strings=c("NA", ""), fill=TRUE, stringsAsFactors=FALSE, quote="|")
+  clusterStatsMCC   <- read.table(paste0(outputpath, "clusters_", cluster_f, "_MCC_0.5.tsv"), sep="\t", head=TRUE, na.strings=c("NA", ""), fill=TRUE, stringsAsFactors=FALSE, quote="|")
+  
+  # # clusterStatsMCC   <- read.csv(paste0(outputpath, "clusters_", cluster_f, "_MCC_NA.csv"))
+  # # clusterSamplesMCC <- read.csv(paste0(outputpath, "clusterSamples_", cluster_f, "_MCC_0.5.csv"))
+  # # clusterSamplesMCC <- read.csv(paste0(outputpath, "clusterSamples_", cluster_f, "_MCC_NA.csv"))
+  # clusterSamplesMCC <- read.table(paste0(outputpath, "clusterSamples_", cluster_f, "_MCC_NA.tsv"), sep="\t", head=TRUE, na.strings=c("NA", ""), fill=TRUE, stringsAsFactors=FALSE, quote="|")
+  clusterSamplesMCC <- read.table(paste0(outputpath, "clusterSamples_", cluster_f, "_MCC_0.5.tsv"), sep="\t", head=TRUE, na.strings=c("NA", ""), fill=TRUE, stringsAsFactors=FALSE, quote="|")
+  clusterSamplesMCC <- clusterSamplesMCC[!is.na(clusterSamplesMCC$Virus.name),]
+  
+  clusterStatsMCC$cluster <- sapply(clusterStatsMCC$cluster, function(cluster) paste(strsplit( gsub("-", "_", cluster), split="_")[[1]][c(3,6,7)], collapse="_"))
+  clusterSamplesMCC$cluster <- sapply(clusterSamplesMCC$cluster, function(cluster) paste(strsplit( gsub("-", "_", cluster), split="_")[[1]][c(3,6,7)], collapse="_"))
+  
+  clusterStatsMCC$shift <- alpha + beta/clusterStatsMCC$seqs
+  clusterStatsMCC$tmrca_shifted <- clusterStatsMCC$tmrca - (clusterStatsMCC$shift/366)
+  clusterStatsMCC$tmrca_shifted_calendar <- as.Date(round_date(date_decimal(clusterStatsMCC$tmrca_shifted), unit = "day"))
+  clusterStatsMCC$detection_lag <- as.Date(round_date(date_decimal(clusterStatsMCC$oldest), unit = "day")) - clusterStatsMCC$tmrca_shifted_calendar
+  
+  # Convert dates to POSIX dates
+  clusterStatsMCC$tmrca_calendar <- ymd(clusterStatsMCC$tmrca_calendar)
+  clusterStatsMCC$adm1 <- sapply(
+    str_split(paste0(clusterStatsMCC$Location,"/",clusterStatsMCC$Additional.location.information), "/"), function(x) str_trim(x[3]) )   
+
+  clusterSamplesMCC$sample_date  <- ymd(clusterSamplesMCC$sample_date)
+  
+  clusterSamplesMCC$decimal_date <- decimal_date(clusterSamplesMCC$sample_date)    
+  
+  
+  lineageSizes <- sort(table(clusterSamplesMCC$cluster))
+  clusterSamplesMCC$lineage_seqs            <- sapply(as.character(clusterSamplesMCC$cluster), function(x) lineageSizes[x])
+  clusterSamplesMCC$lineage_tmrca           <- sapply(seq_len(nrow(clusterSamplesMCC)), function(x) 
+    ifelse(clusterSamplesMCC$lineage_seqs[x] == 1, NA, clusterStatsMCC$tmrca[clusterStatsMCC$cluster == as.character(clusterSamplesMCC$cluster[x])]))
+  #clusterSamplesMCC$lineage_tmrca_calendar  <- sapply(seq_len(nrow(clusterSamplesMCC)), function(x) 
+  #                                                    ifelse(clusterSamplesMCC$lineage_seqs[x] == 1, NA, clusterStatsMCC$tmrca_calendar[clusterStatsMCC$cluster == as.character(clusterSamplesMCC$cluster[x])]))
+  clusterSamplesMCC$lineage_oldest          <- sapply(seq_len(nrow(clusterSamplesMCC)), function(x) 
+    ifelse(clusterSamplesMCC$lineage_seqs[x] == 1, NA, clusterStatsMCC$oldest[clusterStatsMCC$cluster == as.character(clusterSamplesMCC$cluster[x])]))
+  clusterSamplesMCC$lineage_mostrecent      <- sapply(seq_len(nrow(clusterSamplesMCC)), function(x) 
+    ifelse(clusterSamplesMCC$lineage_seqs[x] == 1, NA, clusterStatsMCC$mostrecent[clusterStatsMCC$cluster == as.character(clusterSamplesMCC$cluster[x])]))
+  clusterSamplesMCC$lineage_duration        <- 366*(clusterSamplesMCC$lineage_mostrecent - clusterSamplesMCC$lineage_tmrca)
+  clusterSamplesMCC$lineage_age             <- 366*(clusterSamplesMCC$decimal_date - clusterSamplesMCC$lineage_oldest)
+  
+  # clusterSamplesMCC$lineage_tmrca_2           <- sapply(seq_len(nrow(clusterSamplesMCC)), function(x) 
+  #                                                     clusterStatsMCC$tmrca[clusterStatsMCC$cluster == as.character(clusterSamplesMCC$cluster[x])])
+  #  # 
+  #  # clusterSamplesMCC$shift <- alpha + beta/clusterSamplesMCC$lineage_seqs
+  #  # clusterSamplesMCC$tmrca_shifted <- clusterSamplesMCC$lineage_tmrca - ((alpha + beta/clusterSamplesMCC$lineage_seqs)/366)
+  # date_decimal(clusterSamplesMCC$lineage_tmrca_b - ((alpha + beta/clusterSamplesMCC$lineage_seqs)/366))
+  # 
+  #  clusterSamplesMCC$tmrca_shifted_calendar.2 <- as.Date(round_date(, unit = "day"))
+  
+  #  alpha           <- 0.7189865
+  # beta            <- 28.91369
+  # clusterStatsMCC$shift <- alpha + beta/clusterStatsMCC$seqs
+  # clusterStatsMCC$tmrca_shifted <- clusterStatsMCC$tmrca - (clusterStatsMCC$shift/366)
+  # clusterStatsMCC$tmrca_shifted_calendar <- as.Date(round_date(date_decimal(clusterStatsMCC$tmrca_shifted), unit = "day"))
+  # clusterStatsMCC$detection_lag <- as.Date(round_date(date_decimal(clusterStatsMCC$oldest), unit = "day")) - clusterStatsMCC$tmrca_shifted_calendar
+  # clusterStatsMCC$oldest_calendar <-as.Date(round_date(date_decimal(clusterStatsMCC$oldest), unit = "day"))
+  # clusterSamplesMCC$oldest_calendar <- as.Date(round_date(date_decimal(clusterSamplesMCC$lineage_oldest), unit = "day"))
+  
+  clusterSamplesMCC <-
+    clusterSamplesMCC %>% left_join(clusterStatsMCC %>% dplyr::select(cluster, tmrca_calendar, tmrca_shifted_calendar), by=c("cluster"="cluster")) %>%
+    mutate(tmrca_calendar = if_else(is.na(tmrca_calendar), sample_date, tmrca_calendar),
+           tmrca_shifted_calendar = if_else(is.na(tmrca_shifted_calendar), tmrca_calendar - (alpha + beta), tmrca_shifted_calendar))
+  
+  
+  
+  
+  clusterSamplesMCC$country                 <- sapply(strsplit(clusterSamplesMCC$Location, '/'), function(x) str_trim(x[2]))
+  # clusterSamplesMCC$state      <- str_trim(sapply(str_split(paste0(clusterSamplesMCC$Location,"/",clusterSamplesMCC$Additional.location.information), "/"), "[[", 3))
+  clusterSamplesMCC$adm1 <- sapply(
+    str_split(paste0(clusterSamplesMCC$Location,"/",clusterSamplesMCC$Additional.location.information), "/"), function(x) str_trim(x[3]) )    
+  # clusterSamplesMCC$instate      <- set_instate(clusterSamplesMCC, state)
+  clusterSamplesMCC$adm1[clusterSamplesMCC$adm1 == "Baden-Württemberg"] = "Baden-Wurttemberg"
+  if (stateFiles$adm.level[s] == 3){
+    clusterSamplesMCC$instate <- set_instate(clusterSamplesMCC, state.name)
+  }else if (stateFiles$adm.level[s] == 2){
+    clusterSamplesMCC$instate <- clusterSamplesMCC$country == state
+  }
+  
+  clusterSamplesMCCnoSingles <- clusterSamplesMCC[!is.na(clusterSamplesMCC$lineage_tmrca), ]
+  clusterSamplesMCCnoSingles$lineage_tmrca_calendar <- ymd(round_date(date_decimal(clusterSamplesMCCnoSingles$lineage_tmrca), unit="day"))
+  
+  
+  stateInfo$clusterStatsMCC[[s]] = clusterStatsMCC
+  stateInfo$clusterSamplesMCC[[s]] = clusterSamplesMCC
+  stateInfo$clusterSamplesMCCnoSingles[[s]] = clusterSamplesMCCnoSingles
+  
+  # Get the cutoff for plotting samples in lineage plots
+  # (First day when cumulatively 500 UK genomes have been sequenced)
+  degenomes <- sort(metadata$sample_date[stateInfo$metadata_instate[,s]])
+  stateInfo$cutoff[[s]]    <- degenomes[min(1000, length(degenomes))]
+}
+
+germanyState <- which(stateFiles$state == "Germany")
+germanyClusterStatsMCC <- stateInfo$clusterStatsMCC[[germanyState]]
+germanyLargeClusters <- germanyClusterStatsMCC[order(-germanyClusterStatsMCC$seqs)[1:8],]$cluster
+lineagePal[germanyLargeClusters] <- list("#d53e4f", "#fc8d59", "#fee08b", "#99d594", "#3288bd", "#5e4fa2", "#3288bd", "#d53e4f")
+
+```
+
+```{r functions}
+
+    # sampleVsLineageTMRCA <- getSampleBreakdown(clusterStatsMCC[,], 
+    #                                            clusterSamplesMCCnoSingles, 
+    #                                            dateBreaks,
+    #                                            stat="lineage_tmrca_calendar", 
+    #                                            breaks=tmrcaBreaks)    
+
+    getSampleBreakdown <- function(clusterSummary, clusterSamples, dateBreaks, 
+                                    stat="lineage_tmrca", breaks) {
+      
+      clusterSamples$sample_date <- as.Date(clusterSamples$sample_date)
+      dateBreaks                 <- as.Date(dateBreaks)
+      
+      
+      dateBreakdown <- c()
+      for (i in 2:length(dateBreaks)) {
+        samples      <- clusterSamples[clusterSamples$sample_date >= dateBreaks[i-1] & clusterSamples$sample_date < dateBreaks[i] & clusterSamples$instate, ]
+        
+        if (nrow(samples) > 0) {
+          #cat(i, samples[[stat]], breaks)
+          dateBreakdown <- rbind(dateBreakdown, hist(samples[[stat]], plot=FALSE, breaks=breaks)$counts)
+        } else {
+          dateBreakdown <- rbind(dateBreakdown, rep(0, length(breaks)-1))
+        }
+      }
+      rownames(dateBreakdown) <- format.Date(dateBreaks[1:(length(dateBreaks)-1)], format="%Y-%m-%d") # (used equivalent of right = FALSE)
+      colnames(dateBreakdown) <- breaks[2:length(breaks)]  # (used default right = TRUE)
+      
+      return(dateBreakdown)
+    }
+    
+
+    # stateInfo$weeklyBreakdown[[s]] <- getSampleLineageBreakdown(clusterSamplesMCC, breaks="weeks", startDate = startDate, endDate = endDate)
+    getSampleLineageBreakdown <- function(clusterSamples, breaks="weeks", startDate="2020-01-12", endDate="2020-06-28") {
+    
+        uksamples <- droplevels(clusterSamples[clusterSamples$instate, ])
+        uksamples$sample_date <- as.Date(uksamples$sample_date)
+        
+        sampleBreaks      <- seq.Date(as.Date(startDate), as.Date(endDate), by=breaks)
+        
+        
+        #################################################
+        # Get nr of sequences / period for each lineage #
+        #################################################
+        
+        sizeDistr  <- sort(table(uksamples$cluster), decreasing=TRUE)
+        clustNames <- names(sizeDistr)
+        
+        clustSizes <- c()
+        for (cluster in clustNames) {
+            sampleDates <- uksamples$sample_date[uksamples$cluster == cluster]
+            sampleHist  <- hist(sampleDates, breaks=sampleBreaks, plot=FALSE, right=FALSE)
+            clustSizes  <- cbind(clustSizes, sampleHist$counts)
+        }
+        rownames(clustSizes) <- format.Date(sampleBreaks[1:(length(sampleBreaks)-1)])    # Label rows by the start of the epi-week the row represents
+        colnames(clustSizes) <- clustNames
+        
+        weekSums   <- rowSums(clustSizes)
+        weekSums[weekSums == 0] <- 1
+        clustProps <- clustSizes/weekSums
+    
+        
+        ########################################
+        # Aggregate into different size groups #
+        ########################################
+        
+        aggregateLineages <- function(name, sizes) {
+            if (sizes[name] == 1) {
+                return("singleton")
+            } else 
+            if (sizes[name] <= 10) {
+                return("small")
+            } else 
+            if (sizes[name] <= 100) {
+                return("medium")
+            } else 
+            if (sizes[name] <= 1000) {
+                return("big")
+            } else {
+                return("huge")
+            }
+        }
+        
+        uksamples$aggr_lineage <- factor(sapply(as.character(uksamples$cluster), function(x) aggregateLineages(x, sizeDistr)))
+        aggrSizes <- c()
+        sizeCats  <- c("huge", "big", "medium", "small", "singleton")
+        for (cat in sizeCats) {
+            sampleDates <- uksamples$sample_date[uksamples$aggr_lineage == cat]
+            sampleHist  <- hist(sampleDates, breaks=sampleBreaks, plot=FALSE, right=FALSE)
+            aggrSizes   <- cbind(aggrSizes, sampleHist$counts)
+        }
+        rownames(aggrSizes) <- format.Date(sampleBreaks[1:(length(sampleBreaks)-1)])
+        colnames(aggrSizes) <- sizeCats
+        
+        weekSums   <- rowSums(aggrSizes)
+        weekSums[weekSums == 0] <- 1
+        aggrProps <- aggrSizes/weekSums
+        
+        
+        
+        #########################################
+        # Top 8 largest clusters (>400 genomes) #
+        #########################################
+        
+        
+        clustSizesTop8 <- clustSizes[, 1:8]
+        clustPropsTop8 <- clustProps[, 1:8]
+        
+        clustSizesTop8 <- cbind(clustSizesTop8, c(rowSums(clustSizes) - rowSums(clustSizesTop8)))
+        clustPropsTop8 <- cbind(clustPropsTop8, c(rowSums(clustProps) - rowSums(clustPropsTop8)))
+        colnames(clustSizesTop8)[9] <- colnames(clustPropsTop8)[9] <- "Other"
+    
+        
+        clustSizesTop5 <- clustSizes[, 1:5]
+        clustPropsTop5 <- clustProps[, 1:5]
+        
+        clustSizesTop5 <- cbind(clustSizesTop5, c(rowSums(clustSizes) - rowSums(clustSizesTop5)))
+        clustPropsTop5 <- cbind(clustPropsTop5, c(rowSums(clustProps) - rowSums(clustPropsTop5)))
+        colnames(clustSizesTop5)[6] <- colnames(clustPropsTop5)[6] <- "Other"
+    
+        
+        #######################################################################
+        # Hybrid approach, 8 largest clusters + aggregated sizes for the rest #
+        #######################################################################
+        
+        aggrSizesOther <- aggrSizes
+        aggrPropsOther <- aggrProps
+        for (i in seq(8)) {
+          iSize = aggregateLineages(colnames(clustSizesTop8)[i],sizeDistr)
+          aggrSizesOther[,iSize] = aggrSizesOther[,iSize] - clustSizesTop8[,i]
+          aggrPropsOther[,iSize] = aggrPropsOther[,iSize] - clustPropsTop8[,i]
+        }
+        if (sum(aggrSizesOther[,sizeCats[1]]) == 0) {
+          aggrSizesOther <- aggrSizesOther[,2:ncol(aggrSizesOther)]
+          aggrPropsOther <- aggrPropsOther[,2:ncol(aggrPropsOther)]
+        }
+        clustSizesHybrid <- cbind(clustSizesTop8[, 1:8], aggrSizesOther)
+        clustPropsHybrid <- cbind(clustPropsTop8[, 1:8], aggrPropsOther)
+        # t <- aggrSizes[, 2:ncol(aggrSizes)]
+        # t[, 1] <- t[, 1] + aggrSizes[, 1] - rowSums(clustSizesTop8[, 1:8])
+        # clustSizesHybrid <- cbind(clustSizesTop8[, 1:8], t)
+        # 
+        # t <- aggrProps[, 2:ncol(aggrProps)]
+        # t[, 1] <- t[, 1] + aggrProps[, 1] - rowSums(clustPropsTop8[, 1:8])
+        # clustPropsHybrid <- cbind(clustPropsTop8[, 1:8], t)
+     
+        return(list(sampleBreaks = sampleBreaks, 
+                    clustSizes   = clustSizes, 
+                    clustProps   = clustProps, 
+                    aggrSizes    = aggrSizes, 
+                    aggrProps    = aggrProps, 
+                    clustSizesTop8   = clustSizesTop8, 
+                    clustPropsTop8   = clustPropsTop8, 
+                    clustSizesHybrid = clustSizesHybrid, 
+                    clustPropsHybrid = clustPropsHybrid,
+                    clustSizesTop5   = clustSizesTop5, 
+                    clustPropsTop5   = clustPropsTop5 
+                    ))
+    }
+   
+```
+
+
+\clearpage
+
+
+# Sample breakdown (daily)
+
+```{r samples-vs-lineage-age-absolute, fig.width=7, fig.height=3, fig.cap = "Number of genomes collected each day, coloured by the time since the age of the transmission lineage when the genome was collected (time from the oldest sampled genome in the lineage to the sampling time of the genome). Note that **only** genomes in transmission lineages are shown (no singletons)."}
+
+    for (s in 1:nrow(stateFiles)) {
+      state <- stateFiles$state[s]
+      clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+      clusterSamplesMCCnoSingles <- stateInfo$clusterSamplesMCCnoSingles[[s]]
+
+      
+    maxBreakSize <- max(clusterSamplesMCCnoSingles[["lineage_age"]]) + 10
+
+    sampleVsLineageAge <- getSampleBreakdown(clusterStatsMCC, clusterSamplesMCCnoSingles, dateBreaks,
+                                             #stat="lineage_age", breaks=seq(2019, 2022, by=0.2))
+                                             stat="lineage_age", breaks=seq(-60, maxBreakSize, by=10))
+    date_count <- metadata[stateInfo$metadata_instate[,s],] %>% filter(!is.na(sample_date)) %>% dplyr::count(sample_date) 
+    
+    maxSeqPerDay <- max(date_count$n)
+    maxSeqPerDay <- max(rowSums(sampleVsLineageAge)) * 1.05
+
+    par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+    plotDateGradient(sampleVsLineageAge, dateBreaks, startDate=startDate, endDate=endDate, plotLegend=TRUE,
+                     ymax=maxSeqPerDay, normalise=FALSE, ylab="No. of sampled genomes\n(per day)", main=paste(state), 
+                     palfn=inferno, direction=-1, alpha=1, legend = "Lineage age\n(weeks)")
+    
+    # plotDateGradient(sampleVsLineageAge, dateBreaks, startDate=as.Date("2020-06-01"), endDate=as.Date("2021-03-15"), plotLegend=TRUE,
+    #                  ymax=maxSeqPerDay, normalise=FALSE, ylab="No. of sampled genomes\n(per day)",
+    #                  palfn=inferno, direction=-1, alpha=1, legend = "Lineage age\n(weeks)")
+  }
+    
+```
+
+```{r samples-vs-lineage-age-proportion, fig.width=7, fig.height=3, fig.cap = "Proportion of genomes collected each day, coloured by the time since the age of the transmission lineage when the genome was collected (time from the oldest sampled genome in the lineage to the sampling time of the genome). Note that **only** genomes in transmission lineages are shown (no singletons)."}
+
+#    par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+#    plotDateGradient(sampleVsLineageAge, dateBreaks, startDate="2020-03-01", endDate="2020-06-07", plotLegend=TRUE,
+#                     normalise=TRUE, ylab="Proportion of sampled genomes\n(per day)", axes=TRUE, 
+#                     palfn=inferno, direction=-1, alpha=1, legend="Lineage age\n(weeks)")
+    
+```
+
+
+
+```{r samples-vs-lineage-tmrca-absolute, fig.width=7, fig.height=3, fig.cap = "Number of genomes collected each day, coloured by the TMRCA of the transmission lineage. Note that **only** genomes in transmission lineages are shown (no singletons)."}
+
+    for (s in 1:nrow(stateFiles)) {
+      state <- stateFiles$state[s]
+      clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+      clusterSamplesMCCnoSingles <- stateInfo$clusterSamplesMCCnoSingles[[s]]
+
+
+    tmrcaBreaks <- seq(startDate, endDate, by="week")
+    sampleVsLineageTMRCA <- getSampleBreakdown(clusterStatsMCC[clusterStatsMCC$tmrca_calendar >= startDate & clusterStatsMCC$tmrca_calendar < endDate,], 
+                                               clusterSamplesMCCnoSingles[clusterSamplesMCCnoSingles$tmrca_calendar >= startDate & clusterSamplesMCCnoSingles$tmrca_calendar < endDate,], 
+                                               dateBreaks,
+                                               stat="lineage_tmrca_calendar", 
+                                               breaks=tmrcaBreaks)
+
+    maxSeqPerDay <- max(rowSums(sampleVsLineageTMRCA)) + 2
+
+    par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+    plotDateGradient(sampleVsLineageTMRCA, dateBreaks, startDate=startDate, endDate=endDate, plotLegend=TRUE,
+                     ymax=maxSeqPerDay, normalise=FALSE, ylab="No. of sampled genomes\n(per day)", main=paste(state), 
+                     palfn=inferno, direction=-1, alpha=1, legend = "Lineage TMRCA", legendTicks = tmrcaBreaks)
+
+    }
+```
+
+```{r samples-vs-lineage-tmrca-proportion, fig.width=7, fig.height=3, fig.cap = "Proportion of genomes collected each day, coloured by the TMRCA of the transmission lineage. Note that **only** genomes in transmission lineages are shown (no singletons)."}
+
+#    par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+#    plotDateGradient(sampleVsLineageTMRCA, dateBreaks, startDate="2020-03-01", endDate="2020-06-07", plotLegend=TRUE,
+#                     normalise=TRUE, ylab="Proportion of sampled genomes\n(per day)", axes=TRUE, 
+#                     palfn=inferno, direction=-1, alpha=1, legend="Lineage TMRCA", legendTicks = tmrcaBreaks)
+
+```
+
+\clearpage
+
+# Sample breakdown into lineages (weekly)
+
+```{r sample-breakdown-weekly}
+    
+    stateInfo$weeklyBreakdown <- list()
+    for (s in 1:nrow(stateFiles)) {
+      state <- stateFiles$state[s]
+      clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+      
+  # test
+    stateInfo$weeklyBreakdown[[s]] <- getSampleLineageBreakdown(clusterSamplesMCC, breaks="weeks", startDate = startDate, endDate = endDate)
+
+    ###################
+    # Figure captions # 
+    ###################
+    sample_breakdown_weekly_absolute_cap   <- 
+    sample_breakdown_weekly_proportion_cap <- paste0("Lineage size breakdown of ", state, " genomes collected each week. The 8 largest lineages are coloured.")
+    
+    sample_breakdown_weekly_absolute_top8_cap   <- paste0("Lineage size breakdown of ", state, " genomes in the 8 largest lineages collected each week.")
+
+    sample_breakdown_weekly_lineages_absolute_cap   <-
+    sample_breakdown_weekly_lineages_proportion_cap <- paste0("Lineage size breakdown of ", state, " genomes collected each week.")
+    
+    sample_breakdown_weekly_aggr_absolute_cap   <- 
+    sample_breakdown_weekly_aggr_proportion_cap <- paste0("Lineage size breakdown of ", state, " genomes collected each week.")
+  }
+```
+
+
+
+```{r sample-breakdown-weekly-absolute, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_absolute_cap, eval=TRUE}
+
+    for (s in 1:nrow(stateFiles)) {
+      state <- stateFiles$state[s]
+      clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+      clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+      weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+
+    par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+
+    cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+    
+#    dateFreqDistribution(t(weeklyBreakdown$clustSizesHybrid), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+#                         startDate = startDate, endDate = endDate, 
+#                         col=cols, border = "#000000", 
+#                         ymax = 5000, ylab = "Weekly no. of sampled genomes")
+    
+    specificCount <- 5
+    
+    data <- weeklyBreakdown$clustSizesHybrid
+    data[,specificCount+1] <- rowSums(data[,(specificCount+1):12])
+    data <- data[,-((specificCount+2):12)]
+    colnames(data)[specificCount+1] <- "Other"
+    
+    dateFreqDistribution(t(data), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                         startDate = weeklyBreakdown$sampleBreaks[44], endDate = weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)-1], 
+                         col=cols, border = "#000000", 
+                         ymax = max(rowSums(weeklyBreakdown$clustSizes)) + 2, 
+                         ylab = "Weekly no. of sampled genomes")
+
+    legendText1 <- c()
+    for (cluster in colnames(weeklyBreakdown$clustSizesHybrid)[1:6]) {
+        i    <- which(clusterStatsMCC$cluster == cluster)
+        size <- clusterStatsMCC$seqs[i]
+        duration <- lubridate::round_date(lubridate::date_decimal(clusterStatsMCC$mostrecent[i]), unit="day") -
+                    lubridate::round_date(lubridate::date_decimal(clusterStatsMCC$tmrca[i]), unit="day")
+        
+        clusterSimple <- paste("Importation_lineage",strsplit(strsplit(cluster, split="_")[[1]][1],split="-")[[1]][3], sep = "_")
+        
+        # clusterSimple <- paste("Importation_lineage", paste(strsplit( gsub("-", "_", cluster), split="_")[[1]][c(3,6,7)], collapse="_") , sep = "_")
+        
+        clusterSimple <- cluster;
+        legendText1   <- c(legendText1, sprintf("%s\n(%d genomes, %d days)", clusterSimple, size, duration))
+    }
+    legendText2 <- c(sprintf("Other sequences\n(n = %d)", sum(data[,(specificCount+1):ncol(data)])))
+    legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1,
+           fill=cols[1:6], border = "#000000", 
+           legend = c(legendText1, legendText2), y.intersp = 2,
+           cex=0.6)
+    
+    legendText2 <- c(sprintf("Bigger than 100 (n = %d)", sum(clusterStatsMCC$seqs > 100)),
+                     sprintf("11 to 100 (n = %d)", sum(clusterStatsMCC$seqs <= 100 & clusterStatsMCC$seqs > 10)), 
+                     sprintf("10 or smaller (n = %d)", sum(clusterStatsMCC$seqs <= 10)), 
+                     sprintf("Singletons (n = %d)", sum(metadata$instate) - sum(clusterStatsMCC$seqs)))
+    # legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=2,
+    #        fill=cols[(specificCount+1):12], border = "#000000", 
+    #        legend = legendText2, 
+    #        title = paste("Importation lineage of", state),
+    #        cex=0.8)
+    
+    title(paste("Importation lineage of", state), cex=0.8, bty='n', xpd=TRUE)
+
+    stateInfo$legendText1[[s]] <- legendText1
+    stateInfo$legendText2[[s]] <- legendText2
+  }
+```
+
+
+```{r sample-breakdown-weekly-absolute-top8, fig.width=6, fig.height=2.5, fig.cap = "The weekly sampling frequency of the 5 largest `r state` transmission lineages.", eval=TRUE}
+
+for (s in stateInfo$stateOrder) { 
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  
+  
+  par(mar=c(4,4,2.5,8), cex.axis=1, cex.lab=1.2, cex.main=1.2, mgp=c(3,0.75,0))
+  
+  # cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+  cols <- unlist(lineagePal[colnames(weeklyBreakdown$clustSizesTop8)])
+  
+  
+ # layout(matrix(1, nrow=1))
+  for (i in 1:8) {
+    
+    dateFreqDistribution(t(weeklyBreakdown$clustSizesTop8[, i]), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                         startDate = "2020-12-09", endDate="2021-06-02",
+                         # startDate = weeklyBreakdown$sampleBreaks[1], endDate = #weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)], 
+                         col=cols[i], border = "#000000", 
+                         ymax = 100, ylab = "Weekly no. of sampled genomes")
+    
+    mtext(side=3, line=0.5, gsub("\n", " ", legendText1[i]), cex=par("cex.main"))
+    
+    x <- startDate - 0.075*(endDate - startDate)
+    mtext(text = paste(state, LETTERS[i]), side=3, line=0.5, at=x, cex = par("cex.main"))
+    
+  }
+  
+  data <- weeklyBreakdown$clustSizesTop5 %>% data.frame() %>% mutate(date = as.Date(rownames(weeklyBreakdown$clustSizesTop5))) %>% gather(key="cluster", value="n", -date) %>% filter(cluster != "NA" & cluster != "Other")
+  p <- ggplot(data, aes(x=date, y=n, color = cluster)) +
+    geom_line() + 
+    scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-12-09"), as.Date("2021-05-27")), expand = c(0, 0)) +
+    scale_color_manual(values = unlist(lineagePal[colnames(weeklyBreakdown$clustSizesTop5)][1:6]), name = "Lineage") +
+    labs(y = 'Weekly no. of sampled genomes', x= NULL) + 
+    theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+          axis.title = element_text(size = 10),
+        axis.line = element_line(color='black'), panel.grid.minor = element_blank())
+  print(p)
+  
+  
+
+  # dateFreqDistribution(t(weeklyBreakdown$clustSizesTop8), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+  #                    startDate = "2020-12-09", endDate="2021-06-02",
+  #                    # startDate = weeklyBreakdown$sampleBreaks[1], endDate = #weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)], 
+  #                    col=cols[1], border = "#000000", 
+  #                    ymax = 100, ylab = "Weekly no. of sampled genomes")
+
+
+}
+
+```
+
+```{r sample-breakdown-weekly-proportion, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_proportion_cap, eval=TRUE}
+
+
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  
+  par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  
+  
+  cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 1, start=0.75, end=0, alpha = 0.75)) 
+  cols <- unlist(lineagePal[colnames(weeklyBreakdown$clustPropsTop5)])
+
+  dateFreqDistribution(t(weeklyBreakdown$clustPropsTop5), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                         startDate = "2020-10-28", endDate="2021-05-26",
+                       # startDate = weeklyBreakdown$sampleBreaks[1], 
+                       # endDate = weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)-1], 
+                       #startDate = "2020-03-01", endDate = "2020-06-07", 
+                       col=cols, border = "#000000",
+                       ymax = 1, ylab = "Proportion of sampled genomes\n(per week)", axes=TRUE)
+  
+    legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1,
+         fill=cols, border = "#000000",
+         legend = c(legendText1, "Other"), y.intersp = 1.5,
+         cex=0.6)
+
+
+  
+#  legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=2,
+#         fill=cols[9:12], border = "#000000", 
+#         legend = legendText2, title = paste("Transmission lineage size of", state),
+#         cex=0.8)
+}
+
+
+```
+```{r sample-breakdown-weekly-proportion-for-state, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_proportion_cap, eval=TRUE}
+  # library(tidyverse)
+  # tmrcaBreaks <- seq.Date(min(clusterStatsMCC$tmrca_shifted_calendar), max(clusterStatsMCC$tmrca_calendar), by="week")
+  par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  # par(mar=c(5, 5,5 , 5), xpd = TRUE)
+
+  stateImportant <- c("North Rhine-Westphalia", "Bavaria", "Baden-Wurttemberg")
+  is.nan.data.frame <- function(x) do.call(cbind, lapply(x, is.nan))
+  
+  sampleBreaks <- weeklyBreakdown$sampleBreaks
+  #[seq(length(weeklyBreakdown$sampleBreaks)) %% 2 == 1]
+  
+  stateAll <- levels(as.factor(clusterSamplesMCC %>% pull(adm1)))
+
+  # for (stateIndex in seq(length(stateImportant))) {
+  #     state <- stateImportant[stateIndex]
+  
+  for (stateIndex in seq(length(stateAll))) {
+    state <- stateAll[stateIndex]
+  
+  dataStartDate <- as.Date("2021-01-01")
+  dataStartDate.tmrca.break <- sapply(c(dataStartDate), function(x) which.max(x < sampleBreaks) - 1)[1]
+  cols <- unlist(lineagePal[c(germanyLargeClusters[1:5], "Other")])
+
+  data <- clusterSamplesMCC %>% filter(adm1 == state) %>% mutate(cluster = ifelse(cluster %in% germanyLargeClusters[1:5], cluster, "Other"), Collection.date = as.Date(Collection.date)) %>%
+    mutate(tmrca.break.index = sapply(Collection.date, function(x) which.max(x < sampleBreaks) - 1)) %>%
+    group_by(tmrca.break.index, cluster) %>% dplyr::summarise(n = n()) %>% ungroup() %>% 
+    bind_rows(data.frame(tmrca.break.index = seq(length(sampleBreaks)), cluster = "Other", n = 0)) %>%
+    bind_rows(data.frame(tmrca.break.index = 1, cluster = germanyLargeClusters[1:5], n = 0)) %>%
+    group_by(tmrca.break.index, cluster) %>% dplyr::summarise(n = sum(n)) %>% ungroup() %>% 
+    filter(tmrca.break.index >= 1, tmrca.break.index < length(sampleBreaks)) %>%
+    spread(cluster, n, fill = 0) %>% arrange(tmrca.break.index)
+
+  data2 <- data 
+  data2[, names(cols)] <- data[, names(cols)] / (data %>% dplyr::select(-tmrca.break.index) %>% rowSums())[row(data[, names(cols)])]
+  data2[is.nan.data.frame(data2)] <- 0
+
+  
+
+
+  dateFreqDistribution(t((data2 %>% dplyr::select(-tmrca.break.index))[, names(cols)]), sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                         startDate = "2020-12-30", endDate="2021-05-19",
+                       col=cols, border = "#000000",
+                       ymax = 1.0, ylab = paste0("Proportion of analyzed sequences\n", "in ", state, " (per week)"), axes=TRUE)
+  # title(state, cex.lab = 0.2, cex = 0.1)
+
+   # abline(v=sapply(c(as.Date("2021-01-02"), as.Date("2021-04-06")), function(x) {i = which.max(x < tmrcaBreaks) - 1; return (i- as.numeric(tmrcaBreaks[i+1] - x)/as.numeric(tmrcaBreaks[i+1] - tmrcaBreaks[i])); }), col="red", lty=2, lwd=1)
+  # par(cex.lab = 0.5, xpd = TRUE)
+
+  legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1,
+         fill=cols, border = "#000000",
+         legend = c(names(cols)), y.intersp = 1.5,
+         cex=0.6)
+
+   mtext('2021', side=1, line = 2.5, adj = 0.03, col="darkgray", cex = 0.7)
+   # mtext('2021', side=1, line = 0, at=10, las=1, col="darkgray")
+  }
+
+
+  
+  data <- clusterSamplesMCC %>% filter(!adm1 %in% stateImportant) %>% mutate(cluster = ifelse(cluster %in% germanyLargeClusters[1:5], cluster, "Other"), Collection.date = as.Date(Collection.date)) %>%
+    mutate(tmrca.break.index = sapply(Collection.date, function(x) which.max(x < sampleBreaks) - 1)) %>%
+    group_by(tmrca.break.index, cluster) %>% dplyr::summarise(n = n()) %>% ungroup() %>% 
+    bind_rows(data.frame(tmrca.break.index = seq(length(sampleBreaks)), cluster = "Other", n = 0)) %>%
+    bind_rows(data.frame(tmrca.break.index = 1, cluster = germanyLargeClusters[1:5], n = 0)) %>%
+    group_by(tmrca.break.index, cluster) %>% dplyr::summarise(n = sum(n)) %>% ungroup() %>% 
+    filter(tmrca.break.index >= 1, tmrca.break.index < length(sampleBreaks)) %>%
+    spread(cluster, n, fill = 0) %>% arrange(tmrca.break.index)
+
+  data2 <- data 
+  data2[, names(cols)] <- data[, names(cols)] / (data %>% dplyr::select(-tmrca.break.index) %>% rowSums())[row(data[, names(cols)])]
+  data2[is.nan.data.frame(data2)] <- 0
+
+  dateFreqDistribution(t((data2 %>% dplyr::select(-tmrca.break.index))[, names(cols)]), sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                         startDate = "2020-12-30", endDate="2021-05-19",
+                       col=cols, border = "#000000",
+                       ymax = 1.0, ylab = paste0("Proportion of analyzed sequences\n", "in ", "other 13 states", " (per week)"), axes=TRUE)
+  
+  legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1,
+         fill=cols, border = "#000000",
+         legend = c(names(cols)), y.intersp = 1.5,
+         cex=0.6)
+
+   mtext('2021', side=1, line = 2.5, adj = 0.03, col="darkgray", cex = 0.7)
+```
+```{r sample-breakdown-weekly-proportion-for-state-largest-in-state, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_proportion_cap, eval=TRUE}
+  # library(tidyverse)
+  # tmrcaBreaks <- seq.Date(min(clusterStatsMCC$tmrca_shifted_calendar), max(clusterStatsMCC$tmrca_calendar), by="week")
+  par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  # par(mar=c(5, 5,5 , 5), xpd = TRUE)
+
+  is.nan.data.frame <- function(x) do.call(cbind, lapply(x, is.nan))
+  
+  sampleBreaks <- weeklyBreakdown$sampleBreaks
+  #[seq(length(weeklyBreakdown$sampleBreaks)) %% 2 == 1]
+  
+  stateAll <- levels(as.factor(clusterSamplesMCC %>% pull(adm1)))
+
+  # for (stateIndex in seq(length(stateImportant))) {
+  #     state <- stateImportant[stateIndex]
+  
+  manualcolors<-c('forestgreen', 'red2', 'orange', 'cornflowerblue', 
+                'magenta', 'darkolivegreen4', 'indianred1', 'tan4', 'darkblue', 
+                'mediumorchid1','firebrick4',  'yellowgreen', 'lightsalmon', 'tan3',
+                "tan1",'darkgray', 'wheat4', '#DDAD4B', 'chartreuse', 
+                'seagreen1', 'moccasin', 'mediumvioletred', 'seagreen','cadetblue1',
+                "darkolivegreen1" ,"tan2" ,   "tomato3" , "#7CE3D8","gainsboro")
+
+  dataStartDate <- as.Date("2020-12-30")
+  dataStartDate.tmrca.break <- sapply(c(dataStartDate), function(x) which.max(x < sampleBreaks) - 1)[1]
+  
+  
+  for (stateIndex in seq(length(stateAll))) {
+    state <- stateAll[stateIndex]
+    stateLargeClusters <- clusterSamplesMCC %>% filter(adm1 == state, Collection.date >= dataStartDate) %>% group_by(cluster) %>% dplyr::summarise(n = n()) %>% arrange(-n) %>% top_n(3) %>% pull(cluster)
+    # stateLargeClusters2 <- 
+      
+      # x <- clusterSamplesMCC %>% group_by(Collection.date) %>% dplyr::summarise() %>% mutate(tmrca.break.index = sapply(Collection.date, function(x) which.max(x < sampleBreaks) - 1)) %>% dplyr::select(Collection.date, tmrca.break.index) %>% mutate(week_start = sampleBreaks[tmrca.break.index])
+      # 
+      # clusterSamplesMCC %>% filter(adm1 == state, Collection.date >= dataStartDate) %>% group_by(cluster) %>% dplyr::summarise(n = n()) %>% arrange(-n) %>% top_n(3)
+      # clusterSamplesMCC %>% mutate(Collection.date = as.Date(Collection.date)) %>% filter(adm1 == state, Collection.date >= dataStartDate) %>% mutate(tmrca.break.index = sapply(Collection.date, function(x) which.max(x < sampleBreaks) - 1)) %>% filter(tmrca.break.index < dataStartDate.tmrca.break) %>% dplyr::select(Collection.date, tmrca.break.index)
+  
+  cols <- c()
+  cols[stateLargeClusters] <- manualcolors[seq(length(stateLargeClusters))]
+  cols <- c(cols, unlist(lineagePal))
+  cols <- cols[c(stateLargeClusters, "Other")]
+  
+  
+  data <- clusterSamplesMCC %>% filter(adm1 == state) %>% mutate(cluster = ifelse(cluster %in% stateLargeClusters, cluster, "Other"), Collection.date = as.Date(Collection.date)) %>%
+    mutate(tmrca.break.index = sapply(Collection.date, function(x) which.max(x < sampleBreaks) - 1)) %>%
+    group_by(tmrca.break.index, cluster) %>% dplyr::summarise(n = n()) %>% ungroup() %>% 
+    bind_rows(data.frame(tmrca.break.index = seq(length(sampleBreaks)), cluster = "Other", n = 0)) %>%
+    bind_rows(data.frame(tmrca.break.index = 1, cluster = stateLargeClusters, n = 0)) %>%
+    group_by(tmrca.break.index, cluster) %>% dplyr::summarise(n = sum(n)) %>% ungroup() %>% 
+    filter(tmrca.break.index >= 1, tmrca.break.index < length(sampleBreaks)) %>%
+    spread(cluster, n, fill = 0) %>% arrange(tmrca.break.index)
+
+  data2 <- data 
+  data2[, names(cols)] <- data[, names(cols)] / (data %>% dplyr::select(-tmrca.break.index) %>% rowSums())[row(data[, names(cols)])]
+  data2[is.nan.data.frame(data2)] <- 0
+  
+  data2 <- data2[, c("tmrca.break.index", names(cols))]
+
+  
+
+
+  dateFreqDistribution(t(data2[, names(cols)]), sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                         startDate = "2020-12-30", endDate="2021-05-19",
+                       col=cols, border = "#000000",
+                       ymax = 1.0, ylab = paste0("Proportion of analyzed sequences\n", "in ", state, " (per week)"), axes=TRUE)
+  # title(state, cex.lab = 0.2, cex = 0.1)
+
+   # abline(v=sapply(c(as.Date("2021-01-02"), as.Date("2021-04-06")), function(x) {i = which.max(x < tmrcaBreaks) - 1; return (i- as.numeric(tmrcaBreaks[i+1] - x)/as.numeric(tmrcaBreaks[i+1] - tmrcaBreaks[i])); }), col="red", lty=2, lwd=1)
+  # par(cex.lab = 0.5, xpd = TRUE)
+
+  legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1,
+         fill=cols, border = "#000000",
+         legend = c(names(cols)), y.intersp = 1.5,
+         cex=0.6)
+
+   mtext('2021', side=1, line = 2.5, adj = 0.03, col="darkgray", cex = 0.7)
+   # mtext('2021', side=1, line = 0, at=10, las=1, col="darkgray")
+  }
+
+
+```
+
+```{r sample-breakdown-weekly-proportion-for-state-largest-in-state-table, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_proportion_cap, eval=TRUE}
+
+  dataStartDate <- as.Date("2020-12-30")
+  dataStartDate.tmrca.break <- sapply(c(dataStartDate), function(x) which.max(x < sampleBreaks) - 1)[1]
+  
+  deCountySeqRate <- deCountyDaily %>% mutate(date.break.index = sapply(date, function(x) which.max(x < sampleBreaks) - 1)) %>% group_by(county, date.break.index) %>% dplyr::summarise(seq = sum(seqs), case = sum(case), seq.rate = seq / case) %>% ungroup() 
+  
+  clusterSamplesMCCWeightedBySeqRate <- clusterSamplesMCC %>% mutate(tmrca.break.index = sapply(Collection.date, function(x) which.max(x < sampleBreaks) - 1)) %>% left_join(deCountySeqRate, by=c("adm1"="county", "tmrca.break.index"="date.break.index")) %>% mutate(weight = 1/seq.rate)
+  
+  clusterRanks <- clusterSamplesMCCWeightedBySeqRate %>% filter(Collection.date >= dataStartDate) %>% group_by(cluster) %>% dplyr::summarise(weight = sum(weight), seq = n()) %>% mutate(rank.w = dense_rank(-weight), rank.s = dense_rank(-seq))
+
+  
+  data <- clusterSamplesMCCWeightedBySeqRate %>% filter(Collection.date >= dataStartDate) %>% group_by(adm1, cluster) %>% dplyr::summarise(weight = sum(weight), seq = sum(seq)) %>% ungroup() %>% group_by(adm1) 
+  
+  print(kable(data %>% filter(weight == max(weight)) %>% arrange(weight) %>% dplyr::select(-weight), col.names = c("State", "Dominant Imported Lineage (normalized by seqrate)", "Number of sequences")))
+  data2 <- data %>% filter(seq == max(seq)) %>% arrange(seq) %>% dplyr::select(-weight) %>% left_join(clusterRanks %>% dplyr::select(cluster, rank.s), by=c("cluster"="cluster"))
+  print(kable(data2, col.names = c("State", "Dominant Imported Lineage (normalized by seqrate)", "Number of sequences", "Rank of linage in the country")))
+  
+  col <- unlist(lineagePal[unique(data2$cluster)])
+  # names(col) <- data2$adm1
+  
+  
+  
+  germany <- raster::getData("GADM", country = "DEU", level = 1)
+  germany.f <- fortify(germany, region = "CC_1")
+  
+  mapNames <- germany$VARNAME_1
+  mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+  mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+  
+  germany$NAME_1_EN <- germany$NAME_1
+  germany$NAME_1_EN[germany$NAME_1 == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  germany$NAME_1_EN[germany$NAME_1 == "Mecklenburg-Vorpommern"] <- "Mecklenburg-Western Pomerania"
+  germany$NAME_1_EN[germany$NAME_1 == "Bayern"] <- "Bavaria"
+  germany$NAME_1_EN[germany$NAME_1 == "Hessen"] <- "Hesse"
+  germany$NAME_1_EN[germany$NAME_1 == "Niedersachsen"] <- "Lower Saxony"
+  germany$NAME_1_EN[germany$NAME_1 == "Nordrhein-Westfalen"] <- "North Rhine-Westphalia"
+  germany$NAME_1_EN[germany$NAME_1 == "Rheinland-Pfalz"] <- "Rhineland-Palatinate"
+  germany$NAME_1_EN[germany$NAME_1 == "Sachsen"] <- "Saxony"
+  germany$NAME_1_EN[germany$NAME_1 == "Sachsen-Anhalt"] <- "Saxony-Anhalt"
+  germany$NAME_1_EN[germany$NAME_1 == "Thüringen"] <- "Thuringia"
+  
+  # col <- '#1e0000'
+  # germany$value <- 0
+  germany.f$value <- germany$NAME_1_EN[match(germany.f$id, germany$CC_1)]
+  germany.f <- germany.f %>% left_join(data2, by=c("value"="adm1"))  %>% left_join(data.frame(cluster=names(col), color = unname(col)))
+  
+  # id=11 is drawn again because it is inside another region.
+  p <- ggplot() + 
+    geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = forcats::fct_inorder(cluster)), colour = "grey10")+
+    geom_polygon(data = germany.f[germany.f$id == "11",], aes(x = long, y = lat, group = group, fill = cluster), colour = "grey10")+
+    # scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(0, 1),
+    #                     name = "legend_title")+
+    ggtitle("Dominant important lineage in states") +
+    # options(repr.plot.width=max(germany.f$lat) - min(germany.f$lat), repr.plot.height=max(germany.f$long) - min(germany.f$long)) +
+    theme(axis.line=element_blank(), axis.text.x=element_blank(),
+          axis.text.y=element_blank(), axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          panel.background=element_blank(), panel.grid.major=element_blank(),
+          panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+          panel.grid.minor=element_blank(), plot.background=element_blank(),
+          aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat))
+          ) + guides(fill=guide_legend(ncol=2))
+  print(p + scale_fill_manual('Lineage', values = unname(col[as.character(unique(forcats::fct_inorder(germany.f$cluster)))]) ))
+
+# 
+#    plot_on_map(data2$adm1, data$seq >= 0, 
+#             title=paste0("Proportion of sequences from\n", largeCluster), legend_title = "Percentage", col = col, 
+#             max_value = 1, legend.position = "bottom")
+   
+```
+
+```{r sample-breakdown-weekly-proportion-germany-based, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_proportion_cap, eval=TRUE}
+
+germanyState <- which(stateFiles$state == "Germany")
+germanyClusterStatsMCC <- stateInfo$clusterStatsMCC[[germanyState]]
+germanyLargeClusters <- germanyClusterStatsMCC[order(-germanyClusterStatsMCC$seqs)[1:8],]$cluster
+germanyClusterSamplesMCC <- stateInfo$clusterSamplesMCC[[germanyState]]
+
+getSampleLargeClusterIndex <- function(sample) {
+  if (sample$cluster %in% germanyLargeClusters)
+    return(which(sample$cluster == germanyLargeClusters))
+  else
+    return(length(germanyLargeClusters)+1)
+}
+
+stateInfo$clusterSamplesMCC[[germanyState]]$cluster_category <- 
+  sapply(seq_len(nrow(stateInfo$clusterSamplesMCC[[germanyState]])), 
+         function(i) getSampleLargeClusterIndex(stateInfo$clusterSamplesMCC[[germanyState]][i,]))
+
+# germany is removed from this charts, since it shows the lineages of Germany in other states
+for (s in tail(stateInfo$stateOrder, -1)) { 
+  state <- stateFiles$state[s]
+  state.name <- stateFiles$state.name[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  
+  
+  
+  sampleBreaks      <- seq.Date(as.Date(startDate), as.Date(endDate), by="week")
+  uksamples <- droplevels(germanyClusterSamplesMCC[set_instate(germanyClusterSamplesMCC, state.name), ])
+  clustNames <- seq_len(length(germanyLargeClusters)+1)
+  
+  clustSizes <- c()
+  for (cluster in clustNames) {
+    sampleDates <- uksamples$sample_date[uksamples$cluster_category == cluster]
+    sampleHist  <- hist(sampleDates, breaks=sampleBreaks, plot=FALSE, right=FALSE)
+    clustSizes  <- cbind(clustSizes, sampleHist$counts)
+  }
+  rownames(clustSizes) <- format.Date(sampleBreaks[1:(length(sampleBreaks)-1)])
+  colnames(clustSizes) <- clustNames
+  
+  clustPropsHybrid <- t(apply(clustSizes, 1, function(x) if(sum(x) == 0) x else x/sum(x)))
+  
+  
+  # stateSamplesBreakdownWithGermany$sampleBreaks <- sampleBreaks
+  # stateSamplesBreakdownWithGermany$clustPropsHybrid
+  # 
+  # 
+  # clusterSamplesMCCTmp <- stateInfo$clusterSamplesMCC[[germanyState]]
+  # clusterSamplesMCCTmp$instate <- set_instate(clusterSamplesMCCTmp, state)
+  # stateSamplesBreakdownWithGermany <- getSampleLineageBreakdown(clusterSamplesMCCTmp, breaks="weeks", startDate = startDate, endDate = endDate)
+  legendText1 <- stateInfo$legendText1[[germanyState]]
+  legendText2 <- stateInfo$legendText2[[germanyState]]
+  
+  
+  par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  
+  
+  cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+  
+  dateFreqDistribution(t(clustSizes[]), 
+                       sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                       startDate = sampleBreaks[1], 
+                       endDate = sampleBreaks[length(sampleBreaks)-1], 
+                       #startDate = "2020-03-01", endDate = "2020-06-07", 
+                       col=cols, border = "#000000",
+                       ymax = max(rowSums(clustSizes)) * 1.05, ylab = "Number of sampled genomes\n(per week)", axes=TRUE)
+  
+  legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1,
+         fill=cols[1:8], border = "#000000", 
+         legend = legendText1, y.intersp = 2,
+         cex=0.6)
+  
+  legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=2,
+         fill=cols[9:12], border = "#000000", 
+         legend = legendText2, title = paste("Transmission lineage size of", state),
+         cex=0.8)
+  
+  
+  
+  
+  dateFreqDistribution(t(clustPropsHybrid[]), 
+                       sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                       startDate = sampleBreaks[1], 
+                       endDate = sampleBreaks[length(sampleBreaks)-1], 
+                       #startDate = "2020-03-01", endDate = "2020-06-07", 
+                       col=cols, border = "#000000",
+                       ymax = 1, ylab = "Proportion of sampled genomes\n(per week)", axes=TRUE)
+  
+  legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1,
+         fill=cols[1:8], border = "#000000", 
+         legend = legendText1, y.intersp = 2,
+         cex=0.6)
+  
+  legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=2,
+         fill=cols[9:12], border = "#000000", 
+         legend = legendText2, title = paste("Transmission lineage size of", state),
+         cex=0.8)
+}
+
+
+
+```
+
+```{r sample-breakdown-weekly-proportion-germany-based-onmap, fig.width=5, fig.height=3, fig.cap = sample_breakdown_weekly_proportion_cap, eval=TRUE}
+
+germanyState <- which(stateFiles$state == "Germany")
+germanyClusterStatsMCC <- stateInfo$clusterStatsMCC[[germanyState]]
+# germanyLargeClusters <- germanyClusterStatsMCC[order(-germanyClusterStatsMCC$seqs)[1:8],]$cluster
+germanyLargeClusters <- germanyClusterStatsMCC %>% filter(seqs >= 8) %>% pull(cluster)
+
+germanyClusterSamplesMCC <- stateInfo$clusterSamplesMCC[[germanyState]]
+
+getSampleLargeClusterIndex <- function(sample) {
+  if (sample$cluster %in% germanyLargeClusters)
+    return(which(sample$cluster == germanyLargeClusters))
+  else
+    return(length(germanyLargeClusters)+1)
+}
+
+stateInfo$clusterSamplesMCC[[germanyState]]$cluster_category <- 
+  sapply(seq_len(nrow(stateInfo$clusterSamplesMCC[[germanyState]])), 
+         function(i) getSampleLargeClusterIndex(stateInfo$clusterSamplesMCC[[germanyState]][i,]))
+
+stateInfo$clusterSamplesMCC[[germanyState]]$adm1 <- sapply(
+  str_split(paste0(stateInfo$clusterSamplesMCC[[germanyState]]$Location,"/",stateInfo$clusterSamplesMCC[[germanyState]]$Additional.location.information), "/"), function(x) str_trim(x[3]) )
+
+stateInfo$clusterSamplesMCC[[germanyState]]$adm1[stateInfo$clusterSamplesMCC[[germanyState]]$adm1 == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+# stateInfo$clusterSamplesMCC[[germanyState]]$adm1[stateInfo$clusterSamplesMCC[[germanyState]]$adm1 == "NA"] <- "NA"
+adm1.rows <- unique(stateInfo$clusterSamplesMCC[[germanyState]]$adm1)
+adm1.rows <- c(adm1.rows[-which(adm1.rows == "NA")], "NA")
+
+
+aggs <- stateInfo$clusterSamplesMCC[[germanyState]] %>% group_by(cluster_category, adm1) %>% dplyr::summarize(c = length(Accession.ID))
+aggs.matrix <- matrix(0, nrow=length(adm1.rows), ncol=length(unique(aggs$cluster_category)))
+dimnames(aggs.matrix) <- list(adm1.rows,
+                              unique(aggs$cluster_category))
+for (i in 1:nrow(aggs)) {
+  aggs.matrix[aggs$adm1[i], match(aggs$cluster_category[i], unique(aggs$cluster_category))] <- aggs$c[i]
+}
+cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+
+
+
+par(mar=c(6,2,1,1), cex.axis=0.7, cex.lab=0.7, mgp=c(2,0.75,0))
+
+
+
+for (cluster in 1:length(germanyLargeClusters)) {
+  x <- barplot2(aggs.matrix[,cluster], col=cols[cluster], las=2, ylim=c(0,60), legend.text = germanyLargeClusters[cluster])
+  # text(cex=1, x=x-.25, y=-1.25, rownames(aggs.matrix), xpd=TRUE, srt=90)
+}
+
+```
+
+```{r large_lineages_on_map, fig.width = 2.5, fig.height = 4}
+
+# germany <- getData(country = "Germany", level = 1) 
+# 
+# ggplot(data = germany, aes(x = long, y = lat, group = group, fill)) +
+#   geom_polygon(colour = "grey10", fill = "#fff7bc") +
+#     coord_equal() +
+#     theme()
+# germany <- readRDS(url("https://biogeo.ucdavis.edu/data/gadm3.6/Rsp/gadm36_DEU_1_sp.rds"))
+
+
+
+germany <- raster::getData("GADM", country = "DEU", level = 1)
+germany.f <- fortify(germany, region = "CC_1")
+
+mapNames <- germany$VARNAME_1
+mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+
+cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+# cols <- c(unlist(countryPal))[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+
+
+lineages <- c("B.1.1.7_MCC_619", "B.1.1.7_MCC_558", "B.1.1.7_MCC_588", "B.1.1.7_MCC_600", "B.1.1.7_MCC_511", "B.1.1.7_MCC_549", "B.1.177_MCC_39", "B.1.1.7_MCC_584", "B.1.1.7_MCC_360")
+#cols <- unlist(lineagePal[lineages])
+# cols <- gg_color_hue(length(lineages))
+library(RColorBrewer)
+col <- brewer.pal(n = length(lineages), name = "Paired")
+names(col) <- lineages
+
+
+for (lin in lineages) {
+# for (cluster in 1:length(lineages)) {
+  # germany$value <- aggs.matrix[match(mapNames, rownames(aggs.matrix)), cluster]
+  # germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+  # # col <- dePal[[germanyState]]
+  # col <- cols[cluster]
+  # p <- ggplot(data = germany.f, aes(x = long, y = lat, group = group, fill = value)) +
+  #   geom_polygon(colour = "grey10")+
+  #   scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", #limits=c(0, max(germany$value)), 
+  #                       name = "seq.")+
+  #   ggtitle(paste0("Number of sequences of\n", lineages[cluster])) +
+  #   theme(axis.line=element_blank(), axis.text.x=element_blank(),
+  #         axis.text.y=element_blank(), axis.ticks=element_blank(),
+  #         axis.title.x=element_blank(),
+  #         axis.title.y=element_blank(),
+  #         panel.background=element_blank(), panel.grid.major=element_blank(),
+  #         panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+  #         aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)),
+  #         legend.position = "bottom",
+  #         # legend.background = element_rect(fill = "darkgray"),
+  #         legend.box.margin = margin(0, ifelse(max(germany.f$value) >= 120, 0, 5.2) , 0, 0, "pt"),
+  #         panel.grid.minor=element_blank(), plot.background=element_blank()) 
+  # print(p)
+  data <- clusterSamplesMCC %>% filter(cluster == lin) %>% dplyr::group_by(adm1) %>% dplyr::summarise(n = n()) %>% filter(adm1 != "NA")
+  plot_on_map(data$adm1, unlist(data$n), title=paste("Number of sequences of\n", lin), legend_title = "Count", col = col[lin], 
+            max_value = max(data$n),  legend.position = "bottom", text.font.size = NULL)
+
+}
+
+print(kable(clusterSamplesMCC %>% filter(cluster %in% lineages) %>% group_by(cluster) %>% filter(Collection.date <= min(Collection.date)) %>% dplyr::summarise(first.state = paste0(adm1, collapse = ",")), caption = "First case states of the lineages"))
+    
+```
+
+
+```{r large_lineages_in_adm_seq_percentage_on_map, fig.width = 2.5, fig.height = 4}
+
+clusterSamplesMCC <- clusterSamplesMCC %>% mutate(adm1 = ifelse(adm1 == "Baden-Württemberg", "Baden-Wurttemberg", adm1))
+
+dataClusterAdm1SampleCount <- clusterSamplesMCC %>% filter(Collection.date >= dataStartDate) %>% group_by(adm1) %>% dplyr::summarise(n = n())
+dataStartDate <- as.Date("2020-01-01")
+
+for (clusterIndex in 1:length(germanyLargeClusters)) {
+  largeCluster = germanyLargeClusters[clusterIndex]
+  data <- clusterSamplesMCC %>% filter(cluster == largeCluster, Collection.date >= dataStartDate) %>% group_by(adm1) %>% dplyr::summarise(c.n = n()) %>% join(dataClusterAdm1SampleCount, by="adm1") %>% mutate(c.n.ratio = c.n/n * 100) %>% filter(adm1 != "NA")
+
+
+   plot_on_map(data$adm1, data$c.n.ratio, 
+            title=paste0("Proportion of sequences from\n", largeCluster), legend_title = "Percentage", col = "#5e4fa2", 
+            max_value = 45.0, legend.position = "bottom")
+   
+   print(max(data$c.n.ratio))
+}
+   
+```
+
+
+```{r oldest_sequences_of_5_largest_lineages, fig.width = 2.5, fig.height = 4, eval=TRUE }
+
+clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[germanyState]]
+
+germany <- raster::getData("GADM", country = "DEU", level = 1)
+germany.f <- fortify(germany, region = "CC_1")
+
+mapNames <- germany$VARNAME_1
+mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+
+# cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+cols <- unlist(lineagePal[germanyLargeClusters])
+
+for (cluster in 1:length(germanyLargeClusters)) {
+# cluster <- 1
+  oldest <- min(clusterSamplesMCC$decimal_date[clusterSamplesMCC$cluster == germanyLargeClusters[cluster]])
+  newest <- max(clusterSamplesMCC$decimal_date[clusterSamplesMCC$cluster == germanyLargeClusters[cluster]])
+  starting_counties_count <- table(clusterSamplesMCC$adm1[clusterSamplesMCC$cluster == germanyLargeClusters[cluster] & clusterSamplesMCC$decimal_date == oldest])
+  starting_counties <- levels(as.factor(clusterSamplesMCC$adm1[clusterSamplesMCC$cluster == germanyLargeClusters[cluster] & clusterSamplesMCC$decimal_date == oldest]))
+  starting_points_ = sapply(starting_counties, function(county) { map_id <- germany$CC_1[mapNames == county]; cond <- germany.f$id == map_id; return(data.frame(long=mean(germany.f$long[cond]), lat=mean(germany.f$lat[cond]))); })
+  starting_points = data.frame(long=unlist(starting_points_[1,]), 
+                               lat=unlist(starting_points_[2,]), 
+                               ratio = c(starting_counties_count[starting_counties]) / sum(starting_counties_count), 
+                               label = c(starting_counties_count[starting_counties]) )
+  
+  germany$value <- aggs.matrix[match(mapNames, rownames(aggs.matrix)), cluster]
+  germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+  maxcase <- max(germany$value)
+
+    # col <- dePal[[germanyState]]
+  # col <- cols[cluster]
+  # col <- paste0(substr(cols[cluster],1,nchar(cols[cluster])-2), "FF")
+  col <- cols[cluster]
+  p <- ggplot() + 
+    geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = 0), colour = "grey10")+
+    scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(0, maxcase), guide = FALSE)+
+    geom_point(data=starting_points, mapping=aes(x=long, y=lat), size=20 * starting_points$ratio, col=col) +
+    geom_text(data=starting_points, mapping=aes(x=long, y=lat, label=label)) +
+   # ggtitle(paste("oldest seq ", germanyLargeClusters[cluster], 
+        #          as.character(month(date_decimal(oldest),label=TRUE,abbr=TRUE)) )) + 
+    theme(axis.line=element_blank(), axis.text.x=element_blank(),
+          axis.text.y=element_blank(), axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          panel.background=element_blank(), panel.grid.major=element_blank(),
+          panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+          panel.grid.minor=element_blank(), plot.background=element_blank(), 
+          aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)))
+  print(p)
+  
+  # divCount = 4
+  samples <- stateInfo$clusterSamplesMCC[[germanyState]][stateInfo$clusterSamplesMCC[[germanyState]]$cluster == germanyLargeClusters[cluster],]
+  # samples$date_prtition <- floor((samples$decimal_date - oldest)/(newest - oldest+1/365)* divCount) + 1
+  startYM <- 2020*12+11-1
+  endYM <- 2021*12+5-1
+  samples$date_prtition <- year(samples$Collection.date) * 12 + month(samples$Collection.date) - 1
+
+  aggsTimed <- samples %>% group_by(date_prtition, adm1) %>% dplyr::summarize(c = length(Accession.ID))
+
+  # for (step in seq(2)){
+  #   startDates <- c()
+  #   endDates <- c()
+  #   data <- data.frame(adm1=aggsTimed$adm1)
+  #   
+  #   for (i in seq(startYM, endYM, step)) {
+  #     aggsTimedPartition <- as.data.frame(aggsTimed[aggsTimed$date_prtition >= i & aggsTimed$date_prtition < i+step,])
+  #     for (ad in setdiff(mapNames, aggsTimedPartition$adm1)) {
+  #       aggsTimedPartition <- aggsTimedPartition %>% add_row(date_prtition=1, adm1=ad, c=0)
+  #     }
+  #     
+  #     # startDate <- format(date_decimal((newest - oldest+1/365) / divCount* (i-1) + oldest), format="%Y-%m-%d")
+  #     # endDate <- format(date_decimal((newest - oldest+1/365) /divCount * (i) + oldest), format="%Y-%m-%d")
+  #     startDate <- format(ISOdate(i%/%12,(i%%12)+1,1), format="%Y-%m-%d")
+  #     endDate <- format(ISOdate((i+step)%/%12,((i+step)%%12)+1,1)+days(-1), format="%Y-%m-%d")
+  #     
+  #     
+  #     
+  #     
+  #     germany$value <- aggsTimedPartition$c[match(mapNames, aggsTimedPartition$adm1)]
+  #     germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+  #     p <- ggplot() + 
+  #       geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+  #       scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(0, maxcase),
+  #                           name = "Number of sequences")+
+  #       # geom_point(data=starting_points, mapping=aes(x=long, y=lat), size=5, col=col) +
+  #       ggtitle(paste(germanyLargeClusters[cluster], startDate, "-", endDate)) +
+  #       theme(axis.line=element_blank(), axis.text.x=element_blank(),
+  #             axis.text.y=element_blank(), axis.ticks=element_blank(),
+  #             axis.title.x=element_blank(),
+  #             axis.title.y=element_blank(),
+  #             panel.background=element_blank(), panel.grid.major=element_blank(),
+  #             panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+  #             panel.grid.minor=element_blank(), plot.background=element_blank(), 
+  #             aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)))
+  #     print(p)
+  #     # print(kable(aggsTimedPartition, caption=paste("Number of sequences", startDate, endDate, germanyLargeClusters[cluster])))
+  #     startDates <- c(startDates, startDate)
+  #     endDates <- c(endDates, endDate)
+  #     data <- data  %>% join(aggsTimedPartition %>% dplyr::select(-date_prtition), by=c("adm1"="adm1"))
+  #   }
+  #   
+  #   germany$value <- aggs.matrix[match(mapNames, rownames(aggs.matrix)), cluster]
+  #   germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+  #   p <- ggplot() + 
+  #     geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+  #     scale_fill_gradient(low = lighten(col,1), high = col, space = "Lab", limits=c(0, maxcase),
+  #                         name = "Number of sequences")+
+  #     # geom_point(data=starting_points, mapping=aes(x=long, y=lat), size=5, col=col) +
+  #     ggtitle(paste(germanyLargeClusters[cluster], format(date_decimal(oldest), format="%Y-%m-%d"), format(date_decimal(newest), format="%Y-%m-%d"))) +
+  #     theme(axis.line=element_blank(), axis.text.x=element_blank(),
+  #           axis.text.y=element_blank(), axis.ticks=element_blank(),
+  #           axis.title.x=element_blank(),
+  #           axis.title.y=element_blank(),
+  #           panel.background=element_blank(), panel.grid.major=element_blank(),
+  #           panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+  #           panel.grid.minor=element_blank(), plot.background=element_blank(), 
+  #           aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)))
+  #   print(p)
+  #   
+  #   colnames(data) <- c("adm1", (data.frame(startDates, endDates) %>% mutate(x=paste(startDates, endDates, sep = "_")))$x)
+  #   print(kable(
+  #     data.frame(adm1=names(aggs.matrix[, cluster]),
+  #                agg = aggs.matrix[, cluster], stringsAsFactors = FALSE) %>% dplyr::full_join(data, by="adm1") %>% replace(is.na(.), 0) %>% unique()
+  #     , caption=paste("Number of sequences", germanyLargeClusters[cluster])))
+  # }
+  
+  
+}
+    
+```
+```{r large_lineages_on_map_evolution-calibrated, fig.width = 4, fig.height = 4, eval=TRUE }
+
+layout(matrix(1:30, ncol=6))
+
+referenceDate <- as.Date("2020-12-01")
+
+calculateTimeInterval <- function(dates, referenceDate) {
+   # return(as.numeric(dates - referenceDate)%/%7)
+  return ((as.POSIXlt(dates)$year - as.POSIXlt(referenceDate)$year) * 12 + (as.POSIXlt(dates)$mon - as.POSIXlt(referenceDate)$mon));
+}
+
+calculateTimeIntervalReverse <- function(ti, referenceDate) {
+  return (referenceDate + months(ti));
+}
+
+sequenceCaseCount <- metadataAllSequences %>% 
+   filter(country == "Germany") %>%
+   mutate(adm1 = ifelse(adm1 == "Herzogenrath", "North Rhine-Westphalia", adm1)) %>%
+   mutate(adm1 = ifelse(adm1 == "Sachsen", "Saxony", adm1)) %>%
+   # filter(Pango.lineage == lin | startsWith(Pango.lineage, paste0(lin, "."))) %>% 
+   filter(adm1 != "NA" & !is.na(adm1)) %>%
+   mutate(week = calculateTimeInterval(sample_date, referenceDate)) %>%
+   group_by(week, adm1) %>%
+   dplyr::summarise(n = n()) 
+   # mutate(p =  round(n/sum(n) * 100, digits=1)) %>%
+   # arrange(desc(n)) %>% left_join(deCounty, by = c("adm1" = "state")) %>%
+   # mutate(n.pcapita = n / population * 1000000, n.pcase = n / case * 10000)
+
+deCountyWeekly <- deCountyDaily %>% mutate(week = calculateTimeInterval(date, referenceDate)) %>% group_by(week, county) %>% dplyr::summarise(case = sum(case))
+
+clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[germanyState]]
+   
+# cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+cols <- unlist(lineagePal[germanyLargeClusters])
+
+# max_value <- 1300
+for (cli in seq(length(germanyLargeClusters))) {
+  cl <- germanyLargeClusters[cli]
+  clusterSequenceCaseCount <- clusterSamplesMCC %>% 
+     mutate(adm1 = ifelse(adm1 == "Herzogenrath", "North Rhine-Westphalia", adm1)) %>%
+     mutate(adm1 = ifelse(adm1 == "Sachsen", "Saxony", adm1)) %>%
+     filter(cluster == cl) %>% 
+     filter(adm1 != "NA" & !is.na(adm1)) %>%
+     mutate(week = calculateTimeInterval(sample_date, referenceDate))  %>%
+     group_by(week, adm1) %>%
+     dplyr::summarise(n = n()) 
+     # mutate(p =  round(n/sum(n) * 100, digits=1)) %>%
+     # arrange(desc(n)) %>% left_join(deCounty, by = c("adm1" = "state")) %>%
+     # mutate(n.pcapita = n / population * 1000000, n.pcase = n / case * 10000)
+  
+  dataAll <- deCountyWeekly %>% 
+    left_join(clusterSequenceCaseCount %>% dplyr::rename(lin.seq=n), by=c("week"="week", "county"="adm1")) %>% 
+    left_join(sequenceCaseCount %>% dplyr::rename(seq=n), by=c("week"="week", "county"="adm1")) %>% 
+    filter(county != "NA") %>%
+    mutate(lin.seq = ifelse(is.na(lin.seq), 0, lin.seq)) %>%
+    mutate(seq = ifelse(is.na(seq), 0, seq)) %>%
+    group_by(county, week) %>% dplyr::summarise(lin.seq.calibrated = ifelse(sum(seq) == 0, 0, sum(lin.seq) / sum(seq) * sum(case)), 
+                                          lin.seq.norm= ifelse(sum(seq) == 0, 0, sum(lin.seq)/sum(seq)),
+                                          seq = sum(seq),
+                                          lin.seq = sum(lin.seq)) %>%
+    left_join(deCounty %>% dplyr::select(state, population), by=c("county"="state")) %>%
+    mutate(lin.seq.calibared.per.capita = lin.seq.calibrated / population)
+  
+  max_value <- max(dataAll$lin.seq.calibrated)
+
+  weeksInChart = 1
+  for (ws in seq(0,5)) {
+    data <- deCountyWeekly %>% 
+      left_join(clusterSequenceCaseCount %>% dplyr::rename(lin.seq=n), by=c("week"="week", "county"="adm1")) %>% 
+      left_join(sequenceCaseCount %>% dplyr::rename(seq=n), by=c("week"="week", "county"="adm1")) %>% 
+      filter(week >= ws, week < ws + weeksInChart)%>%
+      filter(county != "NA") %>%
+      mutate(lin.seq = ifelse(is.na(lin.seq), 0, lin.seq)) %>%
+      mutate(seq = ifelse(is.na(seq), 0, seq)) %>%
+      group_by(county) %>% dplyr::summarise(lin.seq.calibrated = ifelse(sum(seq) == 0, 0, sum(lin.seq) / sum(seq) * sum(case)), 
+                                            lin.seq.norm= ifelse(sum(seq) == 0, 0, sum(lin.seq)/sum(seq)),
+                                            seq = sum(seq),
+                                            lin.seq = sum(lin.seq)) %>%
+      left_join(deCounty %>% dplyr::select(state, population), by=c("county"="state")) %>%
+      mutate(lin.seq.calibared.per.capita = lin.seq.calibrated / population)
+    
+    
+    plot_on_map(data$county, data$lin.seq.calibrated,
+                title=paste( calculateTimeIntervalReverse(ws, referenceDate), " - ",
+                            (calculateTimeIntervalReverse(ws+weeksInChart, referenceDate)-1)),
+                legend_title = "Calibrated no.", col = cols[cli], min_value = 0, max_value = max_value)
+    
+    if(max(data$lin.seq.calibrated, na.rm = TRUE)>max_value) {
+      warning("re-set max_value")
+    }
+    
+  }
+}
+  
+    
+```
+
+```{r distribution_of_first_cases, fig.width = 5, fig.height = 4}
+
+clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[germanyState]]
+clusterStatsMCC <- stateInfo$clusterStatsMCC[[germanyState]]
+
+germany <- raster::getData("GADM", country = "DEU", level = 1)
+germany.f <- fortify(germany, region = "CC_1")
+
+mapNames <- germany$VARNAME_1
+mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+
+# cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75)) 
+
+
+largeLineages <- clusterStatsMCC[order(-clusterStatsMCC$seqs)[1:min(100, nrow(clusterStatsMCC))], ]
+cols <- unlist(lineagePal[largeLineages$cluster])
+
+filteredClusterSamples <- clusterSamplesMCC[clusterSamplesMCC$cluster %in% largeLineages$cluster,]
+
+firstCaseCount <- data.frame(adm1 = filteredClusterSamples$adm1[filteredClusterSamples$decimal_date - filteredClusterSamples$lineage_oldest < 1/365]) %>% dplyr::count(adm1)
+for (ad in setdiff(mapNames, firstCaseCount$adm1)) {
+  firstCaseCount <- firstCaseCount %>% add_row(adm1=ad, n=0)
+}
+
+
+  germany$value <- firstCaseCount$n[match(mapNames, firstCaseCount$adm1)]
+  germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+
+  col <- "#33A03CFF"
+  p <- ggplot() + 
+    geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+    scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(0, max(germany$value)),
+                        name = "Number of first cases")+
+    # geom_point(data=starting_points, mapping=aes(x=long, y=lat), size=5, col=col) +
+    # ggtitle(paste(germanyLargeClusters[cluster])) +
+    theme(axis.line=element_blank(), axis.text.x=element_blank(),
+          axis.text.y=element_blank(), axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          panel.background=element_blank(), panel.grid.major=element_blank(),
+          panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+          panel.grid.minor=element_blank(), plot.background=element_blank())
+  print(p)
+  
+metadata$adm1 <- sapply(
+  str_split(paste0(metadata$Location,"/",metadata$Additional.location.information), "/"), function(x) str_trim(x[3]) )
+
+  sample_count <- data.frame(adm1=metadata$adm1[metadata$country == "Germany"]) %>% dplyr::count(adm1)
+  firstCaseAndSamples <- firstCaseCount %>% left_join(sample_count, by="adm1") %>% dplyr::filter(adm1 != "NA") %>% dplyr::rename(no.first.cases=n.x, no.total.cases=n.y)
+  knitr::kable(firstCaseAndSamples, col.names = c("State",
+                           "No. First Cases",
+                           "No. Total Cases"), row.names=FALSE, caption = "Distribution of first cases of imported lineages in states") 
+  
+```
+
+```{r germany_lineage_cs_states, fig.width = 5, fig.height = 4}
+
+  # FOR NON-GERMANY:
+# 
+#   selectedClusters <- c()
+#   for (s in stateInfo$stateOrder[stateInfo$stateOrder != germanyState]) { 
+#       state <- stateFiles$state[s]
+#       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+#       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+#       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+#       legendText1 <- stateInfo$legendText1[[s]]
+#       legendText2 <- stateInfo$legendText2[[s]]
+#       
+#       clusterOneSample <- clusterSamplesMCC[!duplicated(clusterSamplesMCC$cluster), c("cluster", "Accession.ID")]
+#       
+#       clusterOneSample$germanyLineage <- stateInfo$clusterSamplesMCC[[germanyState]]$cluster[match(clusterOneSample$Accession.ID, stateInfo$clusterSamplesMCC[[germanyState]]$Accession.ID)]
+#       
+#       
+#       clusterStatsMCC$germanyLineage <- clusterOneSample$germanyLineage[match(clusterStatsMCC$cluster, clusterOneSample$cluster)]
+#       clusterStatsMCC$state <- s
+#       
+#       selectedClusters <- rbind(selectedClusters, 
+#         clusterStatsMCC[clusterStatsMCC$germanyLineage %in% germanyLargeClusters & clusterStatsMCC$seqs > 10,]
+#       )
+#   }
+#   
+#   selectedClusters$germanyLineageIndex <- match(selectedClusters$germanyLineage, germanyLargeClusters)
+#   
+#   rows <- unique(selectedClusters$state)
+#   cols <- unique(selectedClusters$germanyLineageIndex)
+#   state_germany_large_lineage <- matrix("", nrow=length(rows), ncol=length(cols))
+#   rownames(state_germany_large_lineage) <- stateFiles$state.name[rows]
+#   colnames(state_germany_large_lineage) <- germanyLargeClusters[cols]
+#   for (i in seq_len(nrow(selectedClusters))) {
+#     st <- which(rows == selectedClusters$state[i])
+#     gc <- which(cols == selectedClusters$germanyLineageIndex[i])
+#     cl <- str_replace(str_replace(selectedClusters$cluster[i], ".*20210417-", ""), "_.*", "")
+#     state_germany_large_lineage[st, gc] <- ifelse(state_germany_large_lineage[st, gc] == "", cl,
+#                                                   paste(state_germany_large_lineage[st, gc], cl, sep = ","))
+#   }
+#   
+#   knitr::kable(state_germany_large_lineage)
+#   
+#   germany$name <- mapNames
+#   germany_map_states <- germany.f %>% group_by(id) %>%
+#     summarise(long = mean(long), lat = mean(lat))
+#   germany_map_states$name <- germany$name[match(germany_map_states$id, germany$CC_1)]
+# 
+#   for (col_index in 1:length(cols)) {
+#     cluster <- cols[col_index]
+#       germany$value <- aggs.matrix[match(mapNames, rownames(aggs.matrix)), cluster]
+#       germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+#       
+#       # germany$lin <- state_germany_large_lineage[match(mapNames, rownames(state_germany_large_lineage)), col_index]
+#       # germany.f$lin <- germany$lin[match(germany.f$id, germany$CC_1)]
+#       
+#       germany_map_states$lin <- state_germany_large_lineage[match(germany_map_states$name, rownames(state_germany_large_lineage)), col_index]
+#       germany_map_states$lin[is.na(germany_map_states$lin)] <- ""
+#       
+#       col <- dePal[[stateFiles$state[cluster]]]
+#       p <- ggplot() +
+#         geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey70") +
+#         scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(0, max(germany$value)), 
+#                             name = "Number of sequences")+
+#         ggtitle(germanyLargeClusters[cluster]) +
+#         geom_text(aes(label = lin, x=long, y=lat), data = germany_map_states,  size = 3, hjust = 0.5)+
+#         theme(axis.line=element_blank(),axis.text.x=element_blank(),
+#           axis.text.y=element_blank(),axis.ticks=element_blank(),
+#           axis.title.x=element_blank(),
+#           axis.title.y=element_blank(),
+#           panel.background=element_blank(),panel.grid.major=element_blank(),
+#            panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+#           panel.grid.minor=element_blank(),plot.background=element_blank()) +
+#         coord_equal() 
+#       print(p)
+#     }
+#     
+```
+
+
+\clearpage
+
+```{r sample-breakdown-weekly-lineages-absolute, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_lineages_absolute_cap, eval=TRUE}
+
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  
+  par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  
+  dateFreqDistribution(t(weeklyBreakdown$clustSizes), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                       startDate = weeklyBreakdown$sampleBreaks[1], endDate = weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)-1], 
+                       #startDate = startDate, endDate = endDate, 
+                       col=mPal(unlist(countryPal), 0.75), border = NA,
+                       ymax = max(rowSums(weeklyBreakdown$clustSizes))+2, ylab = "Weekly no. of sampled genomes", main = state)
+}
+
+```
+
+
+```{r sample-breakdown-weekly-lineages-proportion, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_lineages_proportion_cap, eval=TRUE}
+
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  
+  par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  
+  dateFreqDistribution(t(weeklyBreakdown$clustProps), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                       # startDate = weeklyBreakdown$sampleBreaks[1], 
+                       # endDate = weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)-1], 
+                         startDate = "2020-10-28", endDate="2021-05-26",
+                       #startDate = "2020-03-01", endDate = "2020-06-07", 
+                       col=mPal(unlist(countryPal), 0.75), border = "#000000CC",
+                       ymax = 1, ylab = "Proportion of sampled genomes\n(per week)", axes=TRUE, main = state)
+  
+}
+
+```
+
+\clearpage
+
+```{r sample-breakdown-weekly-aggr-absolute, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_aggr_absolute_cap, eval=TRUE}
+
+for (s in stateInfo$stateOrder) { 
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  
+  par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  
+  dateFreqDistribution(t(weeklyBreakdown$aggrSizes), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                       # startDate = "2020-10-01",  endDate = "2021-03-30", 
+                         startDate = "2020-10-28", endDate="2021-05-26",
+                       # startDate = weeklyBreakdown$sampleBreaks[1], endDate = weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)-1], 
+                       col=mPal(unlist(ukPal), 0.75), border = "#000000", 
+                       ymax = max(rowSums(weeklyBreakdown$aggrSizes))+2, ylab = "Weekly no. of sampled genomes")
+  
+  legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=3,
+         fill=mPal(unlist(ukPal), 0.75), border = mPal(unlist(ukPal)), 
+         legend = c("Bigger than 1000", "101 to 1000", "11 to 100", "10 or smaller", "Singletons"), 
+         title = paste("Transmission lineage size of", state),
+         cex=0.8)
+}
+
+```
+
+```{r sample-breakdown-weekly-aggr-absolute-2, fig.width=5, fig.height=5, fig.cap = sample_breakdown_weekly_aggr_absolute_cap, eval=TRUE}
+
+aggregateLineages <- function(sizes) {
+  if (sizes == 1) {
+    return("singleton")
+  } else 
+    if (sizes <= 10) {
+      return("small")
+    } else 
+      if (sizes <= 100) {
+        return("medium")
+      } else 
+        if (sizes <= 1000) {
+          return("big")
+        } else {
+          return("huge")
+        }
+}
+
+
+for (s in stateInfo$stateOrder) { 
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  
+  clusterStatsMCC$size_category <- NA
+  clusterStatsMCC$size_category[clusterStatsMCC$seq > 1000] <- "huge"
+  clusterStatsMCC$size_category[is.na(clusterStatsMCC$size_category) & clusterStatsMCC$seq > 100] <- "big"
+  clusterStatsMCC$size_category[is.na(clusterStatsMCC$size_category) & clusterStatsMCC$seq > 10] <- "medium"
+  clusterStatsMCC$size_category[is.na(clusterStatsMCC$size_category) & clusterStatsMCC$seq > 1] <- "small"
+  clusterStatsMCC$size_category[is.na(clusterStatsMCC$size_category) ] <- "singleton"
+  clusterStatsMCC$size_category <- as.factor(clusterStatsMCC$size_category)
+  
+  linBreakdown <- matrix(0, nrow=length(weeklyBreakdown$sampleBreak)-1, ncol=0)
+  
+  for (i in 1:ncol(weeklyBreakdown$aggrSizes)) {
+    sz <- colnames(weeklyBreakdown$aggrSizes)[i]
+    bd <- hist(clusterStatsMCC$tmrca_calendar[clusterStatsMCC$size_category == sz & clusterStatsMCC$tmrca_calendar >= weeklyBreakdown$sampleBreaks[1] & clusterStatsMCC$tmrca_calendar < weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)]], breaks=weeklyBreakdown$sampleBreak, plot=FALSE, right=FALSE)$count
+    linBreakdown <- cbind(linBreakdown, bd)
+  }
+  colnames(linBreakdown) <- colnames(weeklyBreakdown$aggrSizes)
+  
+  seqBreakdown <- hist(metadata$sample_date[stateInfo$metadata_instate[,s]], breaks=weeklyBreakdown$sampleBreak, plot=FALSE, right=FALSE)$count
+  
+  
+  # par(mar=c(6,4,2.5,6), cex.axis=0.8, cex.lab=0.8, mgp=c(2,0.75,0))
+  # layout(matrix(1:2, nrow=2, byrow=TRUE))
+  
+  
+  
+  # plotLineageScatter(clusterStatsMCC, stat1="tmrca", stat2="duration", startDate = startDate, endDate = endDate, addLine = TRUE, ymax=150, log=FALSE, label="B", 
+  #                ylab="Duration of transmission\nlineage detection (days)")
+  
+  col=mPal(unlist(ukPal), 0.75)
+  
+  for (i in 1:ncol(weeklyBreakdown$aggrSizes)) {
+    sz <- colnames(weeklyBreakdown$aggrSizes)[i]
+    # mtext(side=1, line=4, text="xlab", cex=1)
+    # plotShadedAxes(xlim=c(startDate, endDate), ylim=c(0, 100), ylab="ylab", side=2, decimal=TRUE, yaxs='i')
+    if (i == 1) {
+      plot(seqBreakdown, linBreakdown[,sz], col=col[i], pch=20, xpd=TRUE, main=state, xlab="Number of sequences", ylab="Number of lienages", ylim=c(10, max(linBreakdown) ))
+    } else {
+      points(seqBreakdown, linBreakdown[,sz], col=col[i], pch=20, xpd=TRUE)
+    }
+    reg<-lm(linBreakdown[,sz] ~ seqBreakdown)
+    
+    abline(reg, col=col[i])
+  }
+  
+  legend("topleft", legend=(colnames(weeklyBreakdown$aggrSizes)), col=col, pch=20)
+  
+  
+  for (i in 1:ncol(weeklyBreakdown$aggrSizes)) {
+    sz <- colnames(weeklyBreakdown$aggrSizes)[i]
+    ind <- 54:length(seqBreakdown)
+    # mtext(side=1, line=4, text="xlab", cex=1)
+    # plotShadedAxes(xlim=c(startDate, endDate), ylim=c(0, 100), ylab="ylab", side=2, decimal=TRUE, yaxs='i')
+    if (i == 1) {
+      plot(cumsum(seqBreakdown[ind]), cumsum(linBreakdown[ind,sz]), col=col[i], pch=20, xpd=TRUE, main=state, xlab="Number of sequences", ylab="Number of lienages", ylim=c(10, max(cumsum(linBreakdown[ind,])) ))
+    } else {
+      points(cumsum(seqBreakdown[ind]), cumsum(linBreakdown[ind,sz]), col=col[i], pch=20, xpd=TRUE)
+    }
+    reg<-lm(cumsum(linBreakdown[,sz]) ~ cumsum(seqBreakdown))
+    
+    abline(reg, col=col[i])
+  }
+  
+  legend("topleft", legend=(colnames(weeklyBreakdown$aggrSizes)), col=col, pch=20)
+  
+  
+  
+  for (i in 1:ncol(weeklyBreakdown$aggrSizes)) {
+    sz <- colnames(weeklyBreakdown$aggrSizes)[i]
+    ind <- 54:length(seqBreakdown)
+    # mtext(side=1, line=4, text="xlab", cex=1)
+    # plotShadedAxes(xlim=c(startDate, endDate), ylim=c(0, 100), ylab="ylab", side=2, decimal=TRUE, yaxs='i')
+    if (i == 1) {
+      plot(cumsum(seqBreakdown[ind]), cumsum(linBreakdown[ind,sz]), col=col[i], pch=20, xpd=TRUE, main=state, xlab="logarithm number of sequences", ylab="logarithm of number of detected lienages", ylim=c(1, max(cumsum(linBreakdown[ind,])) ), log="xy")
+      
+      
+    } else {
+      points(cumsum(seqBreakdown[ind]), cumsum(linBreakdown[ind,sz]), col=col[i], pch=20, xpd=TRUE)
+    }
+    reg<-lm(cumsum(linBreakdown[,sz]) ~ cumsum(seqBreakdown))
+    
+    #abline(reg, col=col[i])
+  }
+  
+  legend("topleft", legend=(colnames(weeklyBreakdown$aggrSizes)), col=col, pch=20)
+  
+  
+  
+  #   for (i in 1:ncol(weeklyBreakdown$aggrSizes)) {
+  #     sz <- colnames(weeklyBreakdown$aggrSizes)[i]
+  #       # mtext(side=1, line=4, text="xlab", cex=1)
+  #     # plotShadedAxes(xlim=c(startDate, endDate), ylim=c(0, 100), ylab="ylab", side=2, decimal=TRUE, yaxs='i')
+  #     if (i == 1) {
+  #       plot(seqBreakdown, weeklyBreakdown$aggrSizes[,sz], col=col[i], pch=20, xpd=TRUE, main=paste0("log ", state), xlab="log Number of sequences", ylab="log Number of lienages", ylim=c(10, max(weeklyBreakdown$aggrSizes) ), log="xy")
+  #     } else {
+  #       points(seqBreakdown, weeklyBreakdown$aggrSizes[,sz], col=col[i], pch=20, xpd=TRUE)
+  #     }
+  #     reg<-lm(weeklyBreakdown$aggrSizes[,sz] ~ seqBreakdown)
+  # 
+  #     abline(reg, col=col[i])
+  #   }
+  #   
+  #   legend("topleft", legend=(colnames(weeklyBreakdown$aggrSizes)), col=col, pch=20)
+  # 
+  #   
+  #   for (i in 1:ncol(weeklyBreakdown$aggrSizes)) {
+  #     sz <- colnames(weeklyBreakdown$aggrSizes)[i]
+  #       # mtext(side=1, line=4, text="xlab", cex=1)
+  #     # plotShadedAxes(xlim=c(startDate, endDate), ylim=c(0, 100), ylab="ylab", side=2, decimal=TRUE, yaxs='i')
+  #     seqBreakdownAcc <- cumsum(seqBreakdown)
+  #     lienageSizeAcc <- cumsum(weeklyBreakdown$aggrSizes[,sz])
+  #     if (i == 1) {
+  #       plot(seqBreakdownAcc, lienageSizeAcc, col=col[i], pch=20, xpd=TRUE, main=state, xlab="Number of sequences", ylab="Number of lienages", ylim=c(10, max(colSums(weeklyBreakdown$aggrSizes) ) ) )
+  #     } else {
+  #       points(seqBreakdownAcc, lienageSizeAcc, col=col[i], pch=20, xpd=TRUE)
+  #     }
+  #     reg<-lm(lienageSizeAcc ~ seqBreakdownAcc)
+  # 
+  #     abline(reg, col=col[i])
+  #   }
+  # 
+  #   legend("topleft", legend=(colnames(weeklyBreakdown$aggrSizes)), col=col, pch=20)
+  #   
+  #   
+  #   
+  #   
+  #    for (i in 1:ncol(weeklyBreakdown$aggrSizes)) {
+  #     sz <- colnames(weeklyBreakdown$aggrSizes)[i]
+  #       # mtext(side=1, line=4, text="xlab", cex=1)
+  #     # plotShadedAxes(xlim=c(startDate, endDate), ylim=c(0, 100), ylab="ylab", side=2, decimal=TRUE, yaxs='i')
+  #     seqBreakdownAcc <- cumsum(seqBreakdown)
+  #     lienageSizeAcc <- cumsum(weeklyBreakdown$aggrSizes[,sz])
+  #     if (i == 1) {
+  #       plot(seqBreakdownAcc, lienageSizeAcc, col=col[i], pch=20, xpd=TRUE, main=state, xlab="log Number of sequences", ylab="log Number of lienages", ylim=c(10, max(colSums(weeklyBreakdown$aggrSizes) ) ) , log="xy")
+  #     } else {
+  #       points(seqBreakdownAcc, lienageSizeAcc, col=col[i], pch=20, xpd=TRUE)
+  #     }
+  #     reg<-lm(lienageSizeAcc ~ seqBreakdownAcc)
+  # 
+  #     abline(reg, col=col[i])
+  #   }
+  # 
+  #   legend("topleft", legend=(colnames(weeklyBreakdown$aggrSizes)), col=col, pch=20)
+  #   
+  #   
+  # # par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  # # 
+  # # dateFreqDistribution(t(weeklyBreakdown$aggrSizes), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+  # #              startDate = "2020-12-22",  endDate = "2021-03-30", 
+  # #                      # startDate = weeklyBreakdown$sampleBreaks[1], endDate = weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)-1], 
+  # #              col=mPal(unlist(ukPal), 0.75), border = "#000000", 
+  # #              ymax = max(rowSums(weeklyBreakdown$aggrSizes))+2, ylab = "Weekly no. of sampled genomes")
+  # # 
+  # # legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=3,
+  # #        fill=mPal(unlist(ukPal), 0.75), border = mPal(unlist(ukPal)), 
+  # #        legend = c("Bigger than 1000", "101 to 1000", "11 to 100", "10 or smaller", "Singletons"), title = paste("Transmission lineage size of", state),
+  # #        cex=0.8)
+}
+
+```
+
+
+
+
+```{r sample-breakdown-weekly-aggr-proportion, fig.width=7, fig.height=3, fig.cap = sample_breakdown_weekly_aggr_proportion_cap, eval=TRUE}
+
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  
+  par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  
+  dateFreqDistribution(t(weeklyBreakdown$aggrProps), weeklyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE, 
+                         startDate = "2020-10-28", endDate="2021-05-26",
+                       #startDate = "2020-03-01", endDate = "2020-06-07", 
+                       #startDate = weeklyBreakdown$sampleBreaks[1], endDate = weeklyBreakdown$sampleBreaks[length(weeklyBreakdown$sampleBreaks)-1], 
+                       # startDate = "2020-10-01", endDate = "2021-06-02",
+                       col=mPal(unlist(ukPal), 0.75), border = "#000000",
+                       ymax = 1, ylab = "Proportion of sampled genomes\n(per week)", axes=TRUE)
+  
+  legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=3,
+         fill=mPal(unlist(ukPal), 0.75), border = "#000000", 
+         legend = c("Bigger than 1000", "101 to 1000", "11 to 100", "10 or smaller", "Singletons"), 
+         title = paste("Transmission lineage size of", state),
+         cex=0.8)
+}
+
+```
+
+<!-- \clearpage -->
+
+<!-- # Sample breakdown into lineages (daily) -->
+
+<!-- ```{r sample-breakdown-daily} -->
+
+<!-- stateInfo$dailyBreakdown <- list() -->
+<!--     for (s in 1:nrow(stateFiles)) { -->
+<!--       state <- stateFiles$state[s] -->
+<!--       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]] -->
+<!--       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]] -->
+<!--       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]] -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+
+<!-- #dailyBreakdown <- getSampleLineageBreakdown(clusterSamplesMCC, breaks="days") -->
+<!-- stateInfo$dailyBreakdown[[s]] <- getSampleLineageBreakdown(clusterSamplesMCC, breaks="days", startDate = startDate, endDate = endDate) -->
+
+<!--   } -->
+<!-- ################### -->
+<!-- # Figure captions # -->
+<!-- ################### -->
+<!-- sample_breakdown_daily_absolute_cap   <-  -->
+<!-- sample_breakdown_daily_proportion_cap <- sprintf("Lineage size breakdown of %s genomes collected each day. The 8 largest lineages are coloured.", state) -->
+
+<!-- sample_breakdown_daily_absolute_top8_cap   <- sprintf("Lineage size breakdown of %s genomes in the largest 8 lineages collected each day.", state) -->
+
+
+<!-- sample_breakdown_daily_lineages_absolute_cap   <-  -->
+<!-- sample_breakdown_daily_lineages_proportion_cap <- sprintf("Lineage size breakdown of %s genomes collected each day.", state) -->
+
+<!-- sample_breakdown_daily_aggr_absolute_cap   <-  -->
+<!-- sample_breakdown_daily_aggr_proportion_cap <- sprintf("Lineage size breakdown of %s genomes collected each day.", state) -->
+
+<!-- ``` -->
+
+
+
+<!-- ```{r sample-breakdown-daily-absolute, fig.width=7, fig.height=3, fig.cap = sample_breakdown_daily_absolute_cap, eval=TRUE} -->
+
+<!--     for (s in 1:nrow(stateFiles)) { -->
+<!--       state <- stateFiles$state[s] -->
+<!--       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]] -->
+<!--       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]] -->
+<!--       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]] -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+<!--       dailyBreakdown <- stateInfo$dailyBreakdown[[s]] -->
+
+<!-- par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0)) -->
+
+
+<!-- cols   <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75))  -->
+<!-- border <- c(mPal(unlist(countryPal), 1)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 1))  -->
+
+<!-- dateFreqDistribution(t(dailyBreakdown$clustSizesHybrid), dailyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=TRUE,  -->
+<!--                          startDate = dailyBreakdown$sampleBreaks[1], endDate = dailyBreakdown$sampleBreaks[length(dailyBreakdown$sampleBreaks)-1],  -->
+<!--                      #startDate = startDate, endDate = endDate,  -->
+<!--                      col=cols, border = border,  -->
+<!--                      ymax = max(rowSums(dailyBreakdown$clustSizesHybrid))+2, ylab = "Daily no. of sampled genomes") -->
+
+<!-- legendText1 <- c() -->
+<!-- for (cluster in colnames(dailyBreakdown$clustSizesHybrid)[1:8]) { -->
+<!--     i    <- which(clusterStatsMCC$cluster == cluster) -->
+<!--     size <- clusterStatsMCC$seqs[i] -->
+<!--     duration <- lubridate::round_date(lubridate::date_decimal(clusterStatsMCC$mostrecent[i]), unit="day") - -->
+<!--     lubridate::round_date(lubridate::date_decimal(clusterStatsMCC$tmrca[i]), unit="day") -->
+<!--     #clusterSimple <- paste(strsplit(cluster, split="_")[[1]][c(2,4)], collapse = "_") -->
+<!--     clusterSimple <- paste("Importation_lineage",strsplit(strsplit(cluster, split="_")[[1]][1],split="-")[[1]][3], sep = "_") -->
+<!--     clusterSimple <- cluster -->
+<!--     legendText1   <- c(legendText1, sprintf("%s\n(%d genomes, %d days)", clusterSimple, size, duration)) -->
+<!-- } -->
+<!-- legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1, -->
+<!--            fill=cols[1:8], border = border[1:8],  -->
+<!--            legend = legendText1, y.intersp = 2, -->
+<!--            cex=0.6) -->
+
+<!-- legendText2 <- c(sprintf("Bigger than 100 (n = %d)", sum(clusterStatsMCC$seqs > 100)), -->
+<!--                  sprintf("11 to 100 (n = %d)", sum(clusterStatsMCC$seqs <= 100 & clusterStatsMCC$seqs > 10)),  -->
+<!--                  sprintf("10 or smaller (n = %d)", sum(clusterStatsMCC$seqs <= 10)),  -->
+<!--                  sprintf("Singletons (n = %d)", sum(metadata$instate) - sum(clusterStatsMCC$seqs))) -->
+<!-- legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=2, -->
+<!--        fill=cols[9:12], border = border[9:12],  -->
+<!--        legend = legendText2, title = paste("Transmission lineage size of", state), -->
+<!--        cex=0.8) -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r sample-breakdown-daily-absolute-top8, fig.width=14, fig.height=12, fig.cap = "The daily sampling frequency of the 8 largest `r state` transmission lineages.", eval=TRUE} -->
+
+<!--     for (s in 1:nrow(stateFiles)) { -->
+<!--       state <- stateFiles$state[s] -->
+<!--       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]] -->
+<!--       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]] -->
+<!--       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]] -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+<!--       dailyBreakdown <- stateInfo$dailyBreakdown[[s]] -->
+
+<!--     par(mar=c(4,4,2.5,8), cex.axis=1, cex.lab=1.2, cex.main=1.2, mgp=c(3,0.75,0)) -->
+
+<!--     cols   <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75))  -->
+<!--     border <- c(mPal(unlist(countryPal), 1)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 1))  -->
+<!--     layout(matrix(1:8, nrow=4)) -->
+<!--     for (i in 1:8) { -->
+<!--       dateFreqDistribution(t(dailyBreakdown$clustSizesTop8[, i]), dailyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=TRUE,  -->
+<!--                          startDate = dailyBreakdown$sampleBreaks[1], endDate = dailyBreakdown$sampleBreaks[length(dailyBreakdown$sampleBreaks)-1],  -->
+<!--                            #startDate = startDate, endDate = endDate,  -->
+<!--                            col=cols[i], border = border[i],  -->
+<!--                            ymax = max(rowSums(dailyBreakdown$clustSizesTop8[, 1:8])),  -->
+<!--                          ylab = "Daily no. of sampled genomes") -->
+
+<!--       mtext(side=3, line=0.5, gsub("\n", " ", legendText1[i]), cex=par("cex.main")) -->
+
+<!--       x <- -0.075*(endDate - startDate) -->
+<!--       mtext(text = paste(state, LETTERS[i]), side=3, line=0.5, at=x, cex = par("cex.main")) -->
+<!--     } -->
+<!--     } -->
+
+<!-- ``` -->
+
+
+<!-- ```{r sample-breakdown-daily-proportion, fig.width=7, fig.height=3, fig.cap = sample_breakdown_daily_proportion_cap, eval=TRUE} -->
+
+<!--     for (s in 1:nrow(stateFiles)) { -->
+<!--       state <- stateFiles$state[s] -->
+<!--       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]] -->
+<!--       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]] -->
+<!--       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]] -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+<!--       dailyBreakdown <- stateInfo$dailyBreakdown[[s]] -->
+
+<!-- par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0)) -->
+
+
+<!-- cols <- c(mPal(unlist(countryPal), 0.75)[c(2,3,4,6,10,8,11,12)], gray.colors(n = 4, start=0.75, end=0, alpha = 0.75))  -->
+
+<!-- dateFreqDistribution(t(dailyBreakdown$clustPropsHybrid), dailyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE,  -->
+<!--                          startDate = dailyBreakdown$sampleBreaks[1], endDate = dailyBreakdown$sampleBreaks[length(dailyBreakdown$sampleBreaks)-1],  -->
+<!--                      #startDate = "2020-03-01", endDate = "2020-06-07",  -->
+<!--                      col=cols, border = "#000000", -->
+<!--                      ymax = 1, ylab = "Proportion of sampled genomes\n(per day)", axes=TRUE) -->
+
+
+<!-- legend("left", horiz=FALSE, inset=c(1,-0), bty='n', xpd=TRUE, ncol=1, -->
+<!--        fill=cols[1:8], border = "#000000",  -->
+<!--        legend = legendText1, y.intersp = 2, -->
+<!--        cex=0.6) -->
+
+<!-- legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=2, -->
+<!--        fill=cols[9:12], border = "#000000",  -->
+<!--        legend = legendText2, title = paste("Transmission lineage size of", state), -->
+<!--        cex=0.8) -->
+<!-- } -->
+
+<!-- ``` -->
+
+<!-- \clearpage -->
+
+<!-- ```{r sample-breakdown-daily-lineages-absolute, fig.width=7, fig.height=3, fig.cap = sample_breakdown_daily_lineages_absolute_cap, eval=TRUE} -->
+
+<!--     for (s in 1:nrow(stateFiles)) { -->
+<!--       state <- stateFiles$state[s] -->
+<!--       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]] -->
+<!--       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]] -->
+<!--       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]] -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+<!--       dailyBreakdown <- stateInfo$dailyBreakdown[[s]] -->
+
+<!-- par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0)) -->
+
+
+<!-- dateFreqDistribution(t(dailyBreakdown$clustSizes), dailyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE,  -->
+<!--                      #startDate = startDate, endDate = endDate,  -->
+<!--                          startDate = dailyBreakdown$sampleBreaks[1], endDate = dailyBreakdown$sampleBreaks[length(dailyBreakdown$sampleBreaks)-1],  -->
+<!--                      col=mPal(unlist(countryPal), 0.75), border = NA, -->
+<!--                      ymax = max(rowSums(dailyBreakdown$clustSizes))+2, ylab = "Daily no. of sampled genomes", main=state) -->
+<!-- } -->
+<!-- ``` -->
+
+
+<!-- ```{r sample-breakdown-daily-lineages-proportion, fig.width=7, fig.height=3, fig.cap = sample_breakdown_daily_lineages_proportion_cap, eval=TRUE} -->
+
+
+<!--     for (s in 1:nrow(stateFiles)) { -->
+<!--       state <- stateFiles$state[s] -->
+<!--       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]] -->
+<!--       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]] -->
+<!--       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]] -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+<!--       dailyBreakdown <- stateInfo$dailyBreakdown[[s]] -->
+
+
+<!-- par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0)) -->
+
+
+<!-- dateFreqDistribution(t(dailyBreakdown$clustProps), dailyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE,  -->
+<!--                          startDate = dailyBreakdown$sampleBreaks[1], endDate = dailyBreakdown$sampleBreaks[length(dailyBreakdown$sampleBreaks)-1],  -->
+<!--                      #startDate = "2020-03-01", endDate = "2020-06-07",  -->
+<!--                      col=mPal(unlist(countryPal), 0.75), border = "#000000CC", -->
+<!--                      ymax = 1, ylab = "Proportion of sampled genomes\n(per day)", axes=TRUE, main=state) -->
+<!-- } -->
+
+<!-- ``` -->
+
+<!-- \clearpage -->
+
+<!-- ```{r sample-breakdown-daily-aggr-absolute, fig.width=7, fig.height=3, fig.cap = sample_breakdown_daily_aggr_absolute_cap, eval=TRUE} -->
+
+
+<!--     for (s in 1:nrow(stateFiles)) { -->
+<!--       state <- stateFiles$state[s] -->
+<!--       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]] -->
+<!--       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]] -->
+<!--       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]] -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+<!--       dailyBreakdown <- stateInfo$dailyBreakdown[[s]] -->
+
+<!-- par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0)) -->
+
+
+<!-- dateFreqDistribution(t(dailyBreakdown$aggrSizes), dailyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=TRUE,  -->
+<!--                      #startDate = startDate, endDate = endDate,  -->
+<!--                          startDate = dailyBreakdown$sampleBreaks[1], endDate = dailyBreakdown$sampleBreaks[length(dailyBreakdown$sampleBreaks)-1],  -->
+<!--                      col=mPal(unlist(ukPal), 0.75), border = mPal(unlist(ukPal)), -->
+<!--                      ymax = max(rowSums(dailyBreakdown$aggrSizes))+2, ylab = "Daily no. of sampled genomes") -->
+
+<!-- legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=3, -->
+<!--        fill=mPal(unlist(ukPal), 0.75), border = mPal(unlist(ukPal)),  -->
+<!--        legend = c("Bigger than 1000", "101 to 1000", "11 to 100", "10 or smaller", "Singletons"), title = paste("Transmission lineage size of", state), -->
+<!--        cex=0.8) -->
+<!-- } -->
+<!-- ``` -->
+
+
+<!-- ```{r sample-breakdown-daily-aggr-proportion, fig.width=7, fig.height=3, fig.cap = sample_breakdown_daily_aggr_proportion_cap, eval=TRUE} -->
+
+
+<!--     for (s in 1:nrow(stateFiles)) { -->
+<!--       state <- stateFiles$state[s] -->
+<!--       clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]] -->
+<!--       clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]] -->
+<!--       weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]] -->
+<!--       legendText1 <- stateInfo$legendText1[[s]] -->
+<!--       legendText2 <- stateInfo$legendText2[[s]] -->
+<!--       dailyBreakdown <- stateInfo$dailyBreakdown[[s]] -->
+
+<!-- par(mar=c(4,4,2.5,8), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0)) -->
+
+
+<!-- dateFreqDistribution(t(dailyBreakdown$aggrProps), dailyBreakdown$sampleBreaks, plot.ci=FALSE,  barplot=FALSE,  -->
+<!--                      #startDate = "2020-03-01", endDate = "2020-06-07",  -->
+<!--                          startDate = dailyBreakdown$sampleBreaks[1], endDate = dailyBreakdown$sampleBreaks[length(dailyBreakdown$sampleBreaks)-1],  -->
+<!--                      col=mPal(unlist(ukPal), 0.75), border = "#000000", -->
+<!--                      ymax = 1, ylab = "Proportion of sampled genomes\n(per day)", axes=TRUE) -->
+
+<!-- legend("top", horiz=FALSE, inset=c(0,-0.33), bty='n', xpd=TRUE, ncol=3, -->
+<!--        fill=mPal(unlist(ukPal), 0.75), border = "#000000",  -->
+<!--        legend = c("Bigger than 1000", "101 to 1000", "11 to 100", "10 or smaller", "Singletons"), title = paste("Transmission lineage size of", state), -->
+<!--        cex=0.8) -->
+
+<!-- } -->
+<!-- ``` -->
+
+
+\clearpage
+
+# Individual transmission lineage plots
+
+```{r lineage-duration-captions}
+
+    supp <- "Each row is a transmission lineage. Dots are genome sampling times and boxes show the range of sampling times for each transmission lineage (sampling duration). Asterisks show the TMRCA of each lineage. On the right, n indicates the number of Dusseldorf genomes in the lineage and the duration of lineage detection (time between the lineage’s oldest and most recent genomes). Sampling times of the first 500 SARS-CoV-2 genomes collected in the Dusseldorf have been obscured."
+
+    lineage_duration_biggest_cap    <- paste0("Illustration of the time course of the 50 largest Dusseldorf transmission lineages in our dataset. ", supp)
+    lineage_duration_earliest_cap   <- paste0("Illustration of the time course of the 50 earliest Dusseldorf transmission lineages in our dataset. ", supp)
+    lineage_duration_newest_cap     <- paste0("Illustration of the time course of the 50 most recent (by TMRCA) Dusseldorf transmission lineages in our dataset. ", supp)
+    lineage_duration_cryptic_cap    <- paste0("Illustration of the time course of the 50 Dusseldorf transmission lineages in our dataset with the longest period of cryptic circulation. ", supp)
+    lineage_duration_longest_cap    <- paste0("Illustration of the time course of the 50 Dusseldorf transmission lineages in our dataset with the longest sampling duration (from earliest to most recently collected genome). ", supp)
+    lineage_duration_unobserved_cap <- paste0("Illustration of the time course of the 50 Dusseldorf transmission lineages  in our dataset with the longest unobserved period before reemerging. ", supp)
+
+```
+
+\clearpage
+
+## Biggest transmission lineages
+
+```{r lineage-duration-biggest, fig.width=7, fig.height=4, fig.cap=lineage_duration_biggest_cap, eval=TRUE}
+
+s = germanyState;
+# for (s in stateInfo$stateOrder) {
+state <- stateFiles$state[s]
+clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+legendText1 <- stateInfo$legendText1[[s]]
+legendText2 <- stateInfo$legendText2[[s]]
+# dailyBreakdown <- stateInfo$dailyBreakdown[[s]]
+cutoff <- stateInfo$cutoff[[s]]
+
+
+pal <- dePal
+
+# statesPal <- list(
+#                     "North Rhine-Westphalia"  = "#e9a3c9",
+#                     "Baden-Wurttemberg" = "#fde0ef",
+#                     "Bavaria"      = "#a1d76a",             
+#                     "Saxony"        = "#4d9221",
+#                     "Germany"       = "#c51b7d",
+#                     "oth"          =  "#969696",
+#                   )
+
+par(mar=c(5,6,3,10), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+bigLineages <- clusterStatsMCC[order(clusterStatsMCC$seqs, decreasing = TRUE)[1:min(6, nrow(clusterStatsMCC))], ]
+plotLineageDurations(bigLineages, clusterSamplesMCC, startDate="2020-01-12", endDate="2020-06-28", cutoff=cutoff, orderby="", pal = pal)
+clusterSamplesMCC$adm1 <- str_trim(sapply(str_split(clusterSamplesMCC$Location, "/"), function(x) ifelse(length(x) >= 3, x[[3]], "")))
+clusterSamplesMCC$adm1[clusterSamplesMCC$adm1 == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+clusterSamplesMCC$adm1[clusterSamplesMCC$adm1 == ""] <- "oth"
+# clusterSamplesMCC$state[clusterSamplesMCC$state == ""] <- ""
+# clusterSamplesMCC$state[clusterSamplesMCC$state == ""] <- ""
+# clusterSamplesMCC$state[clusterSamplesMCC$state == ""] <- ""
+# clusterSamplesMCC$state[clusterSamplesMCC$state == ""] <- ""
+
+palShort <- dePal
+names(palShort) <- shortStateName[names(palShort)]
+palShort[["NA"]] <- dePal$oth
+palShort[["oth"]] <- dePal$oth
+
+pal <- dePal
+pal[["NA"]] <- dePal$oth
+
+plotLineageDurations(bigLineages, clusterSamplesMCC %>% mutate(adm1 = ifelse(adm1 == "oth", "oth", unlist(shortStateName[adm1]))), startDate="2020-10-01", endDate="2021-06-01", cutoff="2019-01-05", orderby="", state=state, pal = unlist(palShort), plotDurations = FALSE, ncol=2, legend.inset = c(-.33,0), legend.adm1.pos = "topright")
+
+legend.map.germany(legend.position = "bottomright",
+  legend.inset = c(-0.40, 0),
+  legend.ncol = 2,
+  legend.map.color = dePal,
+  legend.map.viewport = c(2,26,10,2))
+
+kable(clusterSamplesMCC[clusterSamplesMCC$cluster %in% bigLineages$cluster, ] %>% group_by(cluster) %>% filter(sample_date == min(sample_date)) %>% 
+        merge(clusterStatsMCC) %>% arrange(-seqs) %>% dplyr::select(cluster, Pango.lineage, sample_date, lineage_seqs, adm1 ))
+# }
+
+
+  germany <- raster::getData("GADM", country = "DEU", level = 1)
+  germany.f <- fortify(germany, region = "CC_1")
+  
+  mapNames <- germany$VARNAME_1
+  mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+  mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+  
+  germany$NAME_1_EN <- germany$NAME_1
+  germany$NAME_1_EN[germany$NAME_1 == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  germany$NAME_1_EN[germany$NAME_1 == "Mecklenburg-Vorpommern"] <- "Mecklenburg-Western Pomerania"
+  germany$NAME_1_EN[germany$NAME_1 == "Bayern"] <- "Bavaria"
+  germany$NAME_1_EN[germany$NAME_1 == "Hessen"] <- "Hesse"
+  germany$NAME_1_EN[germany$NAME_1 == "Niedersachsen"] <- "Lower Saxony"
+  germany$NAME_1_EN[germany$NAME_1 == "Nordrhein-Westfalen"] <- "North Rhine-Westphalia"
+  germany$NAME_1_EN[germany$NAME_1 == "Rheinland-Pfalz"] <- "Rhineland-Palatinate"
+  germany$NAME_1_EN[germany$NAME_1 == "Sachsen"] <- "Saxony"
+  germany$NAME_1_EN[germany$NAME_1 == "Sachsen-Anhalt"] <- "Saxony-Anhalt"
+  germany$NAME_1_EN[germany$NAME_1 == "Thüringen"] <- "Thuringia"
+  
+  col <- '#1e0000'
+  # germany$value <- 0
+  germany.f$value <- germany$NAME_1_EN[match(germany.f$id, germany$CC_1)]
+  # id=11 is drawn again because it is inside another region.
+  p <- ggplot() + 
+    geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+    geom_polygon(data = germany.f[germany.f$id == "11",], aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+    # scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(0, 1),
+    #                     name = "legend_title")+
+    ggtitle("State colors") +
+    # options(repr.plot.width=max(germany.f$lat) - min(germany.f$lat), repr.plot.height=max(germany.f$long) - min(germany.f$long)) +
+    theme(axis.line=element_blank(), axis.text.x=element_blank(),
+          axis.text.y=element_blank(), axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          panel.background=element_blank(), panel.grid.major=element_blank(),
+          panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+          panel.grid.minor=element_blank(), plot.background=element_blank(), 
+          aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat))
+          ) + guides(fill=guide_legend(ncol=2))
+  print(p)
+
+  print(p +     scale_fill_manual(values = dePal[!str_detect(names(dePal), "Non .*") & names(dePal) != "NA"]) )
+
+  print(
+    ggplot() + 
+      geom_polygon(data = raster::getData("GADM", country = "DEU", level = 0), aes(x = long, y = lat, group = group, fill = "de"), color="grey10")+
+      ggtitle("Germany color") +
+      theme(axis.line=element_blank(), axis.text.x=element_blank(),
+            axis.text.y=element_blank(), axis.ticks=element_blank(),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),
+            panel.background=element_blank(), panel.grid.major=element_blank(),
+            panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+            panel.grid.minor=element_blank(), plot.background=element_blank(), 
+            aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)), 
+            legend.position = "none"
+            ) +
+      scale_fill_manual(values = c("de" = dePal$de)) 
+  ) 
+  
+  
+
+```
+
+\clearpage
+## Earliest transmission lineages
+
+```{r lineage-duration-earliest, fig.width=7, fig.height=9, fig.cap=lineage_duration_earliest_cap, eval=TRUE}
+    for (s in 1:nrow(stateFiles)) {
+      state <- stateFiles$state[s]
+      clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+      clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+      weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+      legendText1 <- stateInfo$legendText1[[s]]
+      legendText2 <- stateInfo$legendText2[[s]]
+      # dailyBreakdown <- stateInfo$dailyBreakdown[[s]]
+      cutoff <- stateInfo$cutoff[[s]]
+      
+      par(mar=c(5,10,3,7), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+      earlyLineages <- clusterStatsMCC[order(clusterStatsMCC$tmrca)[1:min(50, nrow(clusterStatsMCC))], ]
+      #plotLineageDurations(earlyLineages, clusterSamplesMCC, startDate="2020-01-12", endDate="2020-06-28", cutoff=cutoff, orderby="")
+      plotLineageDurations(earlyLineages, clusterSamplesMCC[], startDate=startDate, endDate=endDate, cutoff="2019-01-05", orderby="", state=state, pal=pal)
+    }
+    
+```
+
+\clearpage
+## Newest transmission lineages
+
+```{r lineage-duration-newest, fig.width=7, fig.height=9, fig.cap=lineage_duration_newest_cap, eval=TRUE}
+
+    for (s in 1:nrow(stateFiles)) {
+      state <- stateFiles$state[s]
+      clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+      clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+      weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+      legendText1 <- stateInfo$legendText1[[s]]
+      legendText2 <- stateInfo$legendText2[[s]]
+      # dailyBreakdown <- stateInfo$dailyBreakdown[[s]]
+      cutoff <- stateInfo$cutoff[[s]]
+    
+    par(mar=c(5,10,3,7), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+    newLineages <- clusterStatsMCC[order(clusterStatsMCC$tmrca, decreasing = TRUE)[1:min(50, nrow(clusterStatsMCC))], ]
+    #plotLineageDurations(newLineages, clusterSamplesMCC, startDate="2020-01-12", endDate="2020-06-28", cutoff=cutoff)
+    plotLineageDurations(newLineages, clusterSamplesMCC, startDate=startDate, endDate=endDate, cutoff="2019-01-05", state=state)
+    }
+```
+\clearpage
+## Longest periods of cryptic circulation
+
+```{r lineage-duration-cryptic, fig.width=7, fig.height=9, fig.cap=lineage_duration_cryptic_cap, eval=TRUE}
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  # dailyBreakdown <- stateInfo$dailyBreakdown[[s]]
+  cutoff <- stateInfo$cutoff[[s]]
+  
+  par(mar=c(5,10,3,7), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  longestCryptic <- clusterStatsMCC[order(clusterStatsMCC$oldest - clusterStatsMCC$tmrca, decreasing = TRUE)[1:min(50, nrow(clusterStatsMCC))], ]
+  plotLineageDurations(longestCryptic, clusterSamplesMCC, startDate=min(longestCryptic$tmrca_calendar) - 7, endDate=round_date(date_decimal(max(longestCryptic$mostrecent))+7, unit="day"), cutoff="2019-01-05", orderby = "", state=state)
+}
+
+```
+\clearpage
+## Longest sampling period
+
+```{r lineage-duration-longest, fig.width=7, fig.height=9, fig.cap=lineage_duration_longest_cap, eval=TRUE}
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  # dailyBreakdown <- stateInfo$dailyBreakdown[[s]]
+  cutoff <- stateInfo$cutoff[[s]]
+  
+  par(mar=c(5,10,3,7), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  longestSampling <- clusterStatsMCC[order(clusterStatsMCC$mostrecent - clusterStatsMCC$oldest, decreasing = TRUE)[1:min(50, nrow(clusterStatsMCC))], ]
+  #plotLineageDurations(longestSampling, clusterSamplesMCC, startDate="2020-01-12", endDate="2020-06-28", cutoff=cutoff, orderby="")
+  plotLineageDurations(longestSampling, clusterSamplesMCC, startDate="2020-01-01", endDate="2021-05-30", cutoff="2019-01-05", orderby="", state=state)
+}
+
+```
+
+\clearpage
+## Longest unobserved period before reactivating
+
+```{r lineage-longest-unobserved, fig.width=7, fig.height=9, fig.cap=lineage_duration_unobserved_cap, eval=TRUE}
+
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  # dailyBreakdown <- stateInfo$dailyBreakdown[[s]]
+  cutoff <- stateInfo$cutoff[[s]]
+  cutoff <- "2019-01-05"
+  
+  clusterStatsMCC$longest_unobserved <- rep(0, nrow(clusterStatsMCC))
+  for (i in 1:nrow(clusterStatsMCC)) {
+    sampleTimes <- sort(clusterSamplesMCC$sample_date[clusterSamplesMCC$cluster == as.character(clusterStatsMCC$cluster[i])])
+    clusterStatsMCC$longest_unobserved[i] <- max(diff(sampleTimes))
+  }
+  
+  par(mar=c(5,10,3,7), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  reemergedLineages <- clusterStatsMCC[order(clusterStatsMCC$longest_unobserved, decreasing = TRUE)[1:min(50, nrow(clusterStatsMCC))], ]
+  #plotLineageDurations(reemergedLineages, clusterSamplesMCC, startDate="2020-01-12", endDate="2020-06-28", cutoff=cutoff, orderby = "longest_unobserved")
+  plotLineageDurations(reemergedLineages, clusterSamplesMCC, startDate=startDate, endDate=endDate, cutoff=cutoff, orderby = "longest_unobserved", state=state)
+}
+```
+
+\clearpage
+## Largest lienages
+
+```{r lineage-largest, fig.width=7, fig.height=6, fig.cap=lineage_duration_unobserved_cap, eval=TRUE}
+
+for (s in 1:nrow(stateFiles)) {
+  state <- stateFiles$state[s]
+  clusterStatsMCC <- stateInfo$clusterStatsMCC[[s]]
+  clusterSamplesMCC <- stateInfo$clusterSamplesMCC[[s]]
+  weeklyBreakdown <- stateInfo$weeklyBreakdown[[s]]
+  legendText1 <- stateInfo$legendText1[[s]]
+  legendText2 <- stateInfo$legendText2[[s]]
+  # dailyBreakdown <- stateInfo$dailyBreakdown[[s]]
+  cutoff <- stateInfo$cutoff[[s]]
+  cutoff <- "2019-01-05"
+  lineagesWithSampleAfterFeb <- clusterSamplesMCC %>% group_by(cluster) %>% dplyr::summarise(seq = n(), earliest = max(Collection.date)) %>% filter(earliest >= as.Date("2021-02-01")) %>% pull(cluster)
+  
+  largeLineages <- clusterStatsMCC[order(-clusterStatsMCC$seqs)[1:min(100, nrow(clusterStatsMCC))], ]
+  largeLineages <- largeLineages %>% filter(cluster %in% lineagesWithSampleAfterFeb) 
+  # largeLineages <- clusterSamplesMCC %>% group_by(cluster) %>% dplyr:summerise()
+
+  par(mar=c(5,10,3,7), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  plotLineageDurations(largeLineages, clusterSamplesMCC, startDate="2020-06-01", endDate=endDate, cutoff=cutoff, orderby = "", state=state)
+
+  # par(mar=c(5,10,3,7), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  plotLineageDurations(largeLineages %>% filter(seqs >= 15), clusterSamplesMCC, startDate="2020-06-01", endDate="2021-06-01", cutoff=cutoff, orderby = "", state=state, pal = NULL)
+
+  # par(mar=c(5,10,3,7), cex.axis=0.7, cex.lab=0.8, mgp=c(2,0.75,0))
+  plotLineageDurations(largeLineages %>% filter(seqs >= 15), clusterSamplesMCC, startDate="2020-06-01", endDate="2021-06-01", cutoff=cutoff, orderby = "", state=state, pal = NULL)
+
+  plotLineageDurations(clusterStatsMCC %>% left_join(clusterSamplesMCC %>% filter(Collection.date >= as.Date("2021-01-01")) %>% group_by(cluster) %>% dplyr::summarise(seq.after.jan = n()), by = "cluster") %>% filter(seq.after.jan >= 50) %>% arrange(-seqs), clusterSamplesMCC, startDate="2020-06-01", endDate="2021-06-01", cutoff=cutoff, orderby = "", state=state, pal = NULL, main = "Lineages with at least 8 samples after 2021-01")
+}
+```
+
+\clearpage
+
+#Shannon Index
+
+```{r shannon-index-initialize, eval=TRUE}
+clusterAdm1 <- clusterSamplesMCC %>% mutate(adm1 = ifelse(adm1 == "Sachsen", "Saxony", adm1)) %>% mutate(adm1 = ifelse(adm1 == "Herzogenrath", "North Rhine-Westphalia", adm1)) %>% group_by(cluster, adm1) %>% dplyr::summarize(x=n()) %>% tidyr::spread(key=adm1, value=x, fill=0) %>% as.data.frame()
+rownames(clusterAdm1) <- clusterAdm1$cluster
+clusterAdm1 <- clusterAdm1 %>% dplyr::select(-cluster)
+clusterAdm1IndexInClusterStatsMCC <- match(rownames(clusterAdm1), clusterStatsMCC$cluster)
+
+clusterStatsMCC[clusterAdm1IndexInClusterStatsMCC[!is.na(clusterAdm1IndexInClusterStatsMCC)], "shannon.index"] <- diversity(clusterAdm1[!is.na(clusterAdm1IndexInClusterStatsMCC), ])
+
+deCountyShannonIndex <- data.frame(county = colnames(clusterAdm1), "shannon.index" = diversity(t(clusterAdm1[!is.na(clusterAdm1IndexInClusterStatsMCC), ])))
+# deCounty <- deCounty[!deCounty$county %in% c("NA"),]
+# rownames(deCounty) <- deCounty$county
+deCounty <- deCounty %>% left_join(deCountyShannonIndex, by = c("state" = "county"))
+
+```
+
+
+```{r shannon-index-lienage, eval=TRUE}
+
+knitr::kable(clusterStatsMCC[order(-clusterStatsMCC$shannon.index), c("cluster", "shannon.index", "seqs")], 
+             col.names = c("Cluster",
+                         "Shannon Index",
+                         "No. Sequences"), row.names=FALSE, 
+             caption = "Clusters with highest Shannon Index") 
+
+data <- deCounty[order(-deCounty$shannon.index), c("state", "shannon.index")] 
+data[,2] = round(data[,2],2)
+
+knitr::kable(data, 
+             col.names = c("County",
+                         "Shannon Index"), row.names=FALSE, 
+             caption = "Counties with highest Shannon Index. Singletone clusters not included.") 
+
+
+```
+
+
+```{r shannon-index-map, fig.width=2.5, fig.height=4, eval=TRUE}
+
+# germany <- raster::getData("GADM", country = "DEU", level = 1)
+# germany.f <- fortify(germany, region = "CC_1")
+# 
+# mapNames <- germany$VARNAME_1
+# mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+# mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+# mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+# 
+# germany$NAME_1_EN <- germany$NAME_1
+# germany$NAME_1_EN[germany$NAME_1 == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+# germany$NAME_1_EN[germany$NAME_1 == "Mecklenburg-Vorpommern"] <- "Mecklenburg-Western Pomerania"
+# germany$NAME_1_EN[germany$NAME_1 == "Bayern"] <- "Bavaria"
+# germany$NAME_1_EN[germany$NAME_1 == "Hessen"] <- "Hesse"
+# germany$NAME_1_EN[germany$NAME_1 == "Niedersachsen"] <- "Lower Saxony"
+# germany$NAME_1_EN[germany$NAME_1 == "Nordrhein-Westfalen"] <- "North Rhine-Westphalia"
+# germany$NAME_1_EN[germany$NAME_1 == "Rheinland-Pfalz"] <- "Rhineland-Palatinate"
+# germany$NAME_1_EN[germany$NAME_1 == "Sachsen"] <- "Saxony"
+# germany$NAME_1_EN[germany$NAME_1 == "Sachsen-Anhalt"] <- "Saxony-Anhalt"
+# germany$NAME_1_EN[germany$NAME_1 == "Thüringen"] <- "Thuringia"
+# 
+# germany$value <- 0
+# germany$value[match(deCounty$county, germany$NAME_1_EN)] <- deCounty$shannon.index
+# 
+# 
+# germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+# maxcase <- max(germany$value)
+# col = "#FF8000"
+# 
+#   p <- ggplot() + 
+#     geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+#     scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(3.35, maxcase),
+#                         name = "Shannon index")+
+#     # geom_point(data=starting_points, mapping=aes(x=long, y=lat), size=5, col=col) +
+#     ggtitle("Shannon index of counties") +
+#     theme(axis.line=element_blank(), axis.text.x=element_blank(),
+#           axis.text.y=element_blank(), axis.ticks=element_blank(),
+#           axis.title.x=element_blank(),
+#           axis.title.y=element_blank(),
+#           panel.background=element_blank(), panel.grid.major=element_blank(),
+#           panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+#           panel.grid.minor=element_blank(), plot.background=element_blank())
+#   print(p)
+
+plot_on_map(deCounty$state, deCounty$shannon.index, title="C", legend_title = "Shannon index ", col = "#fdae61", min_value = 1, max_value = max(deCounty$shannon.index), legend.position = "bottom", text.font.size = NULL)
+
+plot_on_map(deCounty$state, deCounty$shannon.index, title="", legend_title = "Shannon index ", col = "#fdae61", min_value = 1, max_value = max(deCounty$shannon.index), legend.position = "bottom", text.font.size = NULL)
+
+```
+```{r shannon-index-interval, fig.width=2.5, fig.height=4}
+
+data <- clusterSamplesMCC %>% mutate(adm1=ifelse(adm1=="Baden-Württemberg", "Baden-Wurttemberg", adm1)) %>% filter(as.Date(Collection.date) >= as.Date("2021-02-01")) %>% mutate(week = calculateWeek(as.Date(sample_date), referenceDate)) %>% dplyr::group_by(adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+data <- data %>% dplyr::union(data %>% group_by(cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% tidyr::spread(cluster, seq, fill=0) 
+data <- data %>% mutate(shannon.index = diversity(data %>% dplyr::select(-adm1))) %>% dplyr::select(adm1, shannon.index) %>% filter(adm1 != "Germany" & adm1 != "NA")
+
+knitr::kable(data %>% arrange(-shannon.index))
+plot_on_map(data$adm1, data$shannon.index, title="C", legend_title = "Shannon index ", col = "#fdae61", min_value = min(data$shannon.index), max_value = max(data$shannon.index), legend.position = "bottom", text.font.size = NULL)
+
+deCounty = deCounty %>% mutate(shannon.index = data$shannon.index[data$adm1 == state])
+
+
+```
+
+```{r shannon-index-time, fig.width=6, fig.height=2.5}
+
+referenceDate <- as.Date("2021-02-01")
+lin <- "B.1.1.7"
+countyImportant <- c("Bavaria", "Baden-Wurttemberg", "North Rhine-Westphalia")
+
+calculateWeek <- function(dates, referenceDate) {
+   return(as.numeric(dates - referenceDate)%/%7)
+}
+
+inset_element <- function(p, left, bottom, right, top, align_to = 'panel', on_top = TRUE, clip = TRUE, ignore_tag = FALSE) {
+  align_to <- match.arg(align_to, c('panel', 'plot', 'full'))
+  if (!is.unit(left)) {
+    left <- unit(left, 'npc')
+  }
+  if (!is.unit(bottom)) {
+    bottom <- unit(bottom, 'npc')
+  }
+  if (!is.unit(right)) {
+    right <- unit(right, 'npc')
+  }
+  if (!is.unit(top)) {
+    top <- unit(top, 'npc')
+  }
+  if (!is.ggplot(p)) {
+    p <- wrap_elements(full = p, clip = FALSE)
+  }
+  if (!is.ggplot(p)) {
+    p <- wrap_elements(full = p, clip = clip)
+  }
+  clip <- if (clip) 'on' else 'off'
+  attr(p, 'settings') <- list(left = left, bottom = bottom, right = right,
+                           top = top, align_to = align_to, on_top = on_top,
+                           clip = clip, ignore_tag = ignore_tag)
+  class(p) <- c('inset_patch', class(p))
+  p
+}
+
+legend.map.color <- sdePal
+      
+germany <- raster::getData("GADM", country = "DEU", level = 1)
+germany.f <- fortify(germany, region = "CC_1")
+
+mapNames <- germany$VARNAME_1
+mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+
+germany$NAME_1_EN <- germany$NAME_1
+germany$NAME_1_EN[germany$NAME_1 == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+germany$NAME_1_EN[germany$NAME_1 == "Mecklenburg-Vorpommern"] <- "Mecklenburg-Western Pomerania"
+germany$NAME_1_EN[germany$NAME_1 == "Bayern"] <- "Bavaria"
+germany$NAME_1_EN[germany$NAME_1 == "Hessen"] <- "Hesse"
+germany$NAME_1_EN[germany$NAME_1 == "Niedersachsen"] <- "Lower Saxony"
+germany$NAME_1_EN[germany$NAME_1 == "Nordrhein-Westfalen"] <- "North Rhine-Westphalia"
+germany$NAME_1_EN[germany$NAME_1 == "Rheinland-Pfalz"] <- "Rhineland-Palatinate"
+germany$NAME_1_EN[germany$NAME_1 == "Sachsen"] <- "Saxony"
+germany$NAME_1_EN[germany$NAME_1 == "Sachsen-Anhalt"] <- "Saxony-Anhalt"
+germany$NAME_1_EN[germany$NAME_1 == "Thüringen"] <- "Thuringia"
+
+germany.f$value <- germany$NAME_1_EN[match(germany.f$id, germany$CC_1)]
+
+pMap <- ggplot() + 
+  geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey10", size = 0.1)+
+  geom_polygon(data = germany.f[germany.f$id == "11",], aes(x = long, y = lat, group = group, fill = value), colour = "grey10", size = 0.1)+
+  # scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(0, 1),
+  #                     name = "legend_title")+
+  # ggtitle("State colors") +
+  # options(repr.plot.width=max(germany.f$lat) - min(germany.f$lat), repr.plot.height=max(germany.f$long) - min(germany.f$long)) +
+  theme(axis.line=element_blank(), axis.text.x=element_blank(),
+        axis.text.y=element_blank(), axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.background=element_blank(), panel.grid.major=element_blank(),
+        # panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+        panel.grid.minor=element_blank(), plot.background=element_blank(), 
+        aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)),
+        legend.position="none"
+        ) + scale_fill_manual(values = legend.map.color)
+
+data <- clusterSamplesMCC %>% mutate(week = calculateWeek(as.Date(sample_date), referenceDate)) %>% dplyr::group_by(week, adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+data <- data %>% filter(adm1 %in% countyImportant) %>% dplyr::union(data %>% group_by(week, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% dplyr::union(data %>% filter(!adm1 %in% countyImportant, adm1 != "NA") %>% group_by(week, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Other")) %>% tidyr::spread(cluster, seq, fill=0) 
+data <- data %>% mutate(shannon.index = diversity(data %>% dplyr::select(-week, -adm1))) %>% dplyr::select(week, adm1, shannon.index) %>% mutate(week_start = referenceDate + week * 7)
+
+marks__extended <- do.call(rbind.data.frame, marks_) %>% mutate(date = as.Date(date)) #%>% left_join(data, by=c("date" = "date"))
+
+ymax <- 5
+
+p <- ggplot(data, aes(x=week_start, y=shannon.index, color = adm1)) +
+ geom_line() + 
+ scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-20")), expand = c(0, 0)) +
+ scale_color_manual(values = unlist(sdePal[c("Other", "Germany", countyImportant)]), name = "State") +
+ labs(y = 'Shannon diversity index', x= NULL) + 
+ theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+       axis.title = element_text(size = 10),
+     axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm")) +
+  ylim(0, ymax*1.1)
+print(p + inset_element(pMap, 1.0, -0.3, 1.5, 0.4))
+
+
+
+p <- p +
+  geom_segment(data=marks__extended, aes(x=date, y=0, xend=date, yend=ymax), color=marks__extended$color, linetype=1) +
+  geom_text(data=marks__extended, aes(label=label, x=date, y=ymax), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax, size=2.5) + ylim(0, ymax*1.1)
+print(p + inset_element(pMap, 1.0, -0.3, 1.5, 0.4))
+
+
+```
+
+```{r, fig.width=5, fig.height=4.5}
+
+statesAllGermany <- clusterSamplesMCC %>% pull(adm1) %>% as.factor() %>% levels()
+
+data <- clusterSamplesMCC %>% mutate(week = calculateWeek(as.Date(sample_date), referenceDate)) %>% dplyr::group_by(week, adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+data <- data %>% filter(adm1 %in% countyImportant) %>% dplyr::union(data %>% group_by(week, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% dplyr::union(data %>% filter(!adm1 %in% countyImportant, adm1 != "NA") %>% group_by(week, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Other")) %>% tidyr::spread(cluster, seq, fill=0) 
+data <- data %>% mutate(shannon.index = diversity(data %>% dplyr::select(-week, -adm1)), 
+                        # lin.count = apply(data %>% dplyr::select(-week, -adm1, shannon.index), 2, function(x) sum(x > 0) ),
+                        lin.count = rowSums(data %>% dplyr::select(-week, -adm1) > 0),
+                        species.evenness = ifelse(lin.count > 0, shannon.index / log(lin.count), Inf)) %>% 
+                          dplyr::select(week, adm1, shannon.index, species.evenness) %>% mutate(week_start = referenceDate + week * 7) 
+
+
+p <- ggplot(data, aes(x=week_start, y=species.evenness, color = adm1)) +
+ geom_line() + 
+ scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-20")), expand = c(0, 0)) +
+ scale_color_manual(values = unlist(sdePal[c("Other", "Germany", countyImportant)]), name = "State") +
+ labs(y = 'Shannon diversity index', x= NULL) + 
+ theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+       axis.title = element_text(size = 10),
+     axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm")) +
+  ylim(0, 1*1.1)
+print(p )
+
+
+
+data <- clusterSamplesMCC %>% filter(Collection.date >= as.Date("2021-01-01")) %>% dplyr::group_by(adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+data <- data %>% dplyr::union(data %>% group_by(cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% tidyr::spread(cluster, seq, fill=0) 
+data <- data %>% mutate(shannon.index = diversity(data %>% dplyr::select(-adm1)), 
+                        lin.count = rowSums(data %>% dplyr::select(-adm1) > 0),
+                        species.evenness = ifelse(lin.count > 0, shannon.index / log(lin.count), Inf)) %>% 
+                          dplyr::select(adm1, shannon.index, species.evenness) 
+
+print(kable(data %>% arrange(-species.evenness)))
+
+p <- ggplot(data %>% filter(adm1!="NA") %>% left_join(clusterSamplesMCC %>% filter(Collection.date >= as.Date("2021-01-01")) %>% group_by(adm1) %>% dplyr::summarise(seq.after.2021 = n())) %>% left_join(clusterSamplesMCC %>% group_by(adm1) %>% dplyr::summarise(seq = n())), aes(x=seq.after.2021, y=species.evenness, label = adm1, col = adm1)) +
+  geom_point() + geom_text_repel(show.legend = FALSE) + 
+  xlab("Number of analyzed sequences after 01-Jan-2021") + ylab("Lineage evenness") +
+  # scale_color_manual(values = unlist(dePal[statesAllGermany]), name = "State")  + 
+  theme_bw() + guides(color = FALSE)
+  # xlim(-400, 800) + ylim(-1, 2)
+print(p)
+
+p <- ggplot(data %>% filter(adm1!="NA") %>% left_join(clusterSamplesMCC %>% filter(Collection.date >= as.Date("2021-01-01")) %>% group_by(adm1) %>% dplyr::summarise(seq.after.2021 = n())) %>% left_join(clusterSamplesMCC %>% group_by(adm1) %>% dplyr::summarise(seq = n())), aes(x=seq.after.2021, y=shannon.index, label = adm1, col = adm1)) +
+  geom_point() + geom_text_repel(show.legend = FALSE) + 
+  xlab("Number of analyzed sequences after 01-Jan-2021") + ylab("Shannon index") +
+  # scale_color_manual(values = unlist(dePal[statesAllGermany]), name = "State") +
+  # xlim(-400, 800) + 
+  ylim(0, 6) + theme_bw() + guides(color = FALSE)
+print(p)
+
+
+p <- ggplot(data %>% left_join(clusterSamplesMCC %>% filter(Collection.date >= as.Date("2021-01-01")) %>% group_by(adm1) %>% dplyr::summarise(lin.no = n_distinct(cluster))) %>% filter(adm1 != "NA"), aes(x=lin.no, y=species.evenness, label = adm1, col = adm1)) +
+  geom_point() + geom_text_repel(show.legend = FALSE) + 
+  xlab("Number of importation lineages since 01-Jan-2021") + ylab("Lineage evenness") +
+  # scale_color_manual(values = unlist(dePal[statesAllGermany]), name = "State")  + 
+  theme_bw() + guides(color = FALSE)
+  # xlim(-400, 800) + ylim(0, 4)
+print(p)
+
+
+p <- ggplot(clusterSamplesMCC %>% filter(Collection.date >= as.Date("2021-01-01")) %>% group_by(adm1) %>% dplyr::summarise(lin.no = n_distinct(cluster), seq = n()) %>% filter(adm1 != "NA"), aes(x=lin.no, y=seq, label = adm1, col = adm1)) +
+  geom_point() + geom_text_repel(show.legend = FALSE) + 
+  xlab("Number of sequences since 01-Jan-2021") + ylab("Number of sequences since 01-Jan-2021") +
+  # scale_color_manual(values = unlist(dePal[statesAllGermany]), name = "State") + 
+  theme_bw()  + guides(color = FALSE)
+  # xlim(-400, 800) + ylim(0, 4)
+print(p)
+
+#sequences are counted after 01-Jan-2021
+```
+
+```{r cluster-distribution-in-states, fig.width=6, fig.height=2.5}
+
+data <- clusterSamplesMCC  %>% filter(Collection.date >= as.Date("2021-01-01")) %>% dplyr::group_by(adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+data <- data %>% dplyr::union(data %>% group_by(cluster) %>% dplyr::summarise(seq = sum(seq)) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% 
+  left_join(clusterSamplesMCC %>% group_by(cluster) %>% dplyr::summarise(tmrca_shifted_calendar = min(tmrca_shifted_calendar)), by=c("cluster"="cluster"))
+#%>% tidyr::spread(cluster, seq, fill=0) 
+
+for (adm1.index in seq(length(statesAllGermany))) {
+  adm1.i = statesAllGermany[adm1.index]
+  
+  p <- ggplot(data = data %>% filter(adm1 == adm1.i) %>% filter(seq > 0) %>% dplyr::select(-adm1) %>% arrange(-seq), aes(x=reorder(cluster, -seq), y=seq)) + 
+    geom_bar(stat='identity', fill = dePal[[adm1.i]]) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = paste0("Sequences of ", adm1.i))
+  print(p)
+  
+  p <- ggplot(data = data %>% filter(adm1 == adm1.i) %>% filter(seq > 0) %>% dplyr::select(-adm1) %>% arrange(-seq) %>% top_n(20), aes(x=reorder(cluster, -seq), y=seq)) + 
+    geom_bar(stat='identity', fill = dePal[[adm1.i]]) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = paste0("Sequences of ", adm1.i))
+  print(p)
+  
+  p <- ggplot(data = data %>% filter(adm1 == adm1.i) %>% filter(seq > 0) %>% dplyr::select(-adm1) %>% arrange(-seq), aes(x=seq)) + 
+    geom_histogram(binwidth=1, fill = dePal[[adm1.i]]) + labs(y = paste0("Count ", adm1.i))
+  print(p)
+  
+  # p <- ggplot(data = data %>% filter(adm1 == adm1.i) %>% filter(seq > 0) %>% mutate(old = as.numeric(as.Date("2021-06-01") - tmrca_shifted_calendar)), aes(area=seq, fill = old)) + labs(fill = paste0(adm1.i, "\nImportation date\n(days before 2021-06-1)")) + 
+  #   #scale_fill_gradient(low=dePal[[adm1.i]], high=darken(dePal[adm1.i], 0.5)) + 
+  #   geom_treemap(color="white", start="topleft", show.legend = TRUE) 
+  # print(p)
+  treemap(data %>% filter(adm1 == adm1.i) %>% filter(seq > 0) %>% mutate(old = as.numeric(as.Date("2021-06-01") - tmrca_shifted_calendar)), index="cluster", vSize = "seq", vColor = "old", type="value", 
+          title = adm1.i, title.legend = paste0("Importation date (days before 2021-06-1)"), 
+            fontsize.labels = 10, border.lwds = 0.4, cex=2, fontsize.legend=9, position.legend = "bottom", range=c(0,400), mapping=c(0,as.numeric(as.Date("2021-06-01"))-as.numeric(as.Date("2021-01-01")),400), palette="RdYlBu")
+}
+
+```
+```{r}
+  data <- clusterSamplesMCC  %>% filter(Collection.date >= as.Date("2021-01-01")) %>% dplyr::group_by(adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+  data <- data %>% dplyr::union(data %>% group_by(cluster) %>% dplyr::summarise(seq = sum(seq)) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% 
+    left_join(clusterSamplesMCC %>% group_by(cluster) %>% dplyr::summarise(tmrca_shifted_calendar = min(tmrca_shifted_calendar)), by=c("cluster"="cluster"))
+  data <- data %>% mutate(old = as.numeric(as.Date("2021-06-01") - tmrca_shifted_calendar)) %>% group_by(adm1) %>% filter(seq == max(seq)) %>% filter(old == max(old)) %>% arrange(-seq) %>% ungroup() %>% filter(adm1 != "NA", adm1 != "Germany")
+  print(kable(data))
+  
+  
+  # plot_on_map(data$adm1, data$old, title="", legend_title = "dayes before 2021-06-01", col = "#fdae61", min_value = 0, max_value = 400, legend.position = "bottom", text.font.size = NULL)
+  names = data$adm1
+  values = data$old
+  
+  germany <- raster::getData("GADM", country = "DEU", level = 1)
+  germany.f <- fortify(germany, region = "CC_1")
+  
+  names[names == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  
+  mapNames <- germany$VARNAME_1
+  mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+  mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+  
+  germany$NAME_1_EN <- germany$NAME_1
+  germany$NAME_1_EN[germany$NAME_1 == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  germany$NAME_1_EN[germany$NAME_1 == "Mecklenburg-Vorpommern"] <- "Mecklenburg-Western Pomerania"
+  germany$NAME_1_EN[germany$NAME_1 == "Bayern"] <- "Bavaria"
+  germany$NAME_1_EN[germany$NAME_1 == "Hessen"] <- "Hesse"
+  germany$NAME_1_EN[germany$NAME_1 == "Niedersachsen"] <- "Lower Saxony"
+  germany$NAME_1_EN[germany$NAME_1 == "Nordrhein-Westfalen"] <- "North Rhine-Westphalia"
+  germany$NAME_1_EN[germany$NAME_1 == "Rheinland-Pfalz"] <- "Rhineland-Palatinate"
+  germany$NAME_1_EN[germany$NAME_1 == "Sachsen"] <- "Saxony"
+  germany$NAME_1_EN[germany$NAME_1 == "Sachsen-Anhalt"] <- "Saxony-Anhalt"
+  germany$NAME_1_EN[germany$NAME_1 == "Thüringen"] <- "Thuringia"
+  
+  germany$value <- 0
+  germany$value[match(names, germany$NAME_1_EN)] <- values
+  
+  
+  germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+  if (is.null(max_value)) {
+    max_value <- max(germany$value) * 1.1
+  }
+  
+  # id=11 is drawn again because it is inside another region.
+  p <- ggplot() + 
+    geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+    geom_polygon(data = germany.f[germany.f$id == "11",], aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+    # scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(min_value, max_value),
+    #                     name = legend_title)+
+    scale_fill_gradient2(low = "red",
+      mid = "ivory",
+      high = "blue",
+      midpoint = as.numeric(as.Date("2021-06-01"))-as.numeric(as.Date("2021-01-01")),
+      limits = c(0, 200),
+      space = "Lab",
+      na.value = "grey50",
+      guide = "colourbar",
+      aesthetics = "fill") + 
+     ggtitle("Importation date of the dominant lineage") +
+    # options(repr.plot.width=max(germany.f$lat) - min(germany.f$lat), repr.plot.height=max(germany.f$long) - min(germany.f$long)) +
+    theme(axis.line=element_blank(), axis.text.x=element_blank(),
+          axis.text.y=element_blank(), axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          panel.background=element_blank(), panel.grid.major=element_blank(),
+          panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+          panel.grid.minor=element_blank(), plot.background=element_blank(), 
+          aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)) #,
+          # legend.position = legend.position,
+          # text = element_text(size = text.font.size)
+          )
+  print(p)
+  
+
+```
+
+```{r, fig.width=9, fig.height=5}
+data <- clusterSamplesMCC %>% filter(Collection.date >= as.Date("2021-01-01"), adm1 != "NA") %>% dplyr::group_by(adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% tidyr::spread(cluster, seq, fill=0) 
+# data <- data %>% filter(adm1 %in% countyImportant) %>% dplyr::union(data %>% group_by(week, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% dplyr::union(data %>% filter(!adm1 %in% countyImportant, adm1 != "NA") %>% group_by(week, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Other")) %>% tidyr::spread(cluster, seq, fill=0) 
+# data <- data %>% mutate(shannon.index = diversity(data %>% dplyr::select(-week, -adm1)), 
+#                         # lin.count = apply(data %>% dplyr::select(-week, -adm1, shannon.index), 2, function(x) sum(x > 0) ),
+#                         lin.count = rowSums(data %>% dplyr::select(-week, -adm1) > 0),
+#                         species.evenness = ifelse(lin.count > 0, shannon.index / log(lin.count), Inf)) %>% 
+#                           dplyr::select(week, adm1, shannon.index, species.evenness) %>% mutate(week_start = referenceDate + week * 7)
+
+# "hellinger", "aitchison", "morisita", "cao",
+for (d in c("manhattan", "euclidean", "canberra", "clark", "bray", "kulczynski", "jaccard", "gower", "altGower",  "horn", "mountford", "raup", "binomial", "chao", "mahalanobis", "chisq", "chord", "robust.aitchison")) {
+  cat(d)
+  nmds = metaMDS(data %>% dplyr::select(-adm1), distance = d)
+  p <- ggplot(data.frame(data$adm1, scores(nmds)$sites), aes(x = NMDS1, y = NMDS2, label=data.adm1, col = data.adm1)) + 
+      geom_point(size = 2)+
+      geom_text_repel(show.legend = FALSE) + 
+      labs(x = "NMDS1", y = "NMDS2", title= paste("NMDS for distance", d)) +
+      scale_color_manual(values = unlist(dePal[statesAllGermany]), name = "State")
+
+  print(p)
+
+  x <- as.matrix(vegdist(data %>% dplyr::select(-adm1), diag = TRUE, upper = TRUE, method = d))
+  rownames(x) <- colnames(x) <- data$adm1
+  # print(kable(x))
+  heatmap.2(x, cellnote = round(x, 1), trace = "none", notecol="black", ) # , margins=c(8,8)
+  title(d)
+
+}
+
+```
+```{r, fig.width=9, fig.height=6}
+
+
+# par(mar=c(4,14,10,8))
+
+data <- clusterSamplesMCC %>% mutate(week = calculateWeek(as.Date(sample_date), referenceDate)) %>% dplyr::group_by(week, adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+data <- data %>% filter(adm1 != "NA") %>% dplyr::union(data %>% group_by(week, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% tidyr::spread(cluster, seq, fill=0) 
+data <- data %>% mutate(shannon.index = diversity(data %>% dplyr::select(-week, -adm1)), 
+                                                  lin.count = rowSums(data %>% dplyr::select(-week, -adm1) > 0),
+                                                  species.evenness = ifelse(lin.count > 0, shannon.index / log(lin.count), Inf)) %>% 
+  dplyr::select(week, adm1, shannon.index, species.evenness, lin.count) %>% mutate(week_start = referenceDate + week * 7) %>% 
+  left_join(clusterSamplesMCC %>% mutate(week = calculateWeek(as.Date(sample_date), referenceDate)) %>% dplyr::group_by(week, adm1) %>% dplyr::summarise(lin.seq = n()) %>% ungroup(), by=c("week", "adm1")) %>% 
+  mutate(lin.count = ifelse(lin.seq > 10, lin.count,  NA), species.evenness  = ifelse(lin.seq > 10, species.evenness,  NA))
+
+
+ # pal <- dePal
+ # pal[["Germany"]] <- sdePal[["Germany"]]
+pal <- sdePal
+
+for (adm.list in list(c("Baden-Wurttemberg", "Bavaria", "Saxony", "Hamburg", "Lower Saxony", "Bremen", "Berlin", "Saxony-Anhalt", "Hesse", "Saarland", "Thuringia", "Brandenburg", "Mecklenburg-Western Pomerania", "North Rhine-Westphalia", "Rhineland-Palatinate", "Schleswig-Holstein"), c(germanyImportantStates, "Germany"), c("Baden-Wurttemberg", "Bavaria", "Saxony"), c("Hamburg", "Lower Saxony", "Bremen", "Berlin"), c("Saxony-Anhalt", "Hesse", "Saarland", "Thuringia"), c("Brandenburg", "Mecklenburg-Western Pomerania", "North Rhine-Westphalia", "Rhineland-Palatinate", "Schleswig-Holstein"))) {
+  p <- ggplot(data %>% filter(adm1 %in% adm.list), aes(x=week_start, y=species.evenness, color = adm1)) +
+   geom_line() + 
+    geom_point() +
+   scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-20")), expand = c(0, 0)) +
+   scale_color_manual(values = unlist(pal[adm.list]), name = "State") +
+   labs(y = 'Evenness of lineages', x= NULL) + 
+   theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+         axis.title = element_text(size = 10),
+       axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm")) +
+    ylim(0, 1*1.1)
+  print(p)
+  grid.text("2020", x=unit(0.28, "npc"), y = unit(-0.0, "npc"), just = c("left", "bottom"), gp = gpar(col="darkgray", fontsize=9))
+  grid.text("2021", x=unit(0.33, "npc"), y = unit(-0.0, "npc"), just = c("left", "bottom"), gp = gpar(col="darkgray", fontsize=9))
+}
+ 
+ ymax <- 100
+
+for (adm.list in list(c("Baden-Wurttemberg", "Bavaria", "Saxony", "Hamburg", "Lower Saxony", "Bremen", "Berlin", "Saxony-Anhalt", "Hesse", "Saarland", "Thuringia", "Brandenburg", "Mecklenburg-Western Pomerania", "North Rhine-Westphalia", "Rhineland-Palatinate", "Schleswig-Holstein"), c(germanyImportantStates, "Germany"), c("Baden-Wurttemberg", "Bavaria", "Saxony"), c("Hamburg", "Lower Saxony", "Bremen", "Berlin"), c("Saxony-Anhalt", "Hesse", "Saarland", "Thuringia"), c("Brandenburg", "Mecklenburg-Western Pomerania", "North Rhine-Westphalia", "Rhineland-Palatinate", "Schleswig-Holstein"))) {
+  p <- ggplot(data %>% filter(adm1 %in% adm.list), aes(x=week_start, y=lin.count, color = adm1)) +
+   geom_line() + 
+    geom_point() +
+   scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-20")), expand = c(0, 0)) +
+   scale_color_manual(values = unlist(pal[adm.list]), name = "State") +
+   labs(y = 'Richness (Number of observed lineages)', x= NULL) + 
+   theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+         axis.title = element_text(size = 10),
+       axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm")) +
+    ylim(0, ymax*1.1)
+  print(p)
+  grid.text("2020", x=unit(0.28, "npc"), y = unit(-0.0, "npc"), just = c("left", "bottom"), gp = gpar(col="darkgray", fontsize=9))
+  grid.text("2021", x=unit(0.33, "npc"), y = unit(-0.0, "npc"), just = c("left", "bottom"), gp = gpar(col="darkgray", fontsize=9))
+}
+
+```
+
+```{r}
+
+
+data <- clusterSamplesMCC %>% mutate(week = calculateWeek(as.Date(sample_date), referenceDate)) %>% dplyr::group_by(week, adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+data <- data %>% filter(adm1 != "NA") %>% dplyr::union(data %>% group_by(week, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Germany")) %>% tidyr::spread(cluster, seq, fill=0) 
+data <- data %>% mutate(shannon.index = diversity(data %>% dplyr::select(-week, -adm1)), 
+                                                  lin.count = rowSums(data %>% dplyr::select(-week, -adm1) > 0),
+                                                  species.evenness = ifelse(lin.count > 0, shannon.index / log(lin.count), Inf)) %>% 
+  dplyr::select(week, adm1, shannon.index, species.evenness, lin.count) %>% 
+  left_join(clusterSamplesMCC %>% mutate(week = calculateWeek(as.Date(sample_date), referenceDate)) %>% dplyr::group_by(week, adm1) %>% dplyr::summarise(seq = n()) %>% ungroup(), by=c("week", "adm1")) %>%
+  mutate(week_start = referenceDate + week * 7)
+
+
+ymax = 40
+for (stateIt in germanyImportantStates) {
+  p <- ggplot(data %>% filter(adm1 == stateIt), aes(x=week_start, y=species.evenness, fill = if_else(seq <= 10, "Low sequence number", "High sequence number"))) +
+   geom_bar(stat="identity") +
+   scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-20")), expand = c(0, 0)) +
+   # scale_color_manual(values = unlist(pal[adm.list]), name = "State") +
+   labs(y = 'Evenness of lineages', x= NULL, title = stateIt) +
+   theme(axis.text.x = element_text(angle = 90, hjust = 1),
+         axis.title = element_text(size = 10),
+       axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm")) +
+    ylim(0, 1*1.1) + guides(fill=guide_legend(title="Number of sequences")) + scale_fill_manual(values=c(sdePal[[stateIt]], "gray"))
+  print(p)
+
+  p <- ggplot(data = data %>% filter(adm1 == stateIt), aes(x=week_start, y=lin.count, fill = if_else(seq <= 10, "Low sequence number", "High sequence number"))) +
+   geom_bar(stat="identity") +
+   scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-20")), expand = c(0, 0)) +
+   # scale_color_manual(values = unlist(pal[adm.list]), name = "State") +
+   labs(y = 'Richness (Number of observed lineages)', x= NULL, title = stateIt) +
+   theme(axis.text.x = element_text(angle = 90, hjust = 1),
+         axis.title = element_text(size = 10),
+       axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm")) +
+    ylim(0, ymax*1.1) + guides(fill=guide_legend(title="Number of sequences")) + scale_fill_manual(values=c(sdePal[[stateIt]], "gray"))
+  print(p)
+
+}
+
+  # p <- ggplot(data %>% filter(adm1 %in% germanyImportantStates), aes(x=week_start, y=species.evenness, fill = adm1)) +
+  #  geom_bar(stat="identity", position=position_dodge()) +
+  #  scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-20")), expand = c(0, 0)) +
+  #  # scale_color_manual(values = unlist(pal[adm.list]), name = "State") +
+  #  labs(y = 'Evenness of lineages', x= NULL, title = stateIt) + 
+  #  theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+  #        axis.title = element_text(size = 10),
+  #      axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm")) +
+  #   ylim(0, 1*1.1) + guides(fill=guide_legend(title="Number of sequences")) + scale_fill_manual(values=c(sdePal[germanyImportantStates], "gray"))
+  # print(p)
+  # 
+  # p <- ggplot(data = data %>% filter(adm1 %in% germanyImportantStates), aes(x=week_start, y=lin.count, fill = adm1)) +
+  #  geom_bar(stat="identity", position=position_dodge()) +
+  #  scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-20")), expand = c(0, 0)) +
+  #  # scale_color_manual(values = unlist(pal[adm.list]), name = "State") +
+  #  labs(y = 'Richness (Number of observed lineages)', x= NULL, title = stateIt) + 
+  #  theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+  #        axis.title = element_text(size = 10),
+  #      axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm")) +
+  #   ylim(0, ymax*1.1) + guides(fill=guide_legend(title="Number of sequences")) + scale_fill_manual(values=c(sdePal[germanyImportantStates], "gray"))
+  # print(p)
+  
+
+```
+
+```{r cluster-distribution-in-states-heat-map}
+# data <- clusterSamplesMCC %>% dplyr::group_by(adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+# data <- data %>% dplyr::union(data %>% group_by(cluster) %>% dplyr::summarise(seq = n()) %>% ungroup() %>% mutate(adm1 = "Germany"))  %>% filter(adm1 != "NA", adm1 != "Germany")
+# 
+# 
+# ggplot(data = data, aes(x = cluster, y = adm1)) +
+#   geom_raster(aes(fill = seq)) + 
+#   # stat_summary_2d(bins = c(100,100)) +  #10x downsample, in this case
+#   # scale_x_continuous(breaks = 100*0:10) +
+#   labs(title = "Heatmap of lineages vs states")  
+```
+
+```{r}
+options(dplyr.summarise.inform = FALSE)
+data <- clusterSamplesMCC  %>% filter(Collection.date >= as.Date("2021-01-01")) %>% mutate(week = calculateWeek(as.Date(sample_date), referenceDate)) %>% dplyr::group_by(week, adm1, cluster) %>% dplyr::summarise(seq = n()) %>% ungroup()
+data2 <- data %>% left_join(data %>% group_by(week, adm1) %>% dplyr::summarise(adm.week.seq = sum(seq)), by=c("week", "adm1")) %>% mutate(week_start = referenceDate + week * 7) %>% filter(adm1 != "NA")
+
+data3 <- clusterSamplesMCC  %>% filter(Collection.date >= as.Date("2021-01-01")) %>% dplyr::group_by(adm1) %>% dplyr::summarise(seq = n()) %>% ungroup() 
+
+
+for (clusterIt in c("B.1.1.7_MCC_164", "B.1.1.7_MCC_237", "B.1.1.7_MCC_116", "B.1.1.7_MCC_181", "B.1.1.7_MCC_151", "B.1.1.7_MCC_110", "B.1.1.7_MCC_217", "B.1.1.7_MCC_86", "B.1.1.7_MCC_48", "B.1.1.7_MCC_384", "B.1.1.7_MCC_133", "B.1.1.7_MCC_143", "B.1.1.7_MCC_2", "B.1.1.7_MCC_301", "B.1.1.7_MCC_16", "B.1.1.7_MCC_193", "B.1.1.7_MCC_353", "B.1.1.7_MCC_12", "B.1.1.7_MCC_247", "B.1.1.7_MCC_125", "B.1.1.7_MCC_363", "B.1.1.7_MCC_226", "B.1.1.7_MCC_171", "B.1.1.7_MCC_109", "B.1.1.7_MCC_151", "B.1.1.7_MCC_311")) {
+  data4 <- data2 %>% filter(cluster == clusterIt)
+  data4$adm1 <- factor(data4$adm1, levels = data4 %>% arrange(week) %>% pull(adm1) %>% unique())
+  
+  p <- ggplot(data4, aes(x=week_start, y=adm1, fill=seq / adm.week.seq)) + geom_tile(color = "white",
+              lwd = 0.2,
+              linetype = 1) +
+     scale_x_date(date_labels="%b %d", date_breaks = "7 day", minor_breaks = "1 day", limits = c(as.Date("2020-10-09"), as.Date("2021-05-27")), expand = c(0, 0)) +
+     labs(y = NULL, x= NULL, title = paste0("", clusterIt)) +
+     scale_fill_gradient(low = "white", high = "#c51b7d") +
+     theme(axis.text.x = element_text(angle = 90, hjust = 1), 
+           axis.title = element_text(size = 10),
+         axis.line = element_line(color='black'), panel.grid.minor = element_blank(), legend.justification = "top", legend.spacing.y = unit(0, 'cm'), legend.key.size = unit(0.4, "cm"))+ 
+      geom_vline(xintercept=as.numeric((clusterSamplesMCC %>% filter(cluster == clusterIt) %>% pull(tmrca_shifted_calendar) )[1]),
+                  linetype=2, colour="blue") 
+  print(p)
+  
+  print(kable(data2 %>% filter(cluster == clusterIt) %>% left_join(data3 %>% dplyr::rename(adm.seq = seq), by="adm1") %>% mutate(lin.seq.proportion = seq / adm.seq) %>% dplyr::select(adm1, lin.seq.proportion), caption = clusterIt))
+  
+}
+
+```
+
+
+\clearpage
+
+# First sequences
+```{r first-sequence-init, fig.width=5, fig.height=5, eval=TRUE}
+# only non-singletones
+
+for (lsm in c(1, 10, 50, 100, 200, 250)) {
+  for (firstCaseDistance in c(0, 1, 2)) {
+    clusterFirstCases <- clusterSamplesMCC %>% filter(lineage_seqs > lsm & abs(lineage_oldest - decimal_date) < 1/366 + firstCaseDistance/366) 
+    clusterFirstCasesCount <- clusterFirstCases %>% group_by(cluster) %>% dplyr::summarise(cluster.first.case.count = n())
+    clusterFirstCases <- clusterFirstCases %>% left_join(clusterFirstCasesCount, by=c("cluster" = "cluster"))
+    clusterFirstCaseByCounty <- clusterFirstCases %>% filter(cluster.first.case.count <= 1000000) %>% group_by(adm1) %>% 
+      dplyr::summarise(n = sum(1/cluster.first.case.count)) %>% 
+      mutate(p =  round(n/sum(n) * 100, digits=1)) %>% arrange(desc(n))
+    
+    print(kable(clusterFirstCaseByCounty, caption = paste("First case count for lineages with size > ", lsm, "days after first case", firstCaseDistance)))
+    
+    plot_on_map(clusterFirstCaseByCounty$adm1[clusterFirstCaseByCounty$adm1 != "NA"], clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"], title=paste("Percentages of first cases of lineages", "lin size", lsm, "fcd", firstCaseDistance), legend_title = "Percent", col = "#d7191c", max_value = max(clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"]))
+  }
+  
+}
+
+# Remove duplicate in code:
+lsm <- 0
+firstCaseDistance <- 0
+    clusterFirstCases <- clusterSamplesMCC %>% filter(lineage_seqs > lsm & abs(lineage_oldest - decimal_date) < 1/366 + firstCaseDistance/366) 
+    clusterFirstCasesCount <- clusterFirstCases %>% group_by(cluster) %>% dplyr::summarise(cluster.first.case.count = n())
+    clusterFirstCases <- clusterFirstCases %>% left_join(clusterFirstCasesCount, by=c("cluster" = "cluster"))
+    clusterFirstCaseByCounty <- clusterFirstCases %>% filter(cluster.first.case.count <= 1000000) %>% group_by(adm1) %>% 
+      dplyr::summarise(n = sum(1/cluster.first.case.count)) %>% 
+      mutate(p =  round(n/sum(n) * 100, digits=1)) %>% arrange(desc(n))
+
+```
+
+
+
+
+```{r}
+# For each state, percentage of sequences imported from other states?
+library(scatterpie)
+
+germany.state.centers<-data.frame(	lat=c(48.66,48.79,52.52181866,52.41,53.0793,53.55002464,50.65,53.61,52.63,51.43,50.11,49.39,51,52.2,54,50.7), 	long=c(9.35,11.49,13.40154862,12.53,8.8017,9.999999144,9.16,12.42,9.8,7.66,7.3,7.02,13,11.69,9.56,11.02996212), 	state=c("Baden-Wurttemberg","Bavaria","Berlin","Brandenburg","Bremen","Hamburg","Hesse","Mecklenburg-Western Pomerania","Lower Saxony","North Rhine-Westphalia","Rhineland-Palatinate","Saarland","Saxony","Saxony-Anhalt","Schleswig-Holstein","Thuringia")	)
+
+data1 <- clusterFirstCasesWithSingles %>% 
+  group_by(cluster, adm1) %>% dplyr::summarise(weight = n()/first(cluster.first.case.count) ) %>% 
+  left_join(clusterSamplesMCC %>% dplyr::select(adm1, cluster) %>% dplyr::rename(sample.adm1 = adm1), by = "cluster") %>% 
+  dplyr::rename(adm1.src = adm1, adm1.dst = sample.adm1) %>% 
+  group_by(adm1.src, adm1.dst) %>% dplyr::summarise(weight = sum(weight)) %>% ungroup() %>%
+  group_by(adm1.dst) %>% mutate(weight.ratio = round(weight / sum(weight) * 100, 1)) %>% ungroup() %>% dplyr::select(-weight) 
+  
+  
+x <- data1 %>% filter(adm1.src %in% c("Baden-Wurttemberg", "Bavaria", "North Rhine-Westphalia")) %>%
+  filter(!(adm1.dst %in% c("NA"))) %>%
+  pivot_wider(names_from = adm1.src, values_from = weight.ratio, values_fill = 0) 
+
+kable(x, caption="Percentage of sequences imported to each state", col.names = c("Destination", colnames(x)[2:length(colnames(x))]))
+
+for (state in c("Baden-Wurttemberg", "Bavaria", "North Rhine-Westphalia")) {
+  plot_on_map(x$adm1.dst, unlist(x[,state]), title=paste("Percentage of sequences started from", state), legend_title = "Percentage", col = "#d7191c", 
+              max_value = 75, legend.position = "bottom", text.font.size = NULL)
+  
+}
+
+
+
+# scatter pie
+x <- data1 %>% 
+  mutate(adm1.src = if_else(adm1.src %in% c("Baden-Wurttemberg", "Bavaria", "North Rhine-Westphalia"), adm1.src, "Other")) %>% 
+  group_by(adm1.src, adm1.dst) %>% dplyr::summarise(weight.ratio = sum(weight.ratio)) %>%
+  left_join(germany.state.centers, by=c("adm1.dst" = "state")) 
+  
+germany.germany.f <- calculate.germany.germany.f()
+germany.f <- germany.germany.f$germany.f
+germany <- germany.germany.f$germany
+
+ggplot() +   
+  geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "gray", alpha=0)+
+  geom_polygon(data = germany.f[germany.f$id == "11",], aes(x = long, y = lat, group = group, fill = value), colour = "gray") +
+  # scale_fill_manual(values = rep("white", 17)) + 
+  theme(axis.line=element_blank(), axis.text.x=element_blank(),
+      axis.text.y=element_blank(), axis.ticks=element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank(),
+      panel.background=element_blank(), panel.grid.major=element_blank(),
+      panel.border = element_rect(colour = "black", fill=NA, size=0.4),
+      panel.grid.minor=element_blank(), plot.background=element_blank(),
+      aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)),
+  ) +
+  geom_scatterpie(data = x %>% filter(adm1.dst != "NA") %>% pivot_wider(names_from = "adm1.src", values_from = weight.ratio, values_fill = 0) %>%
+                    left_join(clusterSamplesMCC %>% group_by(adm1) %>% dplyr:::summarise(seq.adm1.dst=n()), by=c("adm1.dst"="adm1")), 
+                  aes(x=long, y=lat, group = adm1.dst, r = sqrt(seq.adm1.dst)/32), 
+                  cols = c("Baden-Wurttemberg", "Bavaria", "North Rhine-Westphalia", "Other"), color = NA) + 
+  # scale_fill_discrete(breaks = c("Baden-Wurttemberg", "Bavaria", "North Rhine-Westphalia", "Other")) +
+  scale_fill_manual(values = c("red", "green", "blue", "gray", rep("white", 17)), breaks = c("Baden-Wurttemberg", "Bavaria", "North Rhine-Westphalia", "Other")) 
+
+# 
+x <- clusterFirstCasesWithSingles %>% 
+  group_by(cluster, adm1) %>% dplyr::summarise(weight = n()/first(cluster.first.case.count) ) %>% 
+  left_join(clusterSamplesMCC %>% dplyr::select(adm1, cluster) %>% dplyr::rename(sample.adm1 = adm1), by = "cluster") %>% 
+  dplyr::rename(adm1.src = adm1, adm1.dst = sample.adm1) %>% 
+  group_by(adm1.src, adm1.dst) %>% dplyr::summarise(weight = sum(weight)) %>% ungroup() %>%
+  # group_by(adm1.dst) %>% mutate(weight.ratio = round(weight / sum(weight) * 100, 1)) %>% ungroup() %>% dplyr::select(-weight) %>% 
+  # filter(adm1.src %in% c("Baden-Wurttemberg", "Bavaria", "North Rhine-Westphalia")) %>%
+  filter(!(adm1.dst %in% c("NA"))) %>%
+  pivot_wider(names_from = adm1.src, values_from = weight, values_fill = 0) 
+
+kable(x, caption="Number of sequences imported to each state", col.names = c("Destination", colnames(x)[2:length(colnames(x))]))
+
+# clusterSamplesMCC %>% dplyr::rename(adm1.dst = adm1) %>% filter(adm1.dst %in% c("Hesse")) %>% dplyr::select(adm1.dst, Collection.date, Location, cluster) %>%
+  # left_join(clusterFirstCasesWithSingles %>% group_by(cluster, adm1) %>% dplyr::summarise(weight = n()/first(cluster.first.case.count) )) 
+
+x <- clusterFirstCasesWithSingles %>% 
+  group_by(cluster, adm1) %>% dplyr::summarise(weight = n()/first(cluster.first.case.count) ) %>% 
+  left_join(clusterSamplesMCC %>% group_by(adm1, cluster) %>% dplyr::summarise() %>% dplyr::rename(sample.adm1 = adm1), by = "cluster") %>% 
+  dplyr::rename(adm1.src = adm1, adm1.dst = sample.adm1) %>% 
+  group_by(adm1.src, adm1.dst) %>% dplyr::summarise(weight = sum(weight)) %>% ungroup() %>%
+  filter(!(adm1.dst %in% c("NA"))) %>%
+  pivot_wider(names_from = adm1.src, values_from = weight, values_fill = 0)
+
+kable(x, caption="Number of lineages imported to each state", col.names = c("Destination", colnames(x)[2:length(colnames(x))]))
+
+for (state in c("Baden-Wurttemberg", "Bavaria", "North Rhine-Westphalia")) {
+  plot_on_map(x$adm1.dst, unlist(x[,state]), title=paste("Number of lineages imported to each state from origin", state), legend_title = "Count", col = "blue", 
+              max_value = 12, legend.position = "bottom", text.font.size = NULL)
+  
+}
+
+
+
+
+
+
+```
+
+
+```{r}
+#deCounty <- deCounty %>% dplyr::select(-first.case.count, -first.case.prob, -no.lineage, -no.lineage)
+
+deCounty <- deCounty %>% left_join(clusterFirstCaseByCounty %>% dplyr::rename(first.case.count=n, first.case.prob=p), by=c("state"="adm1")) %>% 
+  mutate(first.case.count = ifelse(is.na(first.case.count), 0, first.case.count), first.case.prob = ifelse(is.na(first.case.prob), 0, first.case.prob))
+
+```
+
+```{r first-sequence, fig.width=2.5, fig.height=4, eval=TRUE}
+
+kable(clusterFirstCases %>% group_by(cluster) %>% dplyr::summarise(n = n()) %>% arrange(-n) %>% filter(n > 1) %>% left_join(clusterStatsMCC, by=c("cluster" = "cluster")) %>% dplyr::rename(no.first.case = n), caption="Clusters with more than one first case")
+
+kable(clusterFirstCaseByCounty %>% full_join(deCounty %>% dplyr::select(state), by=c("adm1" = "state")) %>% mutate(n = ifelse(is.na(n), 0, n), p = ifelse(is.na(p), 0, p)) %>% arrange(-n), caption = "Number of first cases in each state")
+
+# 
+# germany$value <- 0
+# germany$value[match(clusterFirstCaseByCounty$adm1[clusterFirstCaseByCounty$adm1 != "NA"], germany$NAME_1_EN)] <- clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"]
+# 
+# 
+# germany.f$value <- germany$value[match(germany.f$id, germany$CC_1)]
+# maxcase <- max(germany$value)
+# col = "#FF0000"
+# 
+#   p <- ggplot() + 
+#     geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "grey10")+
+#     scale_fill_gradient(low = lighten(col, 1), high = col, space = "Lab", limits=c(0, maxcase),
+#                         name = "Percent")+
+#     # geom_point(data=starting_points, mapping=aes(x=long, y=lat), size=5, col=col) +
+#     ggtitle("Percentages of first cases of lineages") +
+#     theme(axis.line=element_blank(), axis.text.x=element_blank(),
+#           axis.text.y=element_blank(), axis.ticks=element_blank(),
+#           axis.title.x=element_blank(),
+#           axis.title.y=element_blank(),
+#           panel.background=element_blank(), panel.grid.major=element_blank(),
+#           panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+#           panel.grid.minor=element_blank(), plot.background=element_blank())
+#   print(p)
+
+#title="oldest seqs of importation lineages"
+plot_on_map(clusterFirstCaseByCounty$adm1[clusterFirstCaseByCounty$adm1 != "NA"], clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"], title="D", legend_title = "Percentage", col = "#d7191c", max_value = max(clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"]), legend.position = "bottom", text.font.size = NULL)
+
+plot_on_map(clusterFirstCaseByCounty$adm1[clusterFirstCaseByCounty$adm1 != "NA"], clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"], title="", legend_title = "Percentage", col = "#d7191c", max_value = max(clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"]), legend.position = "bottom", text.font.size = NULL)
+
+# plot_on_map(clusterFirstCaseByCounty %>% group_by(adm1) %>% dplyr::summarise(n = sum(n)) %>% full_join(deCounty %>% dplyr::select(state), by=c("adm1" = "state")) %>% mutate(n = ifelse(is.na(n), 0, n)) %>% arrange(-n) %>% filter(adm1 != "NA") %>% pull(adm1), clusterFirstCaseByCounty %>% group_by(adm1) %>% dplyr::summarise(n = sum(n)) %>% full_join(deCounty %>% dplyr::select(state), by=c("adm1" = "state")) %>% mutate(n = ifelse(is.na(n), 0, n), p=n/sum(n)) %>% arrange(-n) %>% filter(adm1 != "NA") %>% pull(p), title="oldest seqs of importation lineages", legend_title = "Percent", col = "#d7191c", max_value = max(clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"]))
+
+
+# Remove duplicate in code:
+
+    clusterFirstCasesNoSingleton <- clusterSamplesMCC %>% filter(lineage_seqs > 1 & abs(lineage_oldest - decimal_date) < 1/366 + 0/366) 
+    clusterFirstCasesCountNoSingleton <- clusterFirstCasesNoSingleton %>% group_by(cluster) %>% dplyr::summarise(cluster.first.case.count = n())
+    clusterFirstCasesNoSingleton <- clusterFirstCasesNoSingleton %>% left_join(clusterFirstCasesCountNoSingleton, by=c("cluster" = "cluster"))
+    clusterFirstCaseByCountyNoSingleton <- clusterFirstCasesNoSingleton %>% filter(cluster.first.case.count <= 1000000) %>% group_by(adm1) %>% 
+      dplyr::summarise(n = sum(1/cluster.first.case.count)) %>% 
+      mutate(p =  round(n/sum(n) * 100, digits=1)) %>% arrange(desc(n))
+
+    
+kable(clusterFirstCasesNoSingleton %>% group_by(cluster) %>% dplyr::summarise(n = n()) %>% arrange(-n) %>% filter(n > 1) %>% left_join(clusterStatsMCC, by=c("cluster" = "cluster")) %>% dplyr::rename(no.first.case = n), caption="Clusters with more than one first case of no singletons")
+
+kable(clusterFirstCaseByCountyNoSingleton %>% full_join(deCounty %>% dplyr::select(state), by=c("adm1" = "state")) %>% mutate(n = ifelse(is.na(n), 0, n), p = ifelse(is.na(p), 0, p)) %>% arrange(-n), caption = "Number of first cases in each state of no singletons")
+
+    
+plot_on_map(clusterFirstCaseByCountyNoSingleton$adm1[clusterFirstCaseByCountyNoSingleton$adm1 != "NA"], clusterFirstCaseByCountyNoSingleton$p[clusterFirstCaseByCountyNoSingleton$adm1 != "NA"], title="no singleton", legend_title = "Percentage", col = "#d7191c", max_value = max(clusterFirstCaseByCountyNoSingleton$p[clusterFirstCaseByCountyNoSingleton$adm1 != "NA"]), legend.position = "bottom", text.font.size = NULL)
+
+```
+
+# Correlation Coefficients
+
+
+- Correlation coefficient between Lineage Shannon Index and number of sequences: `cor(clusterStatsMCC$shannon.index, clusterStatsMCC$seqs)`
+
+```{r correlation-coefficient-statewise} 
+
+  #deCounty <- deCounty %>% dplyr::select(-no.lineage, -first.case.count.pc)
+  deCounty <- deCounty %>% left_join(clusterSamplesMCC %>% filter(lineage_seqs > 1) %>% 
+                                       dplyr::select(cluster, adm1) %>% 
+                                       mutate(adm1 = case_when(adm1 == "Sachsen" ~ "Saxony", adm1 == "Herzogenrath" ~ "North Rhine-Westphalia", TRUE ~ adm1)) %>% 
+                                       distinct() %>% group_by(adm1) %>% 
+                                       dplyr::summarise(no.lineage = n()), by=c("state" = "adm1")) %>%
+                mutate(first.case.count.pc = first.case.count / population * 1000000)
+
+```
+
+```{r}
+
+data.cols <- c("shannon.index", "first.case.count", "no.lineage", "population",  "case", "seqs", "seq.rate", "first.case.count.pc")   
+
+data.xyz <- data.frame("x" = character(), "y"=character(), "z"=numeric())
+data <- matrix(NA, nrow = length(data.cols), ncol = length(data.cols), dimnames = list(data.cols, data.cols))
+for (colIt in colnames(data)) {
+  for (rowIt in rownames(data)) {
+    data[rowIt, colIt] <- round(cor(deCounty[,rowIt], deCounty[,colIt]), 2)
+    data.xyz <- rbind(data.xyz, data.frame(rowIt, colIt, data[rowIt, colIt]))
+  }
+}
+
+colnames(data.xyz) <- c("x", "y", "z") 
+
+kable(data)
+
+ggplot(data = data.xyz, aes(x=x, y=y)) + geom_raster(aes(fill=z)) +   
+  scale_fill_gradientn(colours=c("yellow", "white", "green"), limits=c(-1,1), breaks=c(-1,0,1)) +
+  labs(x="Index", y="Index", z="Correlation coefficient", title="Correlation coefficient between indices for Germany states") +
+  geom_text(aes(label = round(z, 2)), col = "grey30") +
+  theme_bw() + 
+  theme(axis.text.x=element_text(size=9, angle=0, vjust=0.3),
+                     axis.text.y=element_text(size=9),
+                     plot.title=element_text(size=11))
+
+
+plot_on_map(deCounty$state, deCounty$first.case.count.pc, 
+            title="First case per capita", legend_title = "Percent", col = "#EEAA00", 
+            max_value = max(deCounty$first.case.count.pc))
+
+kable(deCounty %>% arrange(-first.case.count.pc))
+
+
+```
+
+
+# Pangolin analysis
+
+```{r}
+
+clusterStatsMCC$pangolin <- gsub("_.*", "", clusterStatsMCC$cluster)
+
+
+breaks <- seq(as.Date("2020-01-01"), as.Date("2021-06-01"), by="week")
+
+for (lin in levels(as.factor(clusterStatsMCC$pangolin))) {
+  # clusterStatsMCC %>% group_by(pangolin) %>% summarise()
+  
+  linClusters <- clusterStatsMCC %>% 
+          filter(pangolin == lin & tmrca_calendar >= breaks[1] & tmrca_calendar < breaks[length(breaks)])
+  
+  tmrca_hist_small <- hist((linClusters %>% filter(seqs <= 5))$tmrca_calendar, plot=FALSE, breaks=breaks)
+  tmrca_hist_med  <- hist((linClusters %>% filter(seqs  > 5))$tmrca_calendar, plot=FALSE, breaks=breaks)
+  tmrca_hist_big  <- hist((linClusters %>% filter(seqs > 25))$tmrca_calendar, plot=FALSE, breaks=breaks)
+  tmrca_hist_huge <- hist((linClusters %>% filter(seqs > 125))$tmrca_calendar, plot=FALSE, breaks=breaks)
+  
+  tmrca_hist_breakdown <- data.frame(huge  = tmrca_hist_huge$counts,
+                                     big   = tmrca_hist_big$counts,
+                                     med   = tmrca_hist_med$counts,
+                                     small = tmrca_hist_small$counts)
+
+  
+  dateFreqDistribution(t(tmrca_hist_breakdown), 
+       breaks, plot.ci=FALSE,  barplot=TRUE, 
+                         startDate = breaks[15], 
+                         endDate = breaks[length(breaks)-1], 
+                         col=mPal(unlist(ukPal), 0.75), border = "#000000", 
+                         # ymax = max(rowSums(weeklyBreakdown$clustSizes)) + 2, 
+                         ylab = "No. imported lineages",
+       main = paste("TMRCA of pango lineage ", lin), ymax=18)
+
+  
+  
+  
+  
+  tmrca_hist_small <- hist((linClusters %>% filter(seqs <= 5))$tmrca_shifted_calendar, plot=FALSE, breaks=breaks)
+  tmrca_hist_med  <- hist((linClusters %>% filter(seqs  > 5))$tmrca_shifted_calendar, plot=FALSE, breaks=breaks)
+  tmrca_hist_big  <- hist((linClusters %>% filter(seqs > 25))$tmrca_shifted_calendar, plot=FALSE, breaks=breaks)
+  tmrca_hist_huge <- hist((linClusters %>% filter(seqs > 125))$tmrca_shifted_calendar, plot=FALSE, breaks=breaks)
+  
+  tmrca_hist_breakdown <- data.frame(huge  = tmrca_hist_huge$counts,
+                                     big   = tmrca_hist_big$counts,
+                                     med   = tmrca_hist_med$counts,
+                                     small = tmrca_hist_small$counts)
+
+  
+  dateFreqDistribution(t(tmrca_hist_breakdown), 
+       breaks, plot.ci=FALSE,  barplot=TRUE, 
+                         startDate = breaks[15], 
+                         endDate = breaks[length(breaks)-1], 
+                         col=mPal(unlist(ukPal), 0.75), border = "#000000", 
+                         # ymax = max(rowSums(weeklyBreakdown$clustSizes)) + 2, 
+                         ylab = "No. imported lineages",
+       main = paste("Importation of pango lineage ", lin), ymax=18)
+
+}
+
+
+
+```
+
+```{r first-sequence-init-02, fig.width=5, fig.height=5, eval=TRUE}
+# only non-singletones
+
+#clusterStatsMCC$pangolin <- gsub("_.*", "", clusterStatsMCC$cluster)
+
+for (lin in levels(as.factor(clusterStatsMCC$pangolin))) {
+  # for (lsm in c(1, 10, 50, 100, 200, 250)) {
+  for (lsm in c(0)) {
+    for (firstCaseDistance in c(0)) {
+      clusterFirstCases <- clusterSamplesMCC %>% filter(gsub("_.*", "", cluster) == lin & 
+                                                          lineage_seqs > lsm & abs(lineage_oldest - decimal_date) < 1/366 + firstCaseDistance/366) 
+      clusterFirstCasesCount <- clusterFirstCases %>% group_by(cluster) %>% dplyr::summarise(cluster.first.case.count = n())
+      clusterFirstCases <- clusterFirstCases %>% left_join(clusterFirstCasesCount, by=c("cluster" = "cluster"))
+      clusterFirstCaseByCounty <- clusterFirstCases %>% filter(cluster.first.case.count <= 1000000) %>% group_by(adm1) %>% 
+        dplyr::summarise(n = sum(1/cluster.first.case.count)) %>% 
+        mutate(p =  round(n/sum(n) * 100, digits=1)) %>% arrange(desc(n))
+      
+      print(kable(clusterFirstCaseByCounty, caption = paste("First case count for lineages with size > ", lsm, "days after first case", firstCaseDistance, "lin=", lin)))
+      
+      plot_on_map(clusterFirstCaseByCounty$adm1[clusterFirstCaseByCounty$adm1 != "NA"], clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"], title=paste("oldest seqs percentage f", lin, lsm), legend_title = "Percent", col = "#FF0000", max_value = max(clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"]))
+    }
+    
+  }
+}
+
+```
+
+```{r first sequence percentage B.1.1.7, fig.width=5, fig.height=5, eval=TRUE}
+
+lin = "B.1.1.7"
+firstCaseDistance = 0
+lsm = 0 
+
+      clusterFirstCases <- clusterSamplesMCC %>% filter(gsub("_.*", "", cluster) == lin & 
+                                                          lineage_seqs > lsm & abs(lineage_oldest - decimal_date) < 1/366 + firstCaseDistance/366) 
+      clusterFirstCasesCount <- clusterFirstCases %>% group_by(cluster) %>% dplyr::summarise(cluster.first.case.count = n())
+      clusterFirstCases <- clusterFirstCases %>% left_join(clusterFirstCasesCount, by=c("cluster" = "cluster"))
+      clusterFirstCaseByCounty <- clusterFirstCases %>% filter(cluster.first.case.count <= 1000000) %>% group_by(adm1) %>% 
+        dplyr::summarise(n = sum(1/cluster.first.case.count)) %>% 
+        mutate(p =  round(n/sum(n) * 100, digits=1)) %>% arrange(desc(n))
+      
+      print(kable(clusterFirstCaseByCounty, caption = paste("First case count for lineages with size > ", lsm, "days after first case", firstCaseDistance, "lin=", lin)))
+      
+      plot_on_map(clusterFirstCaseByCounty$adm1[clusterFirstCaseByCounty$adm1 != "NA"], clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"], title=paste( lin), legend_title = "Percent", col = "#f46d43", max_value = max(clusterFirstCaseByCounty$p[clusterFirstCaseByCounty$adm1 != "NA"]))
+ 
+
+```
+
+
+
+
+
+
+
+
+```{r pangoli_case_count, fig.width=5, fig.height=5, eval=TRUE}
+# only non-singletones
+
+for (lin in levels(as.factor(clusterStatsMCC$pangolin))) {
+  for (lsm in c(1)) {
+      pangolinCaseCount <- clusterSamplesMCC %>% 
+          filter(gsub("_.*", "", cluster) == lin & lineage_seqs > lsm) %>% 
+          # filter(cluster.first.case.count <= 1000000) %>% 
+          group_by(adm1) %>% 
+          dplyr::summarise(n = n()) %>% 
+          mutate(p =  round(n/sum(n) * 100, digits=1)) %>% 
+          arrange(desc(n))
+      
+      #print(kable(pangolinCaseCount, caption = paste("First case count for lineages with size > ", lsm, "days after first case", firstCaseDistance, "lin=", lin)))
+      
+      plot_on_map(pangolinCaseCount$adm1[pangolinCaseCount$adm1 != "NA"], pangolinCaseCount$p[pangolinCaseCount$adm1 != "NA"], title=paste("No. of samples of lin", "size", lsm, "lin", lin), legend_title = "Percent", col = "#00FF00", max_value = 
+                    # max(pangolinCaseCount$p[pangolinCaseCount$adm1 != "NA"])
+                    100)
+
+  }
+}
+
+```
+```{r pangoli_case_ratio, fig.width=5, fig.height=5, eval=TRUE}
+# only non-singletones
+
+for (lin in levels(as.factor(clusterStatsMCC$pangolin))) {
+  for (lsm in c(1)) {
+      pangolinCaseCount <- clusterSamplesMCC %>% 
+          filter(gsub("_.*", "", cluster) == lin & lineage_seqs > lsm) %>% 
+          group_by(adm1) %>% 
+          dplyr::summarise(n = n()) %>% 
+          mutate(p =  round(n/sum(n) * 100, digits=1)) %>% 
+          arrange(desc(n)) %>% left_join(deCounty, by = c("adm1" = "state")) %>%
+          mutate(n.pcapita = n / population * 1000000, n.pcase = n / case * 10000)
+      
+      #print(kable(pangolinCaseCount, caption = paste("First case count for lineages with size > ", lsm, "days after first case", firstCaseDistance, "lin=", lin)))
+      
+      plot_on_map(pangolinCaseCount$adm1[pangolinCaseCount$adm1 != "NA"], pangolinCaseCount$n[pangolinCaseCount$adm1 != "NA"], 
+                  title=paste("No. of samples of lin", "size", lsm, "lin", lin), legend_title = "No.", col = "#0000FF", max_value = 
+                    max(pangolinCaseCount$n[pangolinCaseCount$adm1 != "NA"]))
+
+      plot_on_map(pangolinCaseCount$adm1[pangolinCaseCount$adm1 != "NA"], pangolinCaseCount$n.pcapita[pangolinCaseCount$adm1 != "NA"], 
+                  title=paste("No. of samples per capita of lin", "size", lsm, "lin", lin), legend_title = "No.", col = "#00FFFF", max_value = 
+                    max(pangolinCaseCount$n.pcapita[pangolinCaseCount$adm1 != "NA"]))
+
+      plot_on_map(pangolinCaseCount$adm1[pangolinCaseCount$adm1 != "NA"], pangolinCaseCount$n.pcase[pangolinCaseCount$adm1 != "NA"], 
+            title=paste("No. of samples per case of lin", "size", lsm, "lin", lin), legend_title = "No.", col = "#FF00FF", max_value = 
+              max(pangolinCaseCount$n.pcase[pangolinCaseCount$adm1 != "NA"]))
+      
+      
+      pangolinSequenceCaseCount <- metadataAllSequences %>% 
+        filter(country == "Germany") %>%
+        mutate(adm1 = ifelse(adm1 == "Herzogenrath", "North Rhine-Westphalia", adm1)) %>%
+        mutate(adm1 = ifelse(adm1 == "Sachsen", "Saxony", adm1)) %>%
+        filter(Pango.lineage == lin | startsWith(Pango.lineage, paste0(lin, "."))) %>% 
+          filter(adm1 != "NA" & !is.na(adm1)) %>%
+          group_by(adm1) %>% 
+          dplyr::summarise(n = n()) %>% 
+          mutate(p =  round(n/sum(n) * 100, digits=1)) %>% 
+          arrange(desc(n)) %>% left_join(deCounty, by = c("adm1" = "state")) %>%
+          mutate(n.pcapita = n / population * 1000000, n.pcase = n / case * 10000)
+
+      
+      plot_on_map(pangolinSequenceCaseCount$adm1, pangolinSequenceCaseCount$n, 
+                  title=paste("No. of sequences of lin", lin), legend_title = "No.", col = "#FF7F00", max_value = 
+                    max(pangolinSequenceCaseCount$n))
+
+      plot_on_map(pangolinSequenceCaseCount$adm1, pangolinSequenceCaseCount$n.pcapita, 
+                  title=paste("No. of sequences per capita of lin", lin), legend_title = "No.", col = "#00FFFF", max_value = 
+                    max(pangolinSequenceCaseCount$n.pcapita))
+
+      plot_on_map(pangolinSequenceCaseCount$adm1, pangolinSequenceCaseCount$n.pcase, 
+            title=paste("No. of sequences per case of lin", lin), legend_title = "No.", col = "#FF00FF", max_value = 
+              max(pangolinSequenceCaseCount$n.pcase))
+      
+    #   sequenceCaseCount <- metadataAllSequences %>% 
+    # filter(country == "Germany") %>%
+    # mutate(adm1 = ifelse(adm1 == "Herzogenrath", "North Rhine-Westphalia", adm1)) %>%
+    # mutate(adm1 = ifelse(adm1 == "Sachsen", "Saxony", adm1)) %>% filter(adm1 != "NA" & !is.na(adm1)) %>%
+    # group_by(adm1) %>% 
+    # dplyr::summarise(n = n()) %>% 
+    # mutate(p =  round(n/sum(n) * 100, digits=1)) %>% 
+    # arrange(desc(n)) %>% left_join(deCounty, by = c("adm1" = "state")) %>%
+    # mutate(n.pcapita = n / population * 1000000, n.pcase = n / case * 10000)
+      
+      #pangolinSequenceCaseCount %>% dplyr::select(n, adm1) %>% left_join(sequenceCaseCount %>% dplyr::select(n, adm1), by=c("adm1"="adm1")) %>% mutate(lin.seq.rate = round(n.x / n.y*100, digits = 2))
+      
+  }
+}
+
+
+
+```
+
+\clearpage
+
+# Session info
+
+```{r sessionInfo, results='markup'}
+    sessionInfo()
+```

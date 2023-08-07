@@ -1,0 +1,907 @@
+---
+title: "SARS-CoV-2 State Introductions"
+subtitle: "lineageMovement.Rmd"
+date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    keep_tex: false
+    fig_crop: false
+layout: page
+editor_options: 
+  chunk_output_type: inline
+params: 
+  inputpath       :  "../../../data/phylogenetic/"
+  casefile        : "../data/cases-rki-by-state.csv"
+  infectionfile   : "../../../data/epidemiological/flaxman-results.csv"
+  epimobilitypath : "../../epidemiological/results/"
+  asymptomatic    : 31
+  cluster_f       : "DTA"
+  # alpha: 0.7189865
+  # beta: 28.91369
+  alpha: 5
+  beta: 0
+  startDate       : "2020-10-01"
+  endDate         : "2021-06-01"
+  device          : "pdf"
+  metadata        : "../../../../data/data/gisaid-20210602-metadata.tsv"
+  outputfolder    : "../results/beast/run/lin-ius-3/"
+  metadataAllSequences   : "../../../../data/data/gisaid-20210602-metadata.tsv"
+  stateTransitionRateMCC_f: "../../phylogenetic-test-snake-2/results/dtamulti/run/all/sampled-DTA-20210602.combined.log.analyzed"
+  clusterMovement_f: "../../phylogenetic-test-snake-2/results/dtamulti/run/lin-ius-3/clusterMovement_DTA_MCC_0.5.tsv"
+---
+
+```{r}
+
+    library(lubridate)
+    library(dplyr)
+    library(plyr)
+    library(gplots)
+    library(beastio)
+    library(knitr)
+    library(tictoc)
+    library(stringr)
+    library(tidyr)
+    source("../reports/palettes.R")
+    source("../reports/plotutils.R")
+    source("../reports/clusterutils.R")
+    source("../reports/reportutils.R")
+    library(shape)
+    library(dplyr)
+    library(colorspace)
+
+    library(gridBase)
+    library(grid)
+
+    inputpath    <- params$inputpath
+    casefile     <- params$casefile
+    infectionfile<- params$infectionfile
+    epipath      <- params$epimobilitypath
+    mobilitypath <- params$epimobilitypath
+    asymptomatic <- params$asymptomatic
+    cluster_f    <- params$cluster_f
+    stateTransitionRateMCC_f <- params$stateTransitionRateMCC_f
+    clusterMovement_f <- params$clusterMovement_f
+
+```
+
+```{r load}
+
+stateTransitionRateMCC <- read.table(stateTransitionRateMCC_f, skip=17, header = TRUE, sep="\t", row.names = 1)
+
+colnames(stateTransitionRateMCC) <- c(colnames(stateTransitionRateMCC)[2:ncol(stateTransitionRateMCC)], "epmty")
+stateTransitionRateMCC$statistics <- rownames(stateTransitionRateMCC)
+
+stateTransitionRateMCC <- stateTransitionRateMCC %>% filter(startsWith(statistics, "location.rates.")) %>% mutate(move = substr(statistics, 16, nchar(statistics)), src = sub("\\..*", "", move), dst = sub(".*\\.", "", move)) 
+
+clusterMovement <- read.table(clusterMovement_f, sep="\t", head = TRUE)
+```
+
+```{r}
+
+
+deStates <- clusterMovement %>% filter(dst != "") %>% pull(dst) %>% as.factor() %>% levels()
+
+# pal <- sdePal
+# pal[['Germany']] = sdePal$`Baden-Wurttemberg`
+pal <- lighten(rainbow(length(deStates) + 2), 0.5)
+names(pal) <- c(deStates, "Other", "Germany")
+pal["NA"] <- pal[NA] <- pal["other"] <- pal["Other"]
+pal <- as.list(pal)
+
+
+nationalcol = "#980043"
+localcol = "#c994c7"
+
+
+marksForStates_ <- list(
+   "Bavaria" = list(
+#      "food2Oct"= list(
+#         "date"= "2020-10-02",
+#         "color"= localcol,
+#         label="A"
+#      ), 
+#      "nights23Oct"= list(
+#         "date"= "2020-10-23",
+#         "color"= localcol,
+#         label="B"
+#      ), 
+#      "home09Dec"= list(
+#         "date"= "2020-12-09",
+#         "color"= localcol,
+#         label="C"
+#      ), 
+        "Ncoldsymp19Oct"= list(
+         "date"= "2020-10-19",
+         "color"= nationalcol,
+         label="N1"
+   ),
+   "Nopera02Nov"= list(
+         "date"= "2020-11-02",
+         "color"= nationalcol,
+         label="N2"
+   ),
+   "Nopera08Nov"= list(
+         "date"= "2020-11-08",
+         "color"= nationalcol,
+         label="N3"
+   ),
+    "Nopera30Nov"= list(
+         "date"= "2020-11-30",
+         "color"= nationalcol,
+         label="N4"
+   ),
+   "Nlockdown16Dec"= list(
+      "date"= "2020-12-16",
+      "color"= nationalcol,
+         label="N5"
+   ), 
+   "Nlockdown16Dec"= list(
+      "date"= "2020-12-22",
+      "color"= nationalcol,
+         label="N6"
+   ), 
+   "Nborder11Jan"= list(
+      "date"= "2021-01-11",
+      "color"= nationalcol,
+      label="N7"
+   ),
+    "Nborder22Jan"= list(
+      "date"= "2021-01-24",
+      "color"= nationalcol,
+      label="N8"
+   ),
+    "Nborder30Jan"= list(
+      "date"= "2021-01-30",
+      "color"= nationalcol,
+      label="N9"
+   ),
+    "Nborder14Feb"= list(
+      "date"= "2021-02-14",
+      "color"= nationalcol,
+      label="N10"
+   ),
+   "Nborder08March"= list(
+      "date"= "2021-03-13",
+      "color"= nationalcol,
+      label="N11"
+   ),
+#   "NPoland21March"= list(
+#      "date"= "2021-03-21",
+#      "color"= nationalcol,
+#      label="N12"
+#   ),
+   "NFrance31March"= list(
+      "date"= "2021-03-30",
+      "color"= nationalcol,
+      label="N12"
+   )
+),
+   
+   "Baden-Wurttemberg"= list(
+#      "mask19ct"= list(
+#         "date"= "2020-10-02",
+#         "color"= localcol,
+#         label="A"
+#      ), 
+   "Ncoldsymp19Oct"= list(
+         "date"= "2020-10-19",
+         "color"= nationalcol,
+         label="N1"
+   ),
+   "Nopera02Nov"= list(
+         "date"= "2020-11-02",
+         "color"= nationalcol,
+         label="N2"
+   ),
+   "Nopera08Nov"= list(
+         "date"= "2020-11-08",
+         "color"= nationalcol,
+         label="N3"
+   ),
+    "Nopera30Nov"= list(
+         "date"= "2020-11-30",
+         "color"= nationalcol,
+         label="N4"
+   ),
+   "Nlockdown16Dec"= list(
+      "date"= "2020-12-16",
+      "color"= nationalcol,
+         label="N5"
+   ), 
+   "Nlockdown16Dec"= list(
+      "date"= "2020-12-22",
+      "color"= nationalcol,
+         label="N6"
+   ), 
+   "Nborder11Jan"= list(
+      "date"= "2021-01-11",
+      "color"= nationalcol,
+      label="N7"
+   ),
+    "Nborder22Jan"= list(
+      "date"= "2021-01-22",
+      "color"= nationalcol,
+      label="N8"
+   ),
+    "Nborder30Jan"= list(
+      "date"= "2021-01-30",
+      "color"= nationalcol,
+      label="N9"
+   ),
+    "Nborder14Feb"= list(
+      "date"= "2021-02-14",
+      "color"= nationalcol,
+      label="N10"
+   ),
+   "Nborder08March"= list(
+      "date"= "2021-03-13",
+      "color"= nationalcol,
+      label="N11"
+   ),
+#   "NPoland21March"= list(
+#      "date"= "2021-03-21",
+#      "color"= nationalcol,
+#      label="N12"
+#   ),
+   "NFrance31March"= list(
+      "date"= "2021-03-30",
+      "color"= nationalcol,
+      label="N12"
+   )
+   ),
+   
+   "North Rhine-Westphalia" = list(
+ 
+    "Ncoldsymp19Oct"= list(
+         "date"= "2020-10-19",
+         "color"= nationalcol,
+         label="N1"
+   ),
+   "Nopera02Nov"= list(
+         "date"= "2020-11-02",
+         "color"= nationalcol,
+         label="N2"
+   ),
+   "Nopera08Nov"= list(
+         "date"= "2020-11-08",
+         "color"= nationalcol,
+         label="N3"
+   ),
+    "Nopera30Nov"= list(
+         "date"= "2020-11-30",
+         "color"= nationalcol,
+         label="N4"
+   ),
+   "Nlockdown16Dec"= list(
+      "date"= "2020-12-16",
+      "color"= nationalcol,
+         label="N5"
+   ), 
+   "Nlockdown16Dec"= list(
+      "date"= "2020-12-22",
+      "color"= nationalcol,
+         label="N6"
+   ), 
+   "Nborder11Jan"= list(
+      "date"= "2021-01-11",
+      "color"= nationalcol,
+      label="N7"
+   ),
+    "Nborder22Jan"= list(
+      "date"= "2021-01-24",
+      "color"= nationalcol,
+      label="N8"
+   ),
+    "Nborder30Jan"= list(
+      "date"= "2021-01-30",
+      "color"= nationalcol,
+      label="N9"
+   ),
+    "Nborder14Feb"= list(
+      "date"= "2021-02-14",
+      "color"= nationalcol,
+      label="N10"
+   ),
+   "Nborder08March"= list(
+      "date"= "2021-03-13",
+      "color"= nationalcol,
+      label="N11"
+   ),
+#   "NPoland21March"= list(
+#      "date"= "2021-03-21",
+#      "color"= nationalcol,
+#      label="N12"
+#   ),
+   "NFrance31March"= list(
+      "date"= "2021-03-30",
+      "color"= nationalcol,
+      label="N12"
+   )
+   ),
+   
+   "Saxony" = list(
+      
+   "Ncoldsymp19Oct"= list(
+         "date"= "2020-10-19",
+         "color"= nationalcol,
+         label="N1"
+   ),
+   "Nopera02Nov"= list(
+         "date"= "2020-11-02",
+         "color"= nationalcol,
+         label="N2"
+   ),
+   "Nopera08Nov"= list(
+         "date"= "2020-11-08",
+         "color"= nationalcol,
+         label="N3"
+   ),
+    "Nopera30Nov"= list(
+         "date"= "2020-11-30",
+         "color"= nationalcol,
+         label="N4"
+   ),
+   "Nlockdown16Dec"= list(
+      "date"= "2020-12-16",
+      "color"= nationalcol,
+         label="N5"
+   ), 
+   "Nlockdown16Dec"= list(
+      "date"= "2020-12-22",
+      "color"= nationalcol,
+         label="N6"
+   ), 
+   "Nborder11Jan"= list(
+      "date"= "2021-01-11",
+      "color"= nationalcol,
+      label="N7"
+   ),
+    "Nborder22Jan"= list(
+      "date"= "2021-01-24",
+      "color"= nationalcol,
+      label="N8"
+   ),
+    "Nborder30Jan"= list(
+      "date"= "2021-01-30",
+      "color"= nationalcol,
+      label="N9"
+   ),
+    "Nborder14Feb"= list(
+      "date"= "2021-02-14",
+      "color"= nationalcol,
+      label="N10"
+   ),
+   "Nborder08March"= list(
+      "date"= "2021-03-13",
+      "color"= nationalcol,
+      label="N11"
+   ),
+#   "NPoland21March"= list(
+#      "date"= "2021-03-21",
+#      "color"= nationalcol,
+#      label="N12"
+#   ),
+   "NFrance31March"= list(
+      "date"= "2021-03-30",
+      "color"= nationalcol,
+      label="N12"
+   )
+   )
+)
+
+
+```
+
+```{r}
+print(kable(
+clusterMovement %>% filter(src != dst, src == "") %>% group_by(dst) %>% dplyr::summarise(n = n()) %>% arrange(n),
+caption="Number of TMRCSs in each state"
+))
+```
+
+```{r}
+
+ggplot(stateTransitionRateMCC %>% filter(src != dst) %>% filter(mean >= 1.2)
+       # %>% filter(adm1.x %in% c("Baden-Wurttemberg", "Bavaria", "Bavaria", "Lower Saxony", "North Rhine-Westphalia", "Saxony")) 
+       # %>% mutate(adm1.x2 = NA) %>% union(data2 %>% dplyr::rename(adm1.x2 = adm1.x) %>% mutate(adm1.x = NA))
+       ,
+       aes(y = mean, axis1 = src, axis2 = dst)) +
+  geom_alluvium(aes(fill = src), width = 1/12) +
+  geom_stratum(width = 1/12, fill = "black", color = "grey") +
+  geom_label(stat = "stratum", aes(label = after_stat(stratum)), size=1) +
+  scale_x_discrete(limits = c("src", "dst"), expand = c(.05, .05)) +
+  # scale_fill_brewer(type = "qual", palette = "Set1") +
+  # scale_fill_identity(values = unlist(dePal)) +
+  ggtitle("Transition rate of state MCC.")
+
+print(kable(
+  stateTransitionRateMCC %>% dplyr::select(src, dst, mean) %>% pivot_wider(names_from = dst, values_from = mean)
+))
+
+```
+
+```{r draw-two-column-rates}
+
+calculate.germany.germany.f <- function() {
+  germany <- raster::getData("GADM", country = "DEU", level = 1)
+  germany.f <- fortify(germany, region = "CC_1")
+  
+  mapNames <- germany$VARNAME_1
+  mapNames[is.na(mapNames)] <- germany$NAME_1[is.na(mapNames)]
+  mapNames[mapNames == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  mapNames[mapNames == "Mecklenburg-West Pomerania"] <- "Mecklenburg-Western Pomerania"
+  
+  germany$NAME_1_EN <- germany$NAME_1
+  germany$NAME_1_EN[germany$NAME_1 == "Baden-Württemberg"] <- "Baden-Wurttemberg"
+  germany$NAME_1_EN[germany$NAME_1 == "Mecklenburg-Vorpommern"] <- "Mecklenburg-Western Pomerania"
+  germany$NAME_1_EN[germany$NAME_1 == "Bayern"] <- "Bavaria"
+  germany$NAME_1_EN[germany$NAME_1 == "Hessen"] <- "Hesse"
+  germany$NAME_1_EN[germany$NAME_1 == "Niedersachsen"] <- "Lower Saxony"
+  germany$NAME_1_EN[germany$NAME_1 == "Nordrhein-Westfalen"] <- "North Rhine-Westphalia"
+  germany$NAME_1_EN[germany$NAME_1 == "Rheinland-Pfalz"] <- "Rhineland-Palatinate"
+  germany$NAME_1_EN[germany$NAME_1 == "Sachsen"] <- "Saxony"
+  germany$NAME_1_EN[germany$NAME_1 == "Sachsen-Anhalt"] <- "Saxony-Anhalt"
+  germany$NAME_1_EN[germany$NAME_1 == "Thüringen"] <- "Thuringia"
+  
+  # col <- '#1e0000'
+  # germany$value <- 0
+  germany.f$value <- germany$NAME_1_EN[match(germany.f$id, germany$CC_1)]
+  
+  return(list('germany.f'=germany.f, 'germany'=germany))
+}
+
+geom.center <- function(x) {
+  return((max(x) + min(x))/2)
+}
+germany.germany.f <- calculate.germany.germany.f()
+germany.f <- germany.germany.f$germany.f
+germany <- germany.germany.f$germany
+data(world.cities)
+
+
+# legend drawing function, copied from ggplot2
+draw_key_segment_custom <- function(data, params, size) {
+  if (is.null(data$linetype)) {
+    data$linetype <- 0
+  } else {
+    data$linetype[is.na(data$linetype)] <- 0
+  }
+
+  segmentsGrob(0.1, 0.5, 0.9, 0.5,
+    gp = gpar(
+      # col = alpha(data$colour %||% data$fill %||% "black", data$alpha),
+      col = data$colour,
+      # the following line was added relative to the ggplot2 code
+      # fill = alpha(data$colour %||% data$fill %||% "black", data$alpha),
+      fill = data$colour,
+      # lwd = (data$size %||% 0.5) * .pt,
+      lwd = 0.5 * .pt,
+      # lty = data$linetype %||% 1,
+      lty = 1,
+      lineend = "round"
+    ),
+    # arrow = params$arrow
+    arrow = arrow(length = unit(0.2, "cm"), angle=30, type = "closed", end="first")
+  )
+}
+
+# germany.state.centers <- data.frame(state = c("Baden-Wurttemberg", "Bavaria", "Berlin", "Brandenburg", "Bremen", "Hamburg", "Hesse", "Lower Saxony", "Mecklenburg-Western Pomerania", "North Rhine-Westphalia", "Rhineland-Palatinate", "Saarland", "Saxony", "Saxony-Anhalt", "Schleswig-Holstein", "Thuringia"), center=c("Stuttgart", "Munich", "Berlin", "Potsdam", "Bremen", "Hamburg", "Wiesbaden", "Hanover", "Schwerin", "Dusseldorf", "Mainz", "Saarbrucken", "Dresden", "Magdeburg", "Kiel", "Erfurt")) %>% left_join(world.cities %>% filter(country.etc == "Germany"), by=c("center"="name")) %>% mutate(long=ifelse(state == "Hesse", 9.16, long))
+germany.state.centers<-data.frame(	lat=c(48.66,48.79,52.52181866,52.41,53.0793,53.55002464,50.65,53.61,52.63,51.43,50.11,49.39,51,52.2,54,50.7), 	long=c(9.35,11.49,13.40154862,12.53,8.8017,9.999999144,9.16,12.42,9.8,7.66,7.3,7.02,13,11.69,9.56,11.02996212), 	state=c("Baden-Wurttemberg","Bavaria","Berlin","Brandenburg","Bremen","Hamburg","Hesse","Mecklenburg-Western Pomerania","Lower Saxony","North Rhine-Westphalia","Rhineland-Palatinate","Saarland","Saxony","Saxony-Anhalt","Schleswig-Holstein","Thuringia")	)
+
+# germany.state.grography <- germany.f %>% filter(hole == FALSE) %>% group_by(id, value) %>% summarise(long = geom.center(long), lat = geom.center(lat))
+germany.state.grography <- germany.state.centers %>% dplyr::rename(value = state) %>% left_join(germany.f %>% dplyr::group_by(id, value) %>% dplyr::summarise())
+germany.f$value <- germany$NAME_1_EN[match(germany.f$id, germany$CC_1)]
+
+# data6 <- data5 %>% as.data.frame() %>% tibble::rownames_to_column("src") %>% pivot_longer(!src, names_to = "dst", values_to = "move") %>% filter(move >= 0.3) %>% left_join(germany.state.grography %>% dplyr::rename(src.id = id, src.lat = lat, src.long = long), by=c("src"="value")) %>% left_join(germany.state.grography %>% dplyr::rename(dst.id = id, dst.lat = lat, dst.long = long), by=c("dst"="value"))
+map.edge.info <- data.frame(
+src=c("Baden-Wurttemberg", "Baden-Wurttemberg", "Bavaria", "Bavaria", "Bavaria", "Bavaria", "North Rhine-Westphalia", "North Rhine-Westphalia", "Saxony", "Saxony", "Baden-Wurttemberg", "Baden-Wurttemberg", "Baden-Wurttemberg", "Bavaria", "Bavaria", "Bavaria", "Lower Saxony", "North Rhine-Westphalia", "North Rhine-Westphalia", "North Rhine-Westphalia", "North Rhine-Westphalia", "North Rhine-Westphalia", "North Rhine-Westphalia", "North Rhine-Westphalia", "North Rhine-Westphalia", "North Rhine-Westphalia", "Rhineland-Palatinate", "Saxony", "Saxony", "Saxony", "Thuringia", "Thuringia", "Thuringia"),	dst=c("Berlin", "Saxony", "Baden-Wurttemberg", "Rhineland-Palatinate", "Saxony", "Thuringia", "Saarland", "Saxony", "Baden-Wurttemberg", "Thuringia", "Hesse", "Rhineland-Palatinate", "Saxony-Anhalt", "Berlin", "Hamburg", "Saxony-Anhalt", "Hamburg", "Baden-Wurttemberg", "Berlin", "Hamburg", "Hesse", "Lower Saxony", "Rhineland-Palatinate", "Saxony-Anhalt", "Schleswig-Holstein", "Thuringia", "Hesse", "Hesse", "Rhineland-Palatinate", "Saxony-Anhalt", "Berlin", "Rhineland-Palatinate", "Saxony-Anhalt"),	curvature=c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, -0.1, 0.1, 0.1, 0, 0, 0.2, 0.5, 1.1, 0.8, 0, 1, -0.1, -0.5, 0, -0.5, 0, 0, -0.5, 0, 0.5, -0.2, -0.3, -0.4, 0, 0.2, 0)
+)
+
+#########
+data6 <- stateTransitionRateMCC %>% 
+  filter(mean >= 1.5) %>%
+  mutate(n = mean) %>%
+  #left_join(stateTransitionRateMCC %>% dplyr::rename(adm1.y.lincount = n), by=c("adm1.y" = "adm1")) %>% 
+  #mutate(n.ratio = n/adm1.y.lincount) %>% 
+  #filter(n >= 3, n.ratio >= 0.0) %>% dplyr::rename(src=adm1.x, dst=adm1.y, move=n.ratio) %>% 
+  left_join(germany.state.grography %>% dplyr::rename(src.id = id, src.lat = lat, src.long = long), by=c("src"="value")) %>% 
+  left_join(germany.state.grography %>% dplyr::rename(dst.id = id, dst.lat = lat, dst.long = long), by=c("dst"="value")) %>%
+  left_join(map.edge.info, by=c("src", "dst")) 
+
+
+map.color <- c()
+# map.color[names(dePal)] <- "gray"
+# map.color[data6$src] <- hue_pal()(length(data6$src))
+# map.color[data6$src] <- brewer.pal(length(data6$src), "Set1")
+map.color[levels(as.factor(data6$src))] <- hue_pal()(length(levels(as.factor(data6$src))))
+map.color <- c("Baden-Wurttemberg"="#F46D43", "Bavaria"="#1A9850", "Lower Saxony"="#f1b6da", "North Rhine-Westphalia"="#B2182B",
+"Rhineland-Palatinate"="#fa9fb5", "Saxony"="#c6dbef", "Thuringia"="#D9EF8B")
+map.color[setdiff(names(dePal), names(map.color))] <- "gray"
+
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+map.color[data6$src] <- gg_color_hue(length(data6$src))
+
+# map.color <- hue_pal()(length(data6$src))
+# names(map.color) <- levels(as.factor(germany.f$value))
+ggplot() +
+  geom_polygon(data = germany.f, aes(x = long, y = lat, group = group, fill = value), colour = "gray", alpha=0.5)+
+  geom_polygon(data = germany.f[germany.f$id == "11",], aes(x = long, y = lat, group = group, fill = value), colour = "gray") + 
+  scale_fill_manual("Source", values = rep("white", length(levels(as.factor(germany.f$value))))) +
+  # scale_fill_manual('value', values = unname(unlist(map.color[as.character(unique(forcats::fct_inorder(names(map.color) )))])) ) +
+  # scale_fill_manual('value', values = forcats::fct_inorder(value) ) +
+  # scale_fill_manual('State', values = map.color) +
+  # scale_color_manual(values = map.color[levels(as.factor(dat6 %>% pull(src)))]) + 
+  theme(axis.line=element_blank(), axis.text.x=element_blank(),
+        axis.text.y=element_blank(), axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.background=element_blank(), panel.grid.major=element_blank(),
+        panel.border = element_rect(colour = "black", fill=NA, size=0.1),
+        panel.grid.minor=element_blank(), plot.background=element_blank(),
+        aspect.ratio = (max(germany.f$long) - min(germany.f$long))/(max(germany.f$lat) - min(germany.f$lat)),
+        ) +
+  geom_point(data = germany.state.grography %>% left_join(data6 %>% group_by(src) %>% dplyr::summarise(n = sum(n)), by=c("value"="src")) %>% mutate(n = ifelse(is.na(n), 0, n)),
+             alpha=1.0,
+             aes(x = long,
+                 y = lat,
+                 size = n/100,
+                 colour = value), show.legend = FALSE) +
+  lapply(seq(nrow(data6)), function(i) {
+    geom_curve(data = data6[i,],
+             alpha = 0.8,
+             # curvature =  data6[i,"curvature"],
+             # color = "dodgerblue1",
+             aes(x = src.long, y = src.lat,
+                 xend = dst.long, yend = dst.lat,
+                 color = src), linewidth = data6[i,"n"]/10, show.legend = FALSE)
+  }) +
+  lapply(seq(nrow(data6)), function(i) {
+    geom_curve(data = data6[i,],
+             alpha = 1.0,
+             # curvature =  data6[i,"curvature"],
+             # color = "dodgerblue1",
+             aes(x = src.long, y = src.lat,
+                 xend = dst.long, yend = dst.lat,
+                 color = src),
+                 arrow = arrow(length = unit(0.7, "cm"), angle=10, type = "closed"), size = 0.5, show.legend = TRUE,
+                 key_glyph = "segment_custom")
+  }) +
+  geom_line() + guides(fill = FALSE, size=FALSE)+ labs(color = "Source State")
+
+
+
+```
+
+```{r fig.width=14, fig.height=3}
+
+library(tidyverse)
+
+dateBreaksW  <- seq.Date(as.Date("2020-01-02"), as.Date("2021-06-04"), by="week")
+data <- clusterMovement %>% filter(height != -1, src != dst) %>% mutate(mid_date = (src_date + dst_date)/2, mid_date_calendar = as.Date(date_decimal(mid_date))) %>% 
+  mutate(mid_date_index = sapply(mid_date_calendar, function(x) which.max(dateBreaksW > x) - 1), mid_date_value = dateBreaksW[mid_date_index])
+state.total.src.dst <- data %>% dplyr::group_by(src) %>% dplyr::summarise(src.cnt = n()) %>% mutate(state = src) %>% left_join(data %>% dplyr::select(-src) %>% group_by(dst) %>% dplyr::summarise(dst.cnt = n()), by=c("state"="dst"))
+
+
+marks__extended <- do.call(rbind.data.frame, marks__) %>% mutate(date = as.Date(date)) 
+
+ggplot(data %>% left_join(state.total.src.dst, by=c("src"="state")) %>% mutate(src=fct_reorder(src, src.cnt)), aes(x=mid_date_value, fill=src)) + 
+  #geom_histogram(bins = 30)
+  geom_bar()+
+  scale_x_date(date_breaks = "4 week", date_labels = "%d-%b")+
+  guides(fill=guide_legend(ncol=2))+
+  theme(axis.text.x = element_text(angle = 90)) + ggtitle("Number of importations inside Germany") +
+  # geom_segment(data=marks__extended, aes(x=date, y=smdiff.pref, xend=date, yend=smdiff.next), color=marks__extended$color, linetype=1) +
+  # geom_segment(data=marks__extended, aes(x=date-1, y=smdiff.pref, xend=date+1, yend=smdiff.pref), color=marks__extended$color, linetype=1) +
+  # geom_segment(data=marks__extended, aes(x=date-1, y=smdiff.next, xend=date+1, yend=smdiff.next), color=marks__extended$color, linetype=1) +
+  # geom_segment(data=marks__extended, aes(x=date-6, y=smdiff.pref, xend=date+0, yend=smdiff.pref), color=marks__extended$color, linetype=3) +
+  # geom_segment(data=marks__extended, aes(x=date-0, y=smdiff.next, xend=date+6, yend=smdiff.next), color=marks__extended$color, linetype=3) +
+  # geom_text_repel(data=marks__extended, aes(label=label, x=date, y=smdiff.pref), color=marks__extended$color, nudge_y = 0.01 * ymax, vjust = 0, direction = "x", segment.curvature = -0.1, segment.linetype = 6, force = 0) +
+  # geom_text(data=marks__extended, aes(label=label, x=date, y=smdiff.pref), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax) 
+  geom_segment(data=marks__extended, aes(x=date, y=0, xend=date, yend=15,fill="black"), color=marks__extended$color, linetype=1) +
+  geom_text(data=marks__extended, aes(label=label, x=date, y=15,fill="black"), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax) 
+
+
+    # group_by(mid_date_value) %>% group_modify(~ .x %>% adorn_totals(where = "row")) %>%
+print(kable(
+  data %>% group_by(mid_date_value, src) %>% dplyr::summarise(n = n()) %>% ungroup() %>% arrange(mid_date_value) %>%
+    pivot_wider(names_from=src, values_from = n, values_fill = 0) %>% 
+    adorn_totals("col")
+, caption = "src"))
+
+ggplot(data %>% left_join(state.total.src.dst, by=c("dst"="state")) %>% mutate(dst=fct_reorder(dst, dst.cnt)), aes(x=mid_date_value, fill=dst)) + 
+  #geom_histogram(bins = 30)
+  geom_bar()+
+  scale_x_date(date_breaks = "4 week", date_labels = "%d-%b")+
+  guides(fill=guide_legend(ncol=2))+
+  theme(axis.text.x = element_text(angle = 90)) + ggtitle("Number of importations inside Germany") +
+  # geom_segment(data=marks__extended, aes(x=date, y=smdiff.pref, xend=date, yend=smdiff.next), color=marks__extended$color, linetype=1) +
+  # geom_segment(data=marks__extended, aes(x=date-1, y=smdiff.pref, xend=date+1, yend=smdiff.pref), color=marks__extended$color, linetype=1) +
+  # geom_segment(data=marks__extended, aes(x=date-1, y=smdiff.next, xend=date+1, yend=smdiff.next), color=marks__extended$color, linetype=1) +
+  # geom_segment(data=marks__extended, aes(x=date-6, y=smdiff.pref, xend=date+0, yend=smdiff.pref), color=marks__extended$color, linetype=3) +
+  # geom_segment(data=marks__extended, aes(x=date-0, y=smdiff.next, xend=date+6, yend=smdiff.next), color=marks__extended$color, linetype=3) +
+  # geom_text_repel(data=marks__extended, aes(label=label, x=date, y=smdiff.pref), color=marks__extended$color, nudge_y = 0.01 * ymax, vjust = 0, direction = "x", segment.curvature = -0.1, segment.linetype = 6, force = 0) +
+  # geom_text(data=marks__extended, aes(label=label, x=date, y=smdiff.pref), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax) 
+  geom_segment(data=marks__extended, aes(x=date, y=0, xend=date, yend=15,fill="black"), color=marks__extended$color, linetype=1) +
+  geom_text(data=marks__extended, aes(label=label, x=date, y=15,fill="black"), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax) 
+
+print(kable(
+  data %>% group_by(mid_date_value, dst) %>% dplyr::summarise(n = n()) %>% ungroup() %>% arrange(mid_date_value) %>%
+    pivot_wider(names_from=dst, values_from = n, values_fill = 0) %>% 
+    adorn_totals("col")
+, caption = "dst"))
+
+
+
+
+for (src.i in data %>% pull(src) %>% as.factor() %>% levels()) {
+  print(ggplot(data %>% filter(src == src.i), aes(x=mid_date_value, fill=dst)) + 
+    #geom_histogram(bins = 30)
+    geom_bar()+
+    scale_x_date(date_breaks = "4 week", date_labels = "%d-%b")+
+    guides(fill=guide_legend(ncol=2))+
+    theme(axis.text.x = element_text(angle = 90)) + ggtitle(paste("Number of importations inside Germany", "src=", src.i)) +
+    geom_segment(data=marks__extended, aes(x=date, y=0, xend=date, yend=25,fill="black"), color=marks__extended$color, linetype=1) +
+    geom_text(data=marks__extended, aes(label=label, x=date, y=25,fill="black"), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax) 
+  )
+}
+
+for (dst.i in data %>% pull(dst) %>% as.factor() %>% levels()) {
+  print(ggplot(data %>% filter(dst == dst.i), aes(x=mid_date_value, fill=src)) + 
+    #geom_histogram(bins = 30)
+    geom_bar()+
+    scale_x_date(date_breaks = "4 week", date_labels = "%d-%b")+
+    guides(fill=guide_legend(ncol=2))+
+    theme(axis.text.x = element_text(angle = 90)) + ggtitle(paste("Number of importations inside Germany", "dst=", dst.i)) +
+    geom_segment(data=marks__extended, aes(x=date, y=0, xend=date, yend=25,fill="black"), color=marks__extended$color, linetype=1) +
+    geom_text(data=marks__extended, aes(label=label, x=date, y=25,fill="black"), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax) 
+  )
+}
+
+```
+
+```{r fig.width=14, fig.height=3}
+
+i_point_date_src_coef = c(1, 2, 0)
+i_point_date_dst_coef = c(1, 0, 2)
+i_point_date_name = c("mid", "src", "dst")
+
+for (i in seq(3)) {
+
+  data <- clusterMovement %>% filter(height != -1, src != dst) %>% 
+    mutate(point_date = (i_point_date_src_coef[i]*src_date + i_point_date_dst_coef[i]*dst_date)/2, point_date_calendar = as.Date(date_decimal(point_date))) %>% 
+    mutate(point_date_index = sapply(point_date_calendar, function(x) which.max(dateBreaksW > x) - 1), point_date_value = dateBreaksW[point_date_index])
+  
+  state.total.src.dst <- data %>% dplyr::group_by(src) %>% dplyr::summarise(src.cnt = n()) %>% mutate(state = src) %>% left_join(data %>% dplyr::select(-src) %>% group_by(dst) %>% dplyr::summarise(dst.cnt = n()), by=c("state"="dst"))
+  
+  marks__extended <- do.call(rbind.data.frame, marks__) %>% mutate(date = as.Date(date)) 
+  
+  p <- ggplot(data %>% mutate(pangolin = str_replace(str_replace(cluster, "-20210602_DTA_MCC_[0-9]*", ""), "LIN-Germany-", "")), 
+         aes(x=point_date_value, fill=pangolin)) + 
+    #geom_histogram(bins = 30)
+    geom_bar()+
+    scale_x_date(date_breaks = "4 week", date_labels = "%d-%b")+
+    guides(fill=guide_legend(ncol=2))+
+    theme(axis.text.x = element_text(angle = 90)) + ggtitle(paste("Number of importations inside Germany", i_point_date_name[i])) +
+    # geom_segment(data=marks__extended, aes(x=date, y=smdiff.pref, xend=date, yend=smdiff.next), color=marks__extended$color, linetype=1) +
+    # geom_segment(data=marks__extended, aes(x=date-1, y=smdiff.pref, xend=date+1, yend=smdiff.pref), color=marks__extended$color, linetype=1) +
+    # geom_segment(data=marks__extended, aes(x=date-1, y=smdiff.next, xend=date+1, yend=smdiff.next), color=marks__extended$color, linetype=1) +
+    # geom_segment(data=marks__extended, aes(x=date-6, y=smdiff.pref, xend=date+0, yend=smdiff.pref), color=marks__extended$color, linetype=3) +
+    # geom_segment(data=marks__extended, aes(x=date-0, y=smdiff.next, xend=date+6, yend=smdiff.next), color=marks__extended$color, linetype=3) +
+    # geom_text_repel(data=marks__extended, aes(label=label, x=date, y=smdiff.pref), color=marks__extended$color, nudge_y = 0.01 * ymax, vjust = 0, direction = "x", segment.curvature = -0.1, segment.linetype = 6, force = 0) +
+    # geom_text(data=marks__extended, aes(label=label, x=date, y=smdiff.pref), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax) 
+    geom_segment(data=marks__extended, aes(x=date, y=0, xend=date, yend=15,fill="black"), color=marks__extended$color, linetype=1) +
+    geom_text(data=marks__extended, aes(label=label, x=date, y=15,fill="black"), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax)
+  
+  print(p)
+  
+  print(kable(
+    data %>% mutate(pangolin = str_replace(str_replace(cluster, "-20210602_DTA_MCC_[0-9]*", ""), "LIN-Germany-", "")) %>% group_by(point_date_value, pangolin) %>%
+      dplyr::summarise(n = n()) %>% pivot_wider(names_from = pangolin, values_from = n, values_fill = 0), 
+    caption = i_point_date_name[i]
+  ))  
+}
+
+
+
+```
+
+
+```{r, fig.width=7, fig.height=4}
+
+par(mar = c(4, 6, 5, 6), cex.axis = 0.7, cex.lab = 0.8, cex.main = 1.5, mgp = c(3, 0.75, 0))
+
+dateBreaks  <- seq.Date(as.Date("2020-01-01")-2, as.Date("2021-06-04"), by="day")
+
+data1 <- clusterMovement %>% filter(height == -1) %>% 
+  # mutate(mid_date = (src_date + dst_date)/2) %>% 
+  mutate(mid_date = dst_date) %>% 
+  mutate(mid_date_calendar = as.Date(date_decimal(mid_date)) - 5, mid_date = decimal_date(mid_date_calendar)) %>% 
+  mutate(mid_date_index = sapply(mid_date_calendar, function(x) which.max(dateBreaks > x) - 1)) %>% mutate(n = 1) %>%
+  group_by(src, dst, mid_date_index) %>% dplyr::summarise(n = sum(n)) %>% ungroup() %>% 
+  rbind(data.frame(src="Bavaria", dst="Bavaria", mid_date_index=seq(1, length(dateBreaks)), n=0)) %>%
+  tidyr::complete(src, dst, mid_date_index) %>%
+  mutate(n = if_else(is.na(n), 0, n)) %>% mutate(mid_date_value = dateBreaks[mid_date_index]) %>% filter(src != dst)
+
+data1 <- data1 %>% mutate(adm1 = src)
+
+tmrcaBreaks <- dateBreaks
+
+sumtriangle <- function(data, template = c(seq(7), seq(6,1))) {
+   # print(data)
+   x <- convolve(data, template, type="open")
+   return(x %>% tail(-(length(template)-1)) %>% round(digits = 1))
+}
+
+shift <- function(data, amount) {
+   if (amount > 0) {
+      return(c(rep(NA, amount), data) %>% head(-amount))
+   } else {
+      return(c(data, rep(NA, amount)) %>% tail(-amount))
+   }
+}
+
+smoothDiffMeasure <- function(column, w=7) {
+   # sapply(seq(length(column)), function(i) max(column[max(0,i-w+1):i]) - min(column[min(length(column),i+w-1):i])  ) 
+   sapply(seq(length(column)), function(i) {
+     m1 = max(column[max(1, i-w+1):i])
+     clm = column[i:min(length(column),i+w-1)]
+     return(max(cummax(c(m1, clm))[2:(length(clm)+1)] - rev(cummin(rev(clm)))));
+   }  ) 
+}
+
+smoothDiffMeasureNext <- function(column, w=7) {
+   # sapply(seq(length(column)), function(i) min(column[min(length(column),i+w-1):i])  ) 
+   sapply(seq(length(column)), function(i) {
+     m1 = max(column[max(1, i-w+1):i])
+     clm = column[i:min(length(column),i+w-1)]
+     i_a = which.max(cummax(c(m1, clm))[2:(length(clm)+1)] - rev(cummin(rev(clm))))[1]
+     return(rev(cummin(rev(clm)))[i_a])
+   }  ) 
+}
+smoothDiffMeasurePrev <- function(column, w=7) {
+   # sapply(seq(length(column)), function(i) max(column[max(0,i-w+1):i])  ) 
+   sapply(seq(length(column)), function(i) {
+     m1 = max(column[max(1, i-w+1):i])
+     clm = column[i:min(length(column),i+w-1)]
+     i_a = which.max(cummax(c(m1, clm))[2:(length(clm)+1)] - rev(cummin(rev(clm))))[1]
+     return(cummax(c(m1, clm))[2:(length(clm)+1)][i_a])
+   }  ) 
+}
+
+
+startDate <- as.Date("2020-09-25")
+endDate <- as.Date("2021-06-04")
+
+triangle.peak <- 5
+
+smoothedCharts <- function(adm1_s, adm1_name, col, marks__, data.in = data1, title_add = "") {
+   data2 <- data.in %>% filter(adm1 %in% adm1_s) %>% 
+    group_by(mid_date_index, mid_date_value) %>% dplyr::summarise(n = sum(n)) %>% ungroup() %>%
+      mutate(adm1 = adm1_name) %>%
+      # full_join(tmrcaBreakIndicesDF(tmrcaBreaks), by=c("tmrca.break.index"="tmrca.break.index")) %>% 
+      mutate(adm1=ifelse(is.na(adm1), adm1_name, adm1), n=ifelse(is.na(n), 0, n)) %>% arrange(mid_date_index) %>%
+      # mutate(n=rollsum(n, tmrcaBreaksLength, align='left', fill=0))
+      filter(mid_date_index > 0) %>%
+      # mutate(date = tmrcaBreaks[tmrca.break.index]) %>%
+      mutate(n = sumtriangle(n, template=c(seq(1,triangle.peak),seq(triangle.peak-1,1)))) %>%
+      mutate(n.shift = shift(n, 1), n.diff = n - n.shift) %>%
+      mutate(smdiff = smoothDiffMeasure(n.diff), smdiff.pref = smoothDiffMeasurePrev(n.diff), smdiff.next = smoothDiffMeasureNext(n.diff))
+    plot_weekly_table(data2 %>% mutate(tmrca.break.index = mid_date_index), "adm1", pal, 
+                   # paste("Imp conv to triangle (10 d)", "(+sing)", adm1_name, dvar), 
+                   "", 
+                   "", paste("Smoothed importation frequency of", adm1_name, title_add),
+                   legend_ = function(x) ifelse(nchar(x) > 10, substr(x, 1, 10), x), printTable_ = FALSE, marks_ = marks__ )
+
+   ymax2 = max(data2$n.diff, na.rm = TRUE) * 1.1
+   ymin2 = min(min(data2$n.diff, na.rm = TRUE) * 1.1, 0)
+   marks__extended <- do.call(rbind.data.frame, marks__) %>% mutate(date = as.Date(date)) %>% left_join(data2, by=c("date" = "mid_date_value"))
+   p <- ggplot() + 
+      geom_line(data = data2, aes(x=mid_date_value, y=n.diff), color=col) + 
+      geom_point(data = data2, aes(x=mid_date_value, y=n.diff), color=col) + 
+      #labs(title=paste("Imp  derivation of conv to triangle (10 d)", "(+s)", adm1_name, dvar))+
+      # labs(title=paste("triangle 10d +s",  adm1_name, dvar))+
+      scale_x_date(date_breaks = "2 week", date_labels =  "%d %b %y") + 
+      theme_bw() + 
+      theme(legend.position="top", axis.text.x=element_text(angle=90, hjust=1)) + geom_hline(yintercept = 0, color = "black") +
+      geom_segment(data=marks__extended, aes(x=date, y=smdiff.pref, xend=date, yend=smdiff.next), color=marks__extended$color, linetype=1) +
+      geom_segment(data=marks__extended, aes(x=date-1, y=smdiff.pref, xend=date+1, yend=smdiff.pref), color=marks__extended$color, linetype=1) +
+      geom_segment(data=marks__extended, aes(x=date-1, y=smdiff.next, xend=date+1, yend=smdiff.next), color=marks__extended$color, linetype=1) +
+      geom_segment(data=marks__extended, aes(x=date-6, y=smdiff.pref, xend=date+0, yend=smdiff.pref), color=marks__extended$color, linetype=3) +
+      geom_segment(data=marks__extended, aes(x=date-0, y=smdiff.next, xend=date+6, yend=smdiff.next), color=marks__extended$color, linetype=3) +
+      # geom_text_repel(data=marks__extended, aes(label=label, x=date, y=smdiff.pref), color=marks__extended$color, nudge_y = 0.01 * ymax, vjust = 0, direction = "x", segment.curvature = -0.1, segment.linetype = 6, force = 0) +
+      geom_text(data=marks__extended, aes(label=label, x=date, y=smdiff.pref), color=marks__extended$color, vjust = 0, nudge_y = 0.01 * ymax) +
+      ylab(paste("Change rate of\n  smoothed importation frequency", adm1_name)) + 
+      theme(axis.title.x = element_blank())
+
+   print(p)
+   
+   
+   print(kable(
+      # do.call(bind_rows, marks__) %>%
+      do.call(bind_rows, marks__) %>% crossing(data.frame(mark_date_distance = seq(-5, 5))) %>% mutate(date = as.Date(date) + mark_date_distance) %>%
+        mutate(date.index = sapply(date, function(x) which.max(x < tmrcaBreaks) - 1), date.old.index = sapply(as.Date(date)-days(7), function(x) which.max(x < tmrcaBreaks) - 1)) %>%
+        left_join(data2 %>% dplyr::rename(date.value = n), by=c("date.index"="mid_date_index")) %>%
+        left_join(data2 %>% dplyr::rename(date.old.value = n), by=c("date.old.index"="mid_date_index")) %>%
+        dplyr::select(-date.index, -date.old.index, -color) %>%
+        mutate(fold.change= -(date.old.value-date.value)/date.old.value) %>% dplyr::select(label, smdiff.x, mark_date_distance) %>%
+        pivot_wider(names_from = mark_date_distance, values_from = smdiff.x)
+      ,
+      caption=paste("Change in critical points", adm1_name, title_add)))
+}
+
+data1 <- data1 %>% mutate(adm1 = dst)
+pal <- dePal
+pal[["Other"]] <- "#101010"
+state <- "Germany"
+
+adm1List <- deStates
+# adm1List <- c("Bavaria", "North Rhine-Westphalia", "Baden-Wurttemberg", "Saxony")
+for (adm1_ in adm1List) {
+   
+   marks__ = marks_
+   if (adm1_ %in% names(marksForStates_)) {
+      marks__ = marksForStates_[[adm1_]];
+   }
+   smoothedCharts(adm1_, adm1_, pal[[adm1_]], marks__, title_add = paste("\nsingle", "dvar", "dst"))
+   # smoothedCharts(adm1_, adm1_, pal[[adm1_]], marks__, clusterFirstCase = data, title_add = paste("\nno single", "dvar"))
+}
+
+marks_test = marks_; #for (x in names(marks_test)) { marks_test[[x]]$color = "gray"; }
+smoothedCharts(deStates, state, pal[[state]], marks_, title_add = paste("\nsingle", "dvar", "dst"))
+
+# smoothedCharts(c(levels(factor((data1 %>% dplyr::select(dst))$dst)), NA), state, pal[[state]], marks_, clusterFirstCase.in = data1, title_add = paste("\nno single", "dvar"))
+# smoothedCharts(setdiff(c(levels(factor((clusterFirstCaseByCounty %>% dplyr::select(adm1))$adm1)), NA), c("Bavaria", "North Rhine-Westphalia", "Baden-Wurttemberg")), "other", pal[["Other"]], marks_test, title_add = paste("\nsingle", dvar))
+# smoothedCharts(setdiff(c(levels(factor((clusterFirstCaseByCounty %>% dplyr::select(adm1))$adm1)), NA), c("Bavaria", "North Rhine-Westphalia", "Baden-Wurttemberg")), "other", pal[["Other"]], marks_test, clusterFirstCase = clusterFirstCaseByCounty, title_add = paste("\nno single", dvar))
+# smoothedCharts(setdiff(c(levels(factor((data1 %>% dplyr::select(dst))$dst)), NA), c("Bavaria", "North Rhine-Westphalia", "Baden-Wurttemberg", "Saxony")), "other", pal[["Other"]], marks_test, clusterFirstCase = data1, title_add = paste("\nno single", "dvar"))
+smoothedCharts(setdiff(deStates, c("Bavaria", "North Rhine-Westphalia", "Baden-Wurttemberg", "Saxony")), "other", pal[["Other"]], marks_test, data.in = data1, title_add = paste("\nsingle", "dvar", "dst"))
+
+pal[["NRW,BV"]] <- pal[["Other"]]
+# smoothedCharts(setdiff(c(levels(factor((data1 %>% dplyr::select(dst))$dst)), NA), c("North Rhine-Westphalia", "Bavaria")), "no NRW,BV", pal[["Other"]], marks_test, data.in = data1, title_add = paste("\nno single", "dvar"))
+
+pal[["no NRW,BV"]] <- pal[["Other"]]
+smoothedCharts(setdiff(deStates, c("North Rhine-Westphalia", "Bavaria")), "no NRW,BV", pal[["Other"]], marks_test, data.in = data1, title_add = paste("\nsingle", "dvar", "dst"))
+
+
+
+# adm1List <- deStates
+# adm1List <- c("Bavaria", "North Rhine-Westphalia", "Baden-Wurttemberg", "Saxony")
+# for (adm1_ in adm1List) {
+#    marks__ = marks_
+#    if (adm1_ %in% names(marksForStates_)) {
+#       marks__ = marksForStates_[[adm1_]];
+#    }
+#    smoothedCharts(adm1_, adm1_, pal[[adm1_]], marks__, title_add = paste("\nsingle", "dvar", "src"))
+# }
+# 
+# marks_test = marks_; #for (x in names(marks_test)) { marks_test[[x]]$color = "gray"; }
+# smoothedCharts(deStates, state, pal[[state]], marks_, title_add = paste("\nsingle", "dvar", "src"))
+# 
+# smoothedCharts(setdiff(deStates, c("Bavaria", "North Rhine-Westphalia", "Baden-Wurttemberg", "Saxony")), "other", pal[["Other"]], marks_test, data.in = data1, title_add = paste("\nsingle", "dvar", "src"))
+# 
+# pal[["NRW,BV"]] <- pal[["Other"]]
+# 
+# pal[["no NRW,BV"]] <- pal[["Other"]]
+# smoothedCharts(setdiff(deStates, c("North Rhine-Westphalia", "Bavaria")), "no NRW,BV", pal[["Other"]], marks_test, data.in = data1, title_add = paste("\nsingle", "dvar", "src"))
+
+```
+
+```{r}
+kable(
+  clusterMovement %>% group_by(src, dst) %>% dplyr::summarise(n = n()) %>% pivot_wider(names_from = dst, values_from = n, values_fill = 0),
+  caption = "Movements between states"
+)
+```
+
+\clearpage
+
+# Session info
+
+```{r sessionInfo, results='markup'}
+    sessionInfo()
+```

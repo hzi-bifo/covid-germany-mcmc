@@ -1,9 +1,9 @@
 #!/bin/bash
 
-__conda_setup="$('/home/hforoughmand/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-eval "$__conda_setup"
+#__conda_setup="$('/home/hforoughmand/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+#eval "$__conda_setup"
 #/home/hforoughmand/miniconda3/etc/profile.d/conda.sh
-export PATH="/home/hforoughmand/miniconda3/bin:$PATH"
+#export PATH="/home/hforoughmand/miniconda3/bin:$PATH"
 
 conda activate covid-uk
 
@@ -18,8 +18,8 @@ i=$3
 
 echo "Treeannotator for $DATE_TREE $X $i"
 
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
-export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
+#cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
+#export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
 #treeannotator -type mcc results/beast/run/$X-$i/$X-DTA-$DATE_TREE.sub4500.trees results/beast/run/all/$X-DTA-$DATE_TREE.MCC.tree
 treeannotator -type mcc  results/beast/run/all/$X-DTA-$DATE_TREE.combined.trees  results/beast/run/all/$X-DTA-$DATE_TREE.MCC.tree
 

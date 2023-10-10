@@ -2,14 +2,14 @@
 #DATE_METADATA=$2
 #STATE=Germany
 
-export LD_LIBRARY_PATH="/home/hforoughmand/miniconda3/envs/covid-uk/lib/"
-export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib/"
+#export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
+#cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic
 DATE_TREE=20210602
 DATE_METADATA=20210602
 DATE_SEQ=20210602
 STATE=Germany
-TWD=/net/sgi/viral_genomics/hadi/tmp/
+TWD=/tmp
 SUB_TREES="A B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 C"
 #SUB_TREES="B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.1.214 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 P A C"
 #SUB_TREES="$SUB_TREES B.1.617.2"
@@ -143,7 +143,7 @@ done
 #SUB_TREES="B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.1.214 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 P A C"
 SUB_TREES="B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.177 B.1.160 B.1.221 B.1.36 B.1.351 P A C"
 #NOTE: B.1.1.7 -> i={6..10}
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
+#cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
 for X in $SUB_TREES; do 
 #for X in B.1.1.70 B.1.177; do
 #current jobs number are 31..35, previously it was 1..5 for all and 6..20 for B.1.1.7
@@ -328,7 +328,7 @@ done
 
 # run at grid.bifo
 #DATE_TREE=20210428
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
+#cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
 for X in $SUB_TREES; do 
 #for i in {1..2}; do 
 for i in {31..32}; do 

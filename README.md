@@ -20,7 +20,8 @@ The workflow includes some optional steps, some steps for testing the results. S
 We assume that following data are located at:
 * Raw sequences at `../../../data/data/gisaid-$DATE_SEQ-raw.fa`.
 * Metadata file at `../../../data/data/gisaid-$DATE_METADATA-metadata.tsv`.
-* Alignment of sequences at `../../../data/data/mmsa_20210622_masked.fa`
+* Sequence aligment file at `../../../data/data/mmsa_20210622_masked.fa`
+Note that, these files should be downloaded from [the GISAID website](https://gisaid.org/) after signing up and accepting the agreement form, thus these files are not provided in the repository. The files could be find in the GISAID website following these paths: Raw sequences from GISAID -> EpiCov -> Downloads -> FASTA, metadata file from GISAID -> EpiCov -> Downloads -> metadata, sequence alignment file from GISAID -> EpiCov -> Downloads -> MSA masked.
 
 Note that the paths are relative to the working directory [`analyses/phylogenetic/`](analyses/phylogenetic/).
 

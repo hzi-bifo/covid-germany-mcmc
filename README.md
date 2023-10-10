@@ -16,35 +16,71 @@ File [`analyses/phylogenetic/run-2.sh`](analyses/phylogenetic/run-2.sh) is the s
 The workflow includes some optional steps, some steps for testing the results. Some steps are very time-consuming, so one may want to skip those steps. 
 
 ## Setting up the environment:
+First, we create a new folder and inside it clone this github repository.
+```
+mkdir covid-mcmc
+cd covid-mcmc
+git clone git@github.com:hzi-bifo/covid-germany-mcmc.git
+```
+
 ### Required datasets.
 We assume that following data are located at:
-* Raw sequences at `../../../data/data/gisaid-$DATE_SEQ-raw.fa`.
-* Metadata file at `../../../data/data/gisaid-$DATE_METADATA-metadata.tsv`.
-* Sequence aligment file at `../../../data/data/mmsa_20210622_masked.fa`
+* Raw sequences at `data/data/gisaid-20210602-raw.fa`.
+* Metadata file at `data/data/gisaid-20210602-metadata.tsv`.
+* (Optional) Sequence aligment file at `data/data/mmsa_20210622_masked.fa`
 Note that, these files should be downloaded from [the GISAID website](https://gisaid.org/) after signing up and accepting the agreement form, thus these files are not provided in the repository. The files could be find in the GISAID website following these paths: Raw sequences from GISAID -> EpiCov -> Downloads -> FASTA, metadata file from GISAID -> EpiCov -> Downloads -> metadata, sequence alignment file from GISAID -> EpiCov -> Downloads -> MSA masked.
 
-Note that the paths are relative to the working directory [`analyses/phylogenetic/`](analyses/phylogenetic/).
+```
+mkdir -p data/data/
+```
+Download previous files and put them in the mentioned locations (if you have access, you can download data from [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8426353.svg)](https://doi.org/10.5281/zenodo.8426353). Note that you need to unxz the xz file.).
 
 ### Required applications
 Install the following applications:
-* Thorney BEAST
-* treeannotator from the BEAST package.
-* mash application to be installed in the PATH.
-* `boost_program_options` and `boost_iostreams` located on the `$(CONDA_PREFIX)/lib/` folder for building executables.
-
+* [Thorney BEAST](https://github.com/beast-dev/beast-mcmc/releases/tag/v1.10.5pre_thorney_v0.1.1).
+* The Thorney BEAST package contains the beast application.
+* The Thorney BEAST package also contains the treeannotator application.
+* (Optional) [mash](https://github.com/marbl/mash) application, for reproducing results with added identical sequences.
+Create a conda environment with the following libraries:
+* `boost` and `boostcpp`
 Note: Environment variable `PATH` should contain above mentioned installed applications.
-We highly recommend installation of conda and creation of an environment for the current repository containing the installed applications.
+
+
+```
+mkdir bin/
+cd bin
+wget https://github.com/beast-dev/beast-mcmc/releases/download/v1.10.5pre_thorney_v0.1.1/BEASTv1.10.5pre_thorney_0.1.1.zip
+unzip -q BEASTv1.10.5pre_thorney_0.1.1.zip
+PATH=$PWD/BEASTv1.10.5pre_thorney_0.1.1/bin:$PATH
+cd ../
+# You can check if beast works fine by running the following command
+beast -version
+
+# Creating a conda environment and installing packages
+conda create --name covid-uk
+conda activate covid-uk
+conda install boost-cpp boost -c conda-forge
+
+```
 
 ### Building executables from the current repo.
-Applications from the current repository should be compiled and executable files produces. Code of some applications are not located in the current repository. So we assume that a clone of repository `https://github.com/hzi-bifo/phylogeo-tools` is located at `../../../phylogeo-tools` (relative to the working directory). Then you can check if the symlinked files are pointing to the current source codes (e.g. `scripts/state.h` file relative to the working directory).
+Applications from the current repository should be compiled and executable files produces. Code of some applications are not located in the current repository. So clone the repository `https://github.com/hzi-bifo/covid-germany-mcmc-phylogeo-tools` and put it at `../../../phylogeo-tools` (relative to the working directory). Then you can check if the symlinked files are pointing to the current source codes (e.g. `scripts/state.h` file relative to the working directory).
+
+```
+# It should be executed inside the covid-mcmc folder, we created first.
+git clone git@github.com:hzi-bifo/covid-germany-mcmc-phylogeo-tools.git phylogeo-tools
+git clone git@github.com:hzi-bifo/covid-germany-mcmc-one-tree-public.git one-tree
+
+```
 
 To create executables, on the folder [`scripts/`](analyses/phylogenetic/scripts/) it is enough to run following command:
 ```
+cd covid-germany-mcmc/analyses/phylogenetic/scripts/
 make
+cd ../../../../
 ```
+
 Note that the [makefile](analyses/phylogenetic/scripts/makefile) uses environment variable `CONDA_PREFIX` based on which include directory `$(CONDA_PREFIX)/include` and lib directory `$(CONDA_PREFIX)/lib` are addressed. 
-
-
 
     
 ## Setting environment variables:
@@ -62,7 +98,7 @@ STATE=Germany
 ```
 * `TWD` points to a place with temporary but large free space.
 ```
-TWD=/net/sgi/viral_genomics/hadi/tmp/
+TWD=/tmp
 ```
 * `SUB_TREES` are the important subtrees found after subsampling.
 ```

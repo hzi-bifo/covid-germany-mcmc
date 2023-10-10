@@ -84,6 +84,11 @@ Note that the [makefile](analyses/phylogenetic/scripts/makefile) uses environmen
 
     
 ## Setting environment variables:
+To start the executions, we first change directory to the working folder as
+```
+cd huge-lineage-dynamics/analyses/phylogenetic/
+```
+
 * Environment variable `LD_LIBRARY_PATH` should point to a place with libboost_programoptions.
 * All the executions could be done from working directory [`analyses/phylogenetic/`](analyses/phylogenetic/) relative to the home of the github repository.
 * Following variables are reporesenting current data timestamps. So, please keep it as so.

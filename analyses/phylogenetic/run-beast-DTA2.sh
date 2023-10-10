@@ -24,6 +24,6 @@ echo "executing beast"
 cd $DIR/
 
 #export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
-beast-c8cc55d4fe -save_every 1000000 -overwrite -save_state $X-DTA2-$DATE_TREE.state $X-DTA2-$DATE_TREE.xml
+beast -save_every 1000000 -overwrite -save_state $X-DTA2-$DATE_TREE.state $X-DTA2-$DATE_TREE.xml
 
 echo "done"

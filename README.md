@@ -33,7 +33,7 @@ Note that, these files should be downloaded from [the GISAID website](https://gi
 ```
 mkdir -p data/data/
 ```
-Download previous files and put them in the mentioned locations (if you have access, you can download data from [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8426353.svg)](https://doi.org/10.5281/zenodo.8426353). Note that you need to unxz the xz file.).
+Download previous files and put them in the mentioned locations.
 
 ### Required applications
 Install the following applications:

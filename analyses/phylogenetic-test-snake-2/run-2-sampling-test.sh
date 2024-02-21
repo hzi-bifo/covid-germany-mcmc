@@ -547,7 +547,9 @@ for X in $SUB_TREES; do
 done | wc -l
 
 
-## NEW DTA for more than two states
+#######################################
+## NEW DTA for more than two states  ##
+#######################################
 
 mkdir results/dtamulti/
 
@@ -587,3 +589,95 @@ srun --mem=100G --cpus-per-task=2 --qos verylong --time=24:00:00 /net/viral_geno
 
 srun ./scripts/lineage-importation-extract-multidta --tree results/dtamulti/run/all/sampled-DTA-$DATE_TREE.MCC.nexus --lineage-samples results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv --out results/dtamulti/run/lin-ius-3/clusterMovement_DTA_MCC_0.5.0.tsv -l \"Baden-Wurttemberg\" \"Bavaria\" \"Berlin\" \"Brandenburg\" \"Bremen\" \"Hamburg\" \"Hesse\" \"Lower Saxony\" \"Mecklenburg-Western Pomerania\" \"North Rhine-Westphalia\" \"Rhineland-Palatinate\" \"Saarland\" \"Saxony\" \"Saxony-Anhalt\" \"Schleswig-Holstein\" \"Thuringia\" --root-date 1900
 sed 's/"//g' < results/dtamulti/run/lin-ius-3/clusterMovement_DTA_MCC_0.5.0.tsv > results/dtamulti/run/lin-ius-3/clusterMovement_DTA_MCC_0.5.tsv
+
+##  POSTERIOR DISTRIBUTION SAMPLES OF MULTIDTA
+rm -rf results/dtamulti/run/lin-ius-3e
+mkdir -p results/dtamulti/run/lin-ius-3e/sample-tree/ results/dtamulti/run/lin-ius-3e/movement/ results/dtamulti/run/lin-ius-3e/log/
+
+alias srun='srun --cpus-per-task=2 --qos verylong --time=24:00:00 '
+
+srun python scripts/tree-separate.py results/dtamulti/run/all/sampled-DTA-$DATE_TREE.combined.trees results/dtamulti/run/lin-ius-3e/sample-tree/tree-NAME.single.nexus
+
+for TREE_FILE in results/dtamulti/run/lin-ius-3e/sample-tree/*.single.nexus ; do
+TREE_NAME=`echo $(basename $TREE_FILE) | sed 's/\.single\.nexus//'`
+echo $TREE_NAME $TREE_FILE
+#sbatch --mem=50g --time=1:00:00 --cpus-per-task 1 -e results/dtamulti/run/lin-ius-3e/log/eff-$TREE_NAME.log -o results/dtamulti/run/lin-ius-3e/log/eff-$TREE_NAME.log scripts/generate-effectiveness.sh $DATE_TREE $STATE $TREE_NAME
+sbatch --mem=50g --time=1:00:00 --cpus-per-task 1 -e results/dtamulti/run/lin-ius-3e/log/eff-$TREE_NAME.err.log -o results/dtamulti/run/lin-ius-3e/log/eff-$TREE_NAME.out.log run-2-movement.sh $TREE_NAME
+done
+
+TREE_NAME=tree-997416000
+head -n 1 results/dtamulti/run/lin-ius-3e/movement/$TREE_NAME.clusterMovement_DTA_MCC_0.5.0.tsv | sed 's/$/\ttree/' > results/dtamulti/run/lin-ius-3e/all.clusterMovement_DTA_MCC_0.5.0.tsv
+
+for TREE_FILE in results/dtamulti/run/lin-ius-3e/sample-tree/*.single.nexus ; do
+TREE_NAME=`echo $(basename $TREE_FILE) | sed 's/\.single\.nexus//'`
+tail -n+2 results/dtamulti/run/lin-ius-3e/movement/$TREE_NAME.clusterMovement_DTA_MCC_0.5.0.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/dtamulti/run/lin-ius-3e/all.clusterMovement_DTA_MCC_0.5.0.tsv
+done
+
+## POSTERIOR DISTRIBUTION SAMPLES OF MULTIDTA - STARTING FROM SAMPLES (NOT MCC) OF DTA
+
+##  POSTERIOR DISTRIBUTION SAMPLES OF DTA
+
+rm -rf results/beast/run/lin-ius-3e/
+
+#extract trees results/beast/run/all/$X-DTA-$DATE_TREE.combined.trees to results/beast/run/lin-ius-3e/sample-tree
+mkdir -p results/beast/run/lin-ius-3e/out results/beast/run/lin-ius-3e/sample-tree results/beast/run/lin-ius-3e/log results/beast/run/lin-ius-3e/mcc-tree/  results/beast/run/lin-ius-3e/out-tree/ 
+for X in $SUB_TREES; do
+	echo $X ...
+	srun python scripts/tree-separate.py results/beast/run/all/$X-DTA-$DATE_TREE.combined.trees results/beast/run/lin-ius-3e/sample-tree/$X-NAME.nexus
+	#cat results/beast/run/all/$X-DTA-$DATE_TREE.combined.trees | sed -n '/^tree /q;p' > results/beast/run/lin-ius-3e/sample-tree/$X-pre-trees.tmp
+	#cat results/beast/run/all/$X-DTA-$DATE_TREE.combined.trees | while read -r a; do
+	#	if [[ "$a" =~ ^tree\  ]]; then
+	#		name=$X-$(echo "$a" | awk '{print $2}' | sed 's/STATE_//')
+	#		echo $name
+	#		(
+	#		cat results/beast/run/lin-ius-3e/sample-tree/$X-pre-trees.tmp
+	#		echo $a
+	#		echo "End;"
+	#		) > results/beast/run/lin-ius-3e/sample-tree/$name.nexus
+	#	fi
+	#done
+	#rm results/beast/run/lin-ius-3e/sample-tree/$X-pre-trees.tmp
+done
+
+for TREE_FILE in results/beast/run/lin-ius-3e/sample-tree/*.nexus ; do
+TREE_NAME=`echo $(basename $TREE_FILE) | sed 's/\.nexus//'`
+echo $TREE_NAME $TREE_FILE
+sbatch --mem=50g --time=1:00:00 --cpus-per-task 1 -e results/beast/run/lin-ius-3e/log/eff-$TREE_NAME.log -o results/beast/run/lin-ius-3e/log/eff-$TREE_NAME.log scripts/generate-effectiveness.sh $DATE_TREE $STATE $TREE_NAME
+done
+# results in results/beast/run/lin-ius-3e/out/$TREE_NAME-effectiveness.tsv
+library(dplyr)
+library(tidyr)
+library(bfp)
+d <- read.table('results/beast/run/lin-ius-3e/all.tsv', sep='\t', header=TRUE, stringsAsFactor=FALSE)
+colnames(d) <- c('name', 'N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7', 'N8',  'N9', 'N10', 'N11', 'N12', 'tree')
+d<- d %>% filter(name != 'name')
+ds <- d %>% mutate(name = ifelse(name == " no NRW,BV", "no NRW,BV", name)) %>% pivot_longer(num_range("N", 1:12), names_to='npi', values_to='eff') %>% mutate(eff = as.numeric(eff)) %>% group_by(name, npi) %>% summarise(eff.avg = mean(eff), eff.sd=sd(eff), hpd.l = empiricalHpd(eff, level=0.95)[1], hpd.u=empiricalHpd(eff, level=0.95)[2]) %>% pivot_wider(names_from=npi, values_from=c(eff.avg, eff.sd, hpd.l, hpd.u)) %>% select(sort(tidyselect::peek_vars())) %>% relocate(name) 
+write.table(ds, 'results/beast/run/lin-ius-3e/summ.tsv', sep='\t', quote=FALSE, row.names=FALSE)
+
+
+TREE_NAME=A-1000440000
+head -n 1 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_0.5.tsv | sed 's/$/\ttree/' > results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_0.5.tsv 
+head -n 1 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_0.5.tsv | sed 's/$/\ttree/' > results/beast/run/lin-ius-3e/all-clusters_DTA_MCC_0.5.tsv
+head -n 1 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusterSamples_DTA_MCC_0.5.tsv| sed 's/$/\ttree/' > results/beast/run/lin-ius-3e/out/all-clusterSamples_DTA_MCC_0.5.tsv
+head -n 1 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_singles_0.5.tsv | sed 's/$/\ttree/' >> results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_singles_0.5.tsv
+
+for TREE_FILE in results/beast/run/lin-ius-3e/sample-tree/*.nexus ; do
+TREE_NAME=`echo $(basename $TREE_FILE) | sed 's/\.nexus//'`
+#echo $TREE_NAME $TREE_FILE
+tail -n+2 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_0.5.tsv  | sed 's/$/\t'$TREE_NAME'/' >> results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_0.5.tsv 
+tail -n+2 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_0.5.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/beast/run/lin-ius-3e/all-clusters_DTA_MCC_0.5.tsv
+tail -n+2 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusterSamples_DTA_MCC_0.5.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/beast/run/lin-ius-3e/out/all-clusterSamples_DTA_MCC_0.5.tsv
+tail -n+2 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_singles_0.5.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_singles_0.5.tsv
+done
+
+d <- read.table('results/beast/run/lin-ius-3e/out/all-clusterSamples_DTA_MCC_0.5.tsv', sep='\t', header=TRUE) %>% select(cluster, tree)
+ds <- d %>% group_by(cluster, tree) %>% summarise(n=n())
+dss <- ds %>% group_by(tree) %>% summarise(n_cluster=n())
+ds %>% mutate(posterior_sample_id=str_replace(tree, '.*-', '')) %>% group_by(posterior_sample_id) %>% summarise(cluster=n()) %>% arrange(-cluster) %>% hist()
+
+
+
+#for X in $SUB_TREES; do
+#scripts/lineage-importation-inject-unsampled --tree results/beast/unsampled/$X-DTA-$DATE_TREE.MCC.tree.2.nexus --dist <( cat /dev/null ) -l \"$STATE\" \"non$STATE\" --out-folder results/beast/run/lin-ius-3e/ --metadata results/gisaid-$DATE_TREE-metadata-sampled-unsampled.tsv --lin-prefix LIN-Germany-$X-"$DATE_TREE"_DTA_MCC_ --treefile results/beast/run/lin-ius-3e/out-tree/$X-DTA-$DATE_TREE.MCC.tree.nexus --out-clusters results/beast/run/lin-ius-3e/out/$X-clusters_DTA_MCC_NA.tsv --out-cluster-samples results/beast/run/lin-ius-3e/out/$X-clusterSamples_DTA_MCC_NA.tsv --out-clusters-single results/beast/run/lin-ius-3e/out/$X-clusters_DTA_MCC_singles.tsv --out-0.5 results/beast/run/lin-ius-3e/out/$X-clusters_DTA_MCC_0.5.tsv results/beast/run/lin-ius-3e/out/$X-clusterSamples_DTA_MCC_0.5.tsv results/beast/run/lin-ius-3e/out/$X-clusters_DTA_MCC_singles_0.5.tsv --allow-new-lineage false --dist-threshold 0.0 --log results/beast/run/lin-ius-3e/$X-2.log --do-assign true
+#done
+

@@ -9,7 +9,7 @@ Goliaei S. (1,2), Foroughmand-Araabi M.H. (1,2), Roddy A. (1,2), Weber A. (3), Ã
 
 The computational workflow for inference of importation lineages of SARS-Cov-2 into Germany. The workflow was adapted from [https://github.com/COG-UK/UK-lineage-dynamics-analysis], for processing a 20-fold larger dataset (original workflow for analysis of first UK wave processed 50K samples and this analysis was handling 1.8M sequence samples). 
 
-Note that because of the GISAID terms of use genomic sequences cannot be shared in this repository. Instead, in the metadata files (all the tsv files under the analyses/*/results folders), we kept only the ID of sequences from GISAID data. The GISAID Accession ID for the samples after subsamping and filterings are available in files [results of in/out ratio subsampling with mash identicals](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of in/out ratio subsampling](analyses/phylogenetic-test-subsampling-3-nounsampled/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of in/out ratio subsampling with identicals](analyses/phylogenetic-test-subsampling-3-ridentical/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of fixed bucket size subsampling with mash identicals](analyses/phylogenetic-test-subsampling-5/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of fixed bucket size subsampling](analyses/phylogenetic-test-subsampling-5-nounsampled/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of fixed bucket size subsampling with identicals](analyses/phylogenetic-test-subsampling-5-ridentical/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of case-ratio subsampling with mash identicals](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of case-ratio subsampling](analyses/phylogenetic-test-snake-2-nounsampled/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of case-ratio subsampling with identicals](analyses/phylogenetic-test-snake-2-ridentical/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv).
+Note that because of the GISAID terms of use genomic sequences cannot be shared in this (public) repository. Instead, in the metadata files (all the tsv files under the analyses/*/results folders), we kept only the ID of sequences from GISAID data. The GISAID Accession ID for the samples after subsamping and filterings are available in files [results of in/out ratio subsampling with mash identicals](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of in/out ratio subsampling](analyses/phylogenetic-test-subsampling-3-nounsampled/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of in/out ratio subsampling with identicals](analyses/phylogenetic-test-subsampling-3-ridentical/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of fixed bucket size subsampling with mash identicals](analyses/phylogenetic-test-subsampling-5/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of fixed bucket size subsampling](analyses/phylogenetic-test-subsampling-5-nounsampled/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of fixed bucket size subsampling with identicals](analyses/phylogenetic-test-subsampling-5-ridentical/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of case-ratio subsampling with mash identicals](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of case-ratio subsampling](analyses/phylogenetic-test-snake-2-nounsampled/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv), [results of case-ratio subsampling with identicals](analyses/phylogenetic-test-snake-2-ridentical/results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv).
 
 The preprint of the manuscript is available at [medRxiv](https://doi.org/10.1101/2023.11.10.23298337).
 
@@ -532,3 +532,95 @@ We checked robustness of results under different sub-sampling methods.
 * Sampling proportional to the number of cases (main method): A fixed size for the number of samples for each week is assumed. Then, this value is divided to the countries on each week proportioanl to their number of cases. The proportion for each country is filled with the sequences, or with all the sequences if number of available sequences is less than this value. Results are available in [`analyses/phylogenetic-test-snake-2/`](analyses/phylogenetic-test-snake-2/) for 10000 as the number of sequences for each week.
   * [`analyses/phylogenetic-test-snake-2-nounsampled/`](analyses/phylogenetic-test-snake-2-nounsampled/) without identicals
   * [`analyses/phylogenetic-test-snake-2-ridentical/`](analyses/phylogenetic-test-snake-2-ridentical/) with injected identicals considering non-'n' locus
+
+## Bayesian uncertainty analysis
+
+In the main part of the study we inferred the importation lineages based on the MCC tree afthe the DTA Bayesian step. This could also be done directly based on the posterior samples. Here, for each posterior sample (tree and the location annotation), the importation lineages are inferred. The same methodology also used for the inter-state movement analysis of the importation lineages. The results are available as follows:
+* Importation lineages for the posterior samples of the Bayesian method:
+
+** [Clusters per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_0.5.tsv.xz) (compressed) 
+** [Cluster samples per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusterSamples_DTA_MCC_0.5.tsv.xz) (compressed)
+** [Cluster with single samples per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_singles_0.5.tsv.xz) (compressed)
+
+[//]: # (** results/beast/run/lin-ius-3e/all.tsv)
+[//]: # (** results/beast/run/lin-ius-3e/summ.tsv)
+
+* Inter-state movement for the posterior sampels of the Bayesian method
+** [Inter-state movement clusters per posterior samples](analyses/phylogenetic-test-snake-2/results/dtamulti/run/lin-ius-3e/all.clusterMovement_DTA_MCC_0.5.0.tsv.xz) (compressed)
+
+### Uncertainty analysis of the importation lineages
+
+Following codes infers the importation lineage for each Bayesian posterior sampled tree.
+```
+rm -rf results/beast/run/lin-ius-3e/
+
+#extract trees results/beast/run/all/$X-DTA-$DATE_TREE.combined.trees to results/beast/run/lin-ius-3e/sample-tree
+mkdir -p results/beast/run/lin-ius-3e/out results/beast/run/lin-ius-3e/sample-tree results/beast/run/lin-ius-3e/log results/beast/run/lin-ius-3e/mcc-tree/  results/beast/run/lin-ius-3e/out-tree/ 
+for X in $SUB_TREES; do
+	echo $X ...
+	python scripts/tree-separate.py results/beast/run/all/$X-DTA-$DATE_TREE.combined.trees results/beast/run/lin-ius-3e/sample-tree/$X-NAME.nexus
+done
+
+for TREE_FILE in results/beast/run/lin-ius-3e/sample-tree/*.nexus ; do
+TREE_NAME=`echo $(basename $TREE_FILE) | sed 's/\.nexus//'`
+echo $TREE_NAME $TREE_FILE
+bash scripts/generate-effectiveness.sh $DATE_TREE $STATE $TREE_NAME
+done
+# results in results/beast/run/lin-ius-3e/out/$TREE_NAME-effectiveness.tsv
+```
+
+
+Inferred importation lineages are calculated for each tree in the following code.
+```
+TREE_NAME=A-1000440000
+head -n 1 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_0.5.tsv | sed 's/$/\ttree/' > results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_0.5.tsv 
+head -n 1 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_0.5.tsv | sed 's/$/\ttree/' > results/beast/run/lin-ius-3e/all-clusters_DTA_MCC_0.5.tsv
+head -n 1 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusterSamples_DTA_MCC_0.5.tsv| sed 's/$/\ttree/' > results/beast/run/lin-ius-3e/out/all-clusterSamples_DTA_MCC_0.5.tsv
+head -n 1 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_singles_0.5.tsv | sed 's/$/\ttree/' >> results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_singles_0.5.tsv
+
+for TREE_FILE in results/beast/run/lin-ius-3e/sample-tree/*.nexus ; do
+TREE_NAME=`echo $(basename $TREE_FILE) | sed 's/\.nexus//'`
+#echo $TREE_NAME $TREE_FILE
+tail -n+2 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_0.5.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_0.5.tsv 
+tail -n+2 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_0.5.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/beast/run/lin-ius-3e/all-clusters_DTA_MCC_0.5.tsv
+tail -n+2 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusterSamples_DTA_MCC_0.5.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/beast/run/lin-ius-3e/out/all-clusterSamples_DTA_MCC_0.5.tsv
+tail -n+2 results/beast/run/lin-ius-3e/out/$TREE_NAME-clusters_DTA_MCC_singles_0.5.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_singles_0.5.tsv
+done
+```
+
+The following Rscript summarizes the calculated effectiveness values for the trees and calculates the 95% HPDs.
+```
+library(dplyr)
+library(tidyr)
+library(bfp)
+d <- read.table('results/beast/run/lin-ius-3e/all.tsv', sep='\t', header=TRUE, stringsAsFactor=FALSE)
+colnames(d) <- c('name', 'N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7', 'N8',  'N9', 'N10', 'N11', 'N12', 'tree')
+d<- d %>% filter(name != 'name')
+ds <- d %>% mutate(name = ifelse(name == " no NRW,BV", "no NRW,BV", name)) %>% pivot_longer(num_range("N", 1:12), names_to='npi', values_to='eff') %>% mutate(eff = as.numeric(eff)) %>% group_by(name, npi) %>% summarise(eff.avg = mean(eff), eff.sd=sd(eff), hpd.l = empiricalHpd(eff, level=0.95)[1], hpd.u=empiricalHpd(eff, level=0.95)[2]) %>% pivot_wider(names_from=npi, values_from=c(eff.avg, eff.sd, hpd.l, hpd.u)) %>% select(sort(tidyselect::peek_vars())) %>% relocate(name) 
+write.table(ds, 'results/beast/run/lin-ius-3e/summ.tsv', sep='\t', quote=FALSE, row.names=FALSE)
+```
+
+
+### Uncertainty analysis of the inter-state movement of the importation lineages
+The inter-state movement of the importation lineages could be inferred based on the posterior samples produced with the Bayesian method. 
+```
+rm -rf results/dtamulti/run/lin-ius-3e
+mkdir -p results/dtamulti/run/lin-ius-3e/sample-tree/ results/dtamulti/run/lin-ius-3e/movement/ results/dtamulti/run/lin-ius-3e/log/
+
+python scripts/tree-separate.py results/dtamulti/run/all/sampled-DTA-$DATE_TREE.combined.trees results/dtamulti/run/lin-ius-3e/sample-tree/tree-NAME.single.nexus
+
+for TREE_FILE in results/dtamulti/run/lin-ius-3e/sample-tree/*.single.nexus ; do
+TREE_NAME=`echo $(basename $TREE_FILE) | sed 's/\.single\.nexus//'`
+echo $TREE_NAME $TREE_FILE
+bash run-2-movement.sh $TREE_NAME
+done
+
+TREE_NAME=tree-997416000
+head -n 1 results/dtamulti/run/lin-ius-3e/movement/$TREE_NAME.clusterMovement_DTA_MCC_0.5.0.tsv | sed 's/$/\ttree/' > results/dtamulti/run/lin-ius-3e/all.clusterMovement_DTA_MCC_0.5.0.tsv
+
+for TREE_FILE in results/dtamulti/run/lin-ius-3e/sample-tree/*.single.nexus ; do
+TREE_NAME=`echo $(basename $TREE_FILE) | sed 's/\.single\.nexus//'`
+tail -n+2 results/dtamulti/run/lin-ius-3e/movement/$TREE_NAME.clusterMovement_DTA_MCC_0.5.0.tsv | sed 's/$/\t'$TREE_NAME'/' >> results/dtamulti/run/lin-ius-3e/all.clusterMovement_DTA_MCC_0.5.0.tsv
+done
+```
+

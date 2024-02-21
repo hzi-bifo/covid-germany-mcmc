@@ -537,16 +537,15 @@ We checked robustness of results under different sub-sampling methods.
 
 In the main part of the study we inferred the importation lineages based on the MCC tree afthe the DTA Bayesian step. This could also be done directly based on the posterior samples. Here, for each posterior sample (tree and the location annotation), the importation lineages are inferred. The same methodology also used for the inter-state movement analysis of the importation lineages. The results are available as follows:
 * Importation lineages for the posterior samples of the Bayesian method:
-
-** [Clusters per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_0.5.tsv.xz) (compressed) 
-** [Cluster samples per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusterSamples_DTA_MCC_0.5.tsv.xz) (compressed)
-** [Cluster with single samples per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_singles_0.5.tsv.xz) (compressed)
+  * [Clusters per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_0.5.tsv.xz) (compressed) 
+  * [Cluster samples per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusterSamples_DTA_MCC_0.5.tsv.xz) (compressed)
+  * [Cluster with single samples per posterior samples](analyses/phylogenetic-test-snake-2/results/beast/run/lin-ius-3e/out/all-clusters_DTA_MCC_singles_0.5.tsv.xz) (compressed)
 
 [//]: # (** results/beast/run/lin-ius-3e/all.tsv)
 [//]: # (** results/beast/run/lin-ius-3e/summ.tsv)
 
 * Inter-state movement for the posterior sampels of the Bayesian method
-** [Inter-state movement clusters per posterior samples](analyses/phylogenetic-test-snake-2/results/dtamulti/run/lin-ius-3e/all.clusterMovement_DTA_MCC_0.5.0.tsv.xz) (compressed)
+  * [Inter-state movement clusters per posterior samples](analyses/phylogenetic-test-snake-2/results/dtamulti/run/lin-ius-3e/all.clusterMovement_DTA_MCC_0.5.0.tsv.xz) (compressed)
 
 ### Uncertainty analysis of the importation lineages
 

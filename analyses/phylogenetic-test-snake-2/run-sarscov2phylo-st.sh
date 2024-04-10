@@ -1,9 +1,5 @@
 #!/bin/bash
 
-__conda_setup="$('/home/hforoughmand/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-eval "$__conda_setup"
-conda activate sarscov2phylo
-
 set -o xtrace
 set -e
 set -u # or set -o nounset

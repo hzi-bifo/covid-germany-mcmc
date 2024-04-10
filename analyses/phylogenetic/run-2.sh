@@ -3,8 +3,9 @@
 #STATE=Germany
 
 export LD_LIBRARY_PATH="$CONDA_PREFIX/lib/"
-#export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
-#cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic
+#add beast into path: 
+export PATH=$PATH_TO_BEAST/bin:$PATH
+cd analyses/phylogenetic
 DATE_TREE=20210602
 DATE_METADATA=20210602
 DATE_SEQ=20210602
@@ -143,7 +144,6 @@ done
 #SUB_TREES="B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.1.214 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 P A C"
 SUB_TREES="B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.177 B.1.160 B.1.221 B.1.36 B.1.351 P A C"
 #NOTE: B.1.1.7 -> i={6..10}
-#cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
 for X in $SUB_TREES; do 
 #for X in B.1.1.70 B.1.177; do
 #current jobs number are 31..35, previously it was 1..5 for all and 6..20 for B.1.1.7
@@ -328,7 +328,6 @@ done
 
 # run at grid.bifo
 #DATE_TREE=20210428
-#cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
 for X in $SUB_TREES; do 
 #for i in {1..2}; do 
 for i in {31..32}; do 
@@ -461,8 +460,6 @@ rmarkdown::render('extractLineages_State.Rmd');
 ####
 
 
-# on local computer for copying lin-rich
-#hzi-get /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/results/beast/run/lin-rich results/beast/run/
 
 
 ## fast extractLineage from sequences (add lineages to normal trees):
@@ -615,7 +612,7 @@ done
 #	./scripts/fill-template.py --template data/X-DTA2-template.xml --name $X --sample <(grep "$X$" results/gisaid-$DATE_TREE-unsampled-subtree.txt | cut -f 1; cat results/gisaid-$DATE_TREE-$X-samples0.txt) --metadata results/gisaid-$DATE_TREE-metadata-sampled-unsampled.tsv --out results/beast/$X-DTA2-$DATE_TREE.xml --loc Germany --date $DATE_TREE 
 #done
 #
-#cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
+#cd analyses/phylogenetic/
 #for X in $SUB_TREES; do 
 #for i in {1..1}; do 
 #if [[ "$X" == "B.1.1.7" ]]; then

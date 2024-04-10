@@ -1,7 +1,3 @@
-#cp /net/viral_genomics/corona/gisaid/gisaid_cov2020_sequences.fasta ../../../data/data/gisaid-20200000.fa
-#useless: cp /net/viral_genomics/corona/gisaid_tree/global.tree results/gisaid-20200000-Germany.tree
-#cp ../../../data/data/gisaid-20210602-Wu1.fa ../../../data/data/gisaid-20200000-Wu1.fa 
-
 
 DATE_TREE="20210602"
 #DATE_TREE="20200000"
@@ -9,7 +5,7 @@ DATE_METADATA="20210602"
 DATE_SEQ="20210602"
 #DATE_SEQ="20200000"
 STATE="Germany"
-TWD="/net/sgi/viral_genomics/hadi/tmp/"
+TWD="/tmp"
 #SUB_TREES="A C"
 SUB_TREES="A B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 C"
 FOLDER_MAIN="../phylogenetic/"

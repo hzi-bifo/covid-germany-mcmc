@@ -33,7 +33,7 @@ STATE=Germany
 ./scripts/tree-stat --in results/gisaid-$DATE_TREE-cont.tree -l $STATE non$STATE --large 1000 --depth 10
 ./scripts/tree-stat --in results/gisaid-$DATE_TREE-sampled.tree -l $STATE non$STATE --large 3000 --depth 30
 
-export LD_LIBRARY_PATH="/home/hforoughmand/miniconda3/envs/covid-uk/lib/"
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib/"
 ./scripts/extract-metadata.R results/gisaid-$DATE_TREE-samples.txt ../../data/phylogenetic/gisaid-$DATE_METADATA-metadata.tsv results/gisaid-$DATE_TREE-metadata-sampled.tsv
 # cut -f1 results/gisaid-$DATE_TREE-metadata-sampled.tsv | tail -n +2 | sed 's/^hCoV-19\///' > results/gisaid-$DATE_TREE-sample-names.txt 
 # ./scripts/alignment-filter ../../data/phylogenetic/gisaid-$DATE_SEQ.fa.xz results/gisaid-$DATE_TREE-sample-names.txt > ../../data/phylogenetic/gisaid-$DATE_SEQ-sampled0.fa 
@@ -57,7 +57,7 @@ done
 # DATE_TREE=20210520
 # SUB_TREES="B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.1.214 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 P A C"
 DATE_TREE=20210428
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
+cd analyses/phylogenetic/
 for i in {2..2}; do 
 for X in $SUB_TREES; do 
 qsub -cwd -l h_vmem=64G,mem_free=20G,s_vmem=20G -o results/beast/run/out/$X-$i -e results/beast/run/out/$X-$i run-beast.sh run/$X-$i $DATE_TREE $X
@@ -85,7 +85,7 @@ done
 
 # run at grid.bifo
 DATE_TREE=20210428
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic/
+cd analyses/phylogenetic/
 for i in {1..1}; do 
 for X in $SUB_TREES; do 
 qsub -cwd -l h_vmem=64G,mem_free=20G,s_vmem=20G -o results/beast/run/out/$X-$i -e results/beast/run/out/$X-$i run-beast-DTA.sh run/$X-$i $DATE_TREE $X

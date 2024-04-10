@@ -1,13 +1,6 @@
 #!/bin/bash
 
-__conda_setup="$('/home/hforoughmand/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-eval "$__conda_setup"
-#/home/hforoughmand/miniconda3/etc/profile.d/conda.sh
-export PATH="/home/hforoughmand/miniconda3/bin:$PATH"
-
-conda activate covid-uk
-
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic
+#cd analyses/phylogenetic
 
 set -e
 set -u # or set -o nounset

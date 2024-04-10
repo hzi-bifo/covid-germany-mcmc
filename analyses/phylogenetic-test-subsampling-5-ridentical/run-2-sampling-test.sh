@@ -1,14 +1,15 @@
 # In this file we do not add unsampled ones, 
 # Testing differnet strategies of sampling with run-2.sh
 
-export LD_LIBRARY_PATH="/home/hforoughmand/miniconda3/envs/covid-uk/lib/"
-export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic-test-subsampling-5-ridentical/
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib/"
+#add beast into path: 
+export PATH=$PATH_TO_BEAST/bin:$PATH
+cd analyses/phylogenetic-test-subsampling-5-ridentical/
 DATE_TREE=20210602
 DATE_METADATA=20210602
 DATE_SEQ=20210602
 STATE=Germany
-TWD=/net/sgi/viral_genomics/hadi/tmp/
+TWD=/tmp/
 SUB_TREES="A B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 C"
 FOLDER_MAIN=../phylogenetic/
 

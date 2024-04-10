@@ -11,7 +11,6 @@ TREE_NAME=$3
 
 echo scripts/generate-effectiveness.sh 
 
-export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
 #treeannotator -type mcc results/beast/run/$X-$i/$X-DTA-$DATE_TREE.sub4500.trees results/beast/run/all/$X-DTA-$DATE_TREE.MCC.tree
 treeannotator -type mcc results/beast/run/lin-ius-3e/sample-tree/$TREE_NAME.nexus results/beast/run/lin-ius-3e/mcc-tree/$TREE_NAME.mcc.nexus
 

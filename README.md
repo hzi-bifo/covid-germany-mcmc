@@ -504,7 +504,7 @@ loganalyser results/dtamulti/run/all/sampled-DTA-$DATE_TREE.combined.log > resul
 
 Running tree annotator that finds MCC tree.
 ```
-srun --mem=100G --cpus-per-task=2 --qos verylong --time=24:00:00 /net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin/treeannotator -type mcc results/dtamulti/run/all/sampled-DTA-$DATE_TREE.combined.trees  results/dtamulti/run/all/sampled-DTA-$DATE_TREE.MCC.nexus
+srun --mem=100G --cpus-per-task=2 --qos verylong --time=24:00:00 ../../bin/beast/bin/treeannotator -type mcc results/dtamulti/run/all/sampled-DTA-$DATE_TREE.combined.trees  results/dtamulti/run/all/sampled-DTA-$DATE_TREE.MCC.nexus
 ```
 
 Finally, the lineages will be extracted for the R report generation scripts

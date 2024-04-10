@@ -1,13 +1,14 @@
 # Testing differnet strategies of sampling with run-2.sh
 
-export LD_LIBRARY_PATH="/home/hforoughmand/miniconda3/envs/covid-uk/lib/"
-export PATH=/net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin:$PATH
-cd /net/viral_genomics/covid-lineage/huge-lineage-dynamics/analyses/phylogenetic-test-subsampling-5/
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib/"
+#add beast into path: 
+export PATH=$PATH_TO_BEAST/bin:$PATH
+cd analyses/phylogenetic-test-subsampling-5/
 DATE_TREE=20210602
 DATE_METADATA=20210602
 DATE_SEQ=20210602
 STATE=Germany
-TWD=/net/sgi/viral_genomics/hadi/tmp/
+TWD=/tmp/
 SUB_TREES="A B.1.1.7 B.1.1.519 B.1.1.70 B.1.1.317 B.1.177 B.1.160 B.1.221 B.1.36 B.1.258 B.1.351 C"
 FOLDER_MAIN=../phylogenetic/
 
@@ -84,10 +85,6 @@ for X in $SUB_TREES; do
 
 	cat > results/fasttree/$DATE_TREE-$X/qrun.sh << EOF
 #!/bin/bash
-
-__conda_setup="\$('/home/hforoughmand/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-eval "\$__conda_setup"
-conda activate sarscov2phylo
 
 set -o xtrace
 set -e
@@ -526,7 +523,7 @@ loganalyser results/dtamulti/run/all/sampled-DTA-$DATE_TREE.combined.log > resul
 
 alias srun='srun -w ariel --cpus-per-task=2 --qos verylong --time=24:00:00 '
 
-srun --mem=100G --cpus-per-task=2 --qos verylong --time=24:00:00 /net/viral_genomics/covid-lineage/germany-lineage-dynamics/bin/beast/bin/treeannotator -type mcc results/dtamulti/run/all/sampled-DTA-$DATE_TREE.combined.trees  results/dtamulti/run/all/sampled-DTA-$DATE_TREE.MCC.nexus
+srun --mem=100G --cpus-per-task=2 --qos verylong --time=24:00:00 ../../bin/beast/bin/treeannotator -type mcc results/dtamulti/run/all/sampled-DTA-$DATE_TREE.combined.trees  results/dtamulti/run/all/sampled-DTA-$DATE_TREE.MCC.nexus
 
 srun ./scripts/lineage-importation-extract-multidta --tree results/dtamulti/run/all/sampled-DTA-$DATE_TREE.MCC.nexus --lineage-samples results/beast/run/lin-ius-3/clusterSamples_DTA_MCC_0.5.tsv --out results/dtamulti/run/lin-ius-3/clusterMovement_DTA_MCC_0.5.0.tsv -l \"Baden-Wurttemberg\" \"Bavaria\" \"Berlin\" \"Brandenburg\" \"Bremen\" \"Hamburg\" \"Hesse\" \"Lower Saxony\" \"Mecklenburg-Western Pomerania\" \"North Rhine-Westphalia\" \"Rhineland-Palatinate\" \"Saarland\" \"Saxony\" \"Saxony-Anhalt\" \"Schleswig-Holstein\" \"Thuringia\" --root-date 1900
 sed 's/"//g' < results/dtamulti/run/lin-ius-3/clusterMovement_DTA_MCC_0.5.0.tsv > results/dtamulti/run/lin-ius-3/clusterMovement_DTA_MCC_0.5.tsv
